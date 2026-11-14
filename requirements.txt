@@ -3,3 +3,6 @@ pyarrow
 pandas
 plotly
 tzdata
+geopandas
+pyogrio
+shapely
