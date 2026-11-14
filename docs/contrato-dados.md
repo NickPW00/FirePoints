@@ -42,6 +42,21 @@ Sugestão para o app: duas visões do calendário, **Intensidade** (`faixa_inten
 Cada quadradinho (`gi`, `gj`, `lat_centro`, `lon_centro`) com o seu `bioma`, `estado` e `estado_nome`. O app junta com a tabela 1 para filtrar o mapa por estado.
 O estado é o do centro do quadradinho; quadradinhos na divisa contam para um só estado.
 
+## 2c. `focos/focos_<ano>_<sensor>.parquet` — para o download em CSV ⏳ (`pipeline/05_exportar_focos.py`)
+Cada foco detectado (ponto), dividido por ano e sensor (`modis` ou `snpp`) para caber no GitHub. O app lê só os anos do período escolhido, filtra a região e gera o CSV.
+
+| Coluna | Tipo | O que é |
+|---|---|---|
+| `latitude`, `longitude` | float | posição do foco |
+| `data` | data | dia da detecção no horário de Brasília |
+| `sensor` | texto | `modis` ou `snpp` |
+| `confianca` | float | MODIS: 30–100; S-NPP: 50 (nominal) ou 90 (alta) |
+| `frp` | float | potência radiativa do fogo (MW) |
+| `dia_noite` | texto | `D` (dia) ou `N` (noite) |
+| `bioma`, `estado` | texto | do quadradinho de 0,1° onde o foco caiu |
+
+Contagens brutas de cada sensor (não harmonizadas). O CSV deve dizer isso no cabeçalho ou no nome do arquivo.
+
 ## 3. Arquivos de apoio
 - `fatores_bioma_mes.csv` — fator S-NPP ÷ MODIS por bioma e mês (calibrado em 2012–2019).
 - `validacao_harmonizacao.csv` — erro da validação por bioma (para a metodologia).
