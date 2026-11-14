@@ -29,6 +29,8 @@
 - **#14** Stack do app: Streamlit (front + back) + pandas sobre `serie_harmonizada.parquet`; DuckDB só para o CSV dos focos individuais — Prazo curto, um deploy só (Streamlit Cloud); DuckDB evita carregar 27 mi pontos na memória
 - **#15** CSV dos focos individuais fica por último; se os pontos não estiverem no repo até domingo de manhã, oferecer só os pontos da região da demo — Todo o resto do app depende só da série harmonizada, que já está no repo *(substituição proposta em #17)*
 - **#17** CSV dos focos lê `focos/ano=*/` via DuckDB, só os anos do período, até 1,5 mi pontos por download — Pontos já estão no repo; plano B da #15 não é mais necessário
+- **#22** Mapa do app em folium: basemap OSM em cinza + grade de 0,1° como imagem reprojetada para Mercator, divisas e siglas dos estados, região escolhida destacada sem cortar o Brasil; raster Plotly fica como reserva offline — Dá zoom/arraste e contexto geográfico (pedidos da mariaeliza) com página leve (0,26 MB); a reserva garante a demo sem internet
+- **#23** Leitura dos números no app: meses parciais (nov/2000–2002) ficam sem faixa no "vs normal"; "% de anos com fogo" divide só pelos anos com dado no mês (ou anos completos); o total do mapa respeita o mês escolhido; CSV de pontos vai até out/2026, fim da série — Não mostrar falta de satélite como "menos fogo" nem números diferentes entre mapa, calendário e CSV
 
 ## 💡 Ideias por tema
 
@@ -47,6 +49,7 @@
 ### #mapa
 
 - mapa como imagem lat×lon (sem basemap/WebGL): renderiza sempre na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
+- mapa de anomalia do mês (cada célula contra a própria média) — *nicholas* ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 
 ### #validacao
 
@@ -69,6 +72,9 @@
 - [ ] @mariaeliza erro da validação: a #11 diz 0,7% e os docs dizem 0,9% → usar só 0,9% na submissão? ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
 - [ ] @mariaeliza revisar as propostas #1, #2, #7, #8, #9, #12, #14 e #17 ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
 - [ ] @mariaeliza combinar com @nicholas quem faz: AI Use completo no README + texto do "Use of SI", demo (vídeo ≤ 30 s ou ≤ 7 slides) e página de submissão ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza validar #22 e #23 (mapa novo e correções de leitura) ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
+- [ ] @mariaeliza (opcional) exportar `data/processed/ufs_simplificado.geojson` (UFs do IBGE simplificadas): o app usa no lugar das divisas tiradas da grade ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
+- [ ] @mariaeliza a cópia solta `focos/focos_*.parquet` dobra o checkout (559 MB) e o app só lê `focos/ano=*/`: pode remover? ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 
 **@nicholas:**
 
@@ -77,10 +83,6 @@
 - [ ] @nicholas ler `docs/contrato-dados.md` e confirmar a #13 (divisão de tarefas e formato das tabelas do app) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas os pontos estão em `data/processed/focos/ano=AAAA/` (como pedido); colunas: lat, lon, data, sensor, confianca, frp, dia_noite, bioma, estado — sem gi/gj/origem (ver contrato 2c) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
-- [ ] @nicholas (pedidos de melhoria do app, da mariaeliza) mapa com as divisas dos estados e a sigla de cada um ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
-- [ ] @nicholas explicar melhor o que cada gráfico mostra, principalmente o mapa do Brasil (título claro + uma frase de leitura + legenda das cores) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
-- [ ] @nicholas ao selecionar uma região, destacá-la sem cortar o mapa: o Brasil inteiro continua visível e a região fica em evidência (referência: mapa da Globo https://share.google/FZ8TOfijHjce0dI4b) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
-- [ ] @nicholas zoom e arraste no mapa como no Google Maps, para ver a localidade de perto ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
-- [ ] @nicholas melhorar o design; se ajudar, animações para a experiência do usuário ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas app: marcar meses NRT como provisórios (#3) ou ajustar o texto; docstrings no `streamlit_app.py`; `docs/USER_GUIDE.md` (aba How to read + colunas dos CSVs) ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @nicholas testar o mapa com internet real (tiles OSM; só foi testado com tiles simulados) antes do merge e do deploy ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 
