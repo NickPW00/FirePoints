@@ -42,10 +42,6 @@
 **@mariaeliza:**
 
 - [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
-- [ ] @mariaeliza criar o primeiro log dela usando o `_template.md` ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
-- [ ] @mariaeliza instalar a skill na conta dela (zip da pasta → Configurações → Skills) e testar "abrir sessão" ([log](ai-log/2026-11-14_1441_nicholas_skill-registro.md))
-- [ ] @mariaeliza reinstalar a skill (zip novo) se já tiver instalado a versão anterior ([log](ai-log/2026-11-14_1445_nicholas_registro-automatico.md))
-- [ ] @mariaeliza reinstalar a skill (zip novo) e testar "juntar ideias" ([log](ai-log/2026-11-14_1454_nicholas_merge-ideias.md))
 - [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
 
 **@nicholas:**
