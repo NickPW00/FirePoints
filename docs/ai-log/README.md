@@ -19,6 +19,15 @@ Um lugar só para as conversas da dupla com Claude (ou outra IA). Ninguém lê a
 - **Arquivos de código feitos com IA** levam no topo:
   `# AI-assisted: Claude (Anthropic). See docs/ai-log/<arquivo-do-log>.md`
 
+## Skill `firepoints-registro` (recomendado)
+
+Com a skill, basta dizer **"abrir sessão"**, **"checkpoint"** ou **"fechar sessão"**. O Claude lê as decisões e pendências, analisa a conversa e salva o log (ou entrega o texto pronto para colar, se não puder fazer push).
+
+- **Claude Code:** já vem no repo, em `.claude/skills/firepoints-registro/`. Não precisa instalar.
+- **claude.ai:** compacte a pasta `.claude/skills/firepoints-registro/` em `.zip` e envie em Configurações → Skills (cada pessoa na própria conta).
+
+Sem a skill, use o prompt abaixo.
+
 ## Prompt de fechamento (colar no fim da conversa)
 
 ```
