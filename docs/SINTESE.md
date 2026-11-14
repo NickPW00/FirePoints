@@ -11,10 +11,7 @@
 
 **Propostas de mariaeliza:**
 
-- **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ *(substituição proposta em #11)*
-
-**Propostas de mariaeliza:**
-
+- **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
 
 **Propostas de nicholas:**
 
@@ -49,9 +46,6 @@
 **@mariaeliza:**
 
 - [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
-
-**@mariaeliza:**
-
 - [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 - [ ] @mariaeliza rodar 01 e 02 com os dados reais e compartilhar o gráfico ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 
