@@ -1,0 +1,2 @@
+# Linhas acrescentadas pelos dois ao mesmo tempo são mantidas no merge, sem conflito
+docs/decisions.md merge=union
