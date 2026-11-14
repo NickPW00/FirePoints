@@ -19,7 +19,7 @@ Fazer a skill registrar sozinha o que for importante para o projeto, sem precisa
 - `CLAUDE.md` — alterado (seção "Durante o trabalho")
 
 ## Pendências / perguntas para a dupla
-- [ ] @parceira reinstalar a skill (zip novo) se já tiver instalado a versão anterior
+- [ ] @mariaeliza reinstalar a skill (zip novo) se já tiver instalado a versão anterior
 
 ## Referências
 - —
