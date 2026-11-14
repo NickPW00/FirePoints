@@ -40,6 +40,10 @@
 
 - recortar a análise para o estado do Rio de Janeiro (nenhuma decisão atual limita a região) — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 
+### #docs
+
+- montar a página de submissão a partir do README (resumo) + METHODOLOGY (descrição) + DATA (NASA Data) — *nicholas* ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+
 ### #mapa
 
 - mapa como imagem lat×lon (sem basemap/WebGL): renderiza sempre na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
@@ -56,6 +60,16 @@
 
 ## 📋 Pendências abertas
 
+**@mariaeliza:**
+
+- [ ] @mariaeliza README: trocar "in progress" por https://firepoints.streamlit.app; corrigir @NickPW10 → @NickPW00; faltam screenshot, diagrama do pipeline e licença (não há LICENSE) ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza METHODOLOGY: falta a seção References e o gráfico previsto × observado da validação (criar `docs/img/`) ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza DATA.md: dicionário dos Parquet e colunas dos 3 CSVs do app em EN (hoje só no `contrato-dados.md`, em PT) ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza docstrings no pipeline (só 4 de 19 funções têm) e versões no `requirements.txt` ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza erro da validação: a #11 diz 0,7% e os docs dizem 0,9% → usar só 0,9% na submissão? ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza revisar as propostas #1, #2, #7, #8, #9, #12, #14 e #17 ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+- [ ] @mariaeliza combinar com @nicholas quem faz: AI Use completo no README + texto do "Use of SI", demo (vídeo ≤ 30 s ou ≤ 7 slides) e página de submissão ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
+
 **@nicholas:**
 
 - [ ] @nicholas definir responsáveis de cada documento do plano ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
@@ -68,4 +82,5 @@
 - [ ] @nicholas ao selecionar uma região, destacá-la sem cortar o mapa: o Brasil inteiro continua visível e a região fica em evidência (referência: mapa da Globo https://share.google/FZ8TOfijHjce0dI4b) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas zoom e arraste no mapa como no Google Maps, para ver a localidade de perto ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas melhorar o design; se ajudar, animações para a experiência do usuário ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas app: marcar meses NRT como provisórios (#3) ou ajustar o texto; docstrings no `streamlit_app.py`; `docs/USER_GUIDE.md` (aba How to read + colunas dos CSVs) ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
 
