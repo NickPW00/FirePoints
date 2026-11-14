@@ -1,4 +1,5 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
 """Data access for the FirePoints app.
 
 Reads the pre-processed Parquet files in ``data/processed/`` (built by
@@ -164,7 +165,10 @@ def add_anomaly(monthly: pd.DataFrame) -> pd.DataFrame:
     band = pd.Series(np.nan, index=out.index)
     for upper, code, _ in reversed(ANOMALY_BANDS):
         band = band.mask(ratio < upper, code)
-    out["anomaly_band"] = band.where(out["fires"].notna() & (out["mean_month"] > 0))
+    # Partial months (Nov/2000–2002, Terra only) are under-counted by construction: comparing them
+    # with the 2003–2025 normal would show missing satellite coverage as "fewer fires".
+    comparable = out["fires"].notna() & (out["mean_month"] > 0) & (out["status"] != "partial")
+    out["anomaly_band"] = band.where(comparable)
     return out
 
 
@@ -184,21 +188,115 @@ def anomaly(monthly: pd.DataFrame, year: int, month: int) -> dict:
         "n_years": BASELINE_YEARS[1] - BASELINE_YEARS[0] + 1,
         "rank_below": int((base["fires"] < value).sum()) if np.isfinite(value) else None,
         "n_compared": len(base),
+        "status": row["status"].iloc[0] if len(row) else None,
         "history": same[["year", "fires", "status"]],
     }
 
 
+def season_envelope(monthly: pd.DataFrame) -> pd.DataFrame:
+    """Usual range of each calendar month in 2003–2025: 10th percentile, median and 90th percentile."""
+    base = monthly[monthly["year"].between(*BASELINE_YEARS) & monthly["fires"].notna()]
+    q = base.groupby("month")["fires"].quantile([0.1, 0.5, 0.9]).unstack()
+    return q.rename(columns={0.1: "p10", 0.5: "p50", 0.9: "p90"}).reindex(range(1, 13))
+
+
+def year_summary(monthly: pd.DataFrame, year: int) -> dict | None:
+    """One year against the normal, over the months of that year that have data.
+
+    ``monthly`` must come from ``add_anomaly`` on the full record. Returns ``None`` when the
+    year has no data.
+    """
+    m = monthly[(monthly["year"] == year) & monthly["fires"].notna()]
+    if m.empty:
+        return None
+    total, normal = float(m["fires"].sum()), float(m["mean_month"].sum())
+    env = season_envelope(monthly)
+    fires = m.set_index("month")["fires"]
+    return {
+        "year": year,
+        "first_month": int(m["month"].min()),
+        "last_month": int(m["month"].max()),
+        "n_months": len(m),
+        "total": total,
+        "normal": normal,
+        "pct": (total / normal - 1) * 100 if normal > 0 else float("nan"),
+        "partial": bool((m["status"] == "partial").any()),
+        "above_range": int((fires > env["p90"].reindex(fires.index)).sum()),
+        "below_range": int((fires < env["p10"].reindex(fires.index)).sum()),
+        "peak_month": int(fires.idxmax()),
+        "peak_fires": float(fires.max()),
+    }
+
+
+def typical_season(monthly: pd.DataFrame) -> dict | None:
+    """Typical fire season of the area: peak month and the 3 consecutive months with most fires."""
+    base = monthly[monthly["year"].between(*BASELINE_YEARS)].groupby("month")["fires"].mean()
+    base = base.reindex(range(1, 13)).fillna(0.0)
+    if base.sum() <= 0:
+        return None
+    windows = {m: base[[(m - 1 + k) % 12 + 1 for k in range(3)]].sum() for m in range(1, 13)}
+    start = max(windows, key=windows.get)
+    return {
+        "peak_month": int(base.idxmax()),
+        "window": [(start - 1 + k) % 12 + 1 for k in range(3)],
+        "window_share": float(windows[start] / base.sum() * 100),
+    }
+
+
+def calibration_gap(monthly: pd.DataFrame) -> float:
+    """Mean absolute difference (%) between yearly MODIS × k and observed VIIRS in the calibration window (2012–2019)."""
+    y = monthly[monthly["year"].between(2012, 2019)].groupby("year")[["modis_adj", "viirs_raw"]].sum()
+    y = y[y["viirs_raw"] > 0]
+    if y.empty:
+        return float("nan")
+    return float(((y["modis_adj"] / y["viirs_raw"] - 1).abs() * 100).mean())
+
+
+def data_months(years: tuple[int, int], month: int | None = None) -> list[tuple[int, int]]:
+    """(year, month) pairs of the period that have data (optionally only one calendar month)."""
+    months = range(1, 13) if month is None else [month]
+    return [(y, m) for y in range(years[0], years[1] + 1) for m in months if month_status(y, m)]
+
+
+def comparable_years(years: tuple[int, int], month: int | None = None) -> list[int]:
+    """Years that can be counted in "% of years with fire".
+
+    For one calendar month: the years that have that month. For "any month": the complete
+    years (12 months of data), so that 2000 (Nov–Dec only) and the running year do not
+    count as years without fire; if the period has no complete year, the years with any data.
+    """
+    pairs = data_months(years, month)
+    if month is not None:
+        return sorted({y for y, _ in pairs})
+    n = pd.Series([y for y, _ in pairs]).value_counts() if pairs else pd.Series(dtype=int)
+    complete = sorted(n[n == 12].index.tolist())
+    return complete or sorted(n.index.tolist())
+
+
 def fire_frequency(sub: pd.DataFrame, cells: pd.DataFrame, keys: np.ndarray, month: int | None,
                    years: tuple[int, int]) -> pd.DataFrame:
-    """Per cell: % of years with at least one fire (in ``month``, or any month) and total fires."""
+    """Per cell, for ``month`` (or any month) in the period.
+
+    - ``pct_years``: % of the comparable years with at least one fire;
+    - ``total_fires``: VIIRS-equivalent fires in the period (in that month, if one is chosen);
+    - ``fires_per_year``: ``total_fires`` per year of data (so periods of different length compare);
+    - ``peak_month``: calendar month with most fires in the period (NaN where nothing burned).
+    """
     s = sub if month is None else sub[sub["mes"] == month]
     s = s[s["focos"] > 0]
-    yrs_with_fire = s.groupby("key")["ano"].nunique()
-    total = sub.groupby("key")["focos"].sum()
-    n_years = years[1] - years[0] + 1
-    out = cells[cells["key"].isin(keys)][["key", "lat", "lon", "bioma"]].copy()
-    out["pct_years"] = (out["key"].map(yrs_with_fire).fillna(0) / n_years * 100).round(1)
+    valid = comparable_years(years, month)
+    yrs_with_fire = s[s["ano"].isin(valid)].groupby("key")["ano"].nunique()
+    total = s.groupby("key")["focos"].sum()
+    n_data_years = len(data_months(years, month)) / (12 if month is None else 1)
+    by_month = sub[sub["focos"] > 0].groupby(["key", "mes"], observed=True)["focos"].sum().unstack(fill_value=0.0)
+    peak = by_month.idxmax(axis=1) if len(by_month) else pd.Series(dtype=float)
+    cols = [c for c in ["key", "gi", "gj", "lat", "lon", "bioma", "estado", "estado_nome"] if c in cells]
+    out = cells[cells["key"].isin(keys)][cols].copy()
+    out["pct_years"] = (out["key"].map(yrs_with_fire).fillna(0) / max(len(valid), 1) * 100).round(1)
     out["total_fires"] = out["key"].map(total).fillna(0).round(1)
+    out["fires_per_year"] = (out["total_fires"] / max(n_data_years, 1e-9)).round(2)
+    out["peak_month"] = out["key"].map(peak)
+    out.attrs["n_years"] = len(valid)
     return out
 
 
@@ -232,14 +330,18 @@ def _points_query(keys: np.ndarray, years: tuple[int, int], select: str, tail: s
         return pd.DataFrame()
     con = duckdb.connect()
     con.register("sel", pd.DataFrame({"key": keys.astype("int64")}))
+    # The point files run a few days past the series (NRT detections of the running month):
+    # stop at the last month of the harmonized series, so the CSV matches the calendar.
+    last_day = (pd.Timestamp(year=LAST_MONTH[0], month=LAST_MONTH[1], day=1) + pd.offsets.MonthEnd(0)).date()
     # Same cell rule as the pipeline: gi = floor(lat / 0.1), gj = floor(lon / 0.1)
     return con.execute(f"""
         SELECT {select}
         FROM read_parquet(?) p
         JOIN sel ON (CAST(floor(p.latitude / 0.1) AS BIGINT) + 1000) * 4000
                   + (CAST(floor(p.longitude / 0.1) AS BIGINT) + 2000) = sel.key
+        WHERE p.data <= ?
         {tail}
-    """, [files]).df()
+    """, [files, last_day]).df()
 
 
 def count_points(keys: np.ndarray, years: tuple[int, int]) -> int:

@@ -4,7 +4,7 @@
 
 FirePoints merges 26 years of satellite fire detections into **one consistent record**, so emergency teams, scientists and land managers can see when and where Brazil burns, compare any month with its history and download the detections behind every number.
 
-- **Live app:** deployment on Streamlit Community Cloud in progress (link will be added here).
+- **Live app:** <https://firepoints.streamlit.app>
 - **Methodology:** [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) · **Data sources:** [`docs/DATA.md`](docs/DATA.md)
 
 ## The problem
@@ -46,7 +46,7 @@ These are **hotspot detections, not fire events or burned area**. Clouds are not
 ## Team
 
 - **Maria Eliza** ([@Mariaeliza07](https://github.com/Mariaeliza07)) — data pipeline, harmonization and methodology
-- **Nicholas** ([@NickPW10](https://github.com/NickPW10)) — web app
+- **Nicholas** ([@NickPW00](https://github.com/NickPW00)) — web app
 
 ## Use of AI
 
