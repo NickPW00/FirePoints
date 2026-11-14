@@ -1,4 +1,4 @@
-# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_clara_pipeline-focos.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md
 """
 01_processar_focos.py
 ---------------------
@@ -21,7 +21,11 @@ Como rodar (no terminal, dentro da pasta space-apps):
 Precisa de: pip install -r requirements.txt
 """
 
+import fnmatch
 import json
+import os
+import platform
+import sys
 import time
 import zipfile
 from pathlib import Path
@@ -38,6 +42,24 @@ import pyarrow.parquet as pq
 _AQUI = Path(__file__).resolve().parent
 PASTA = _AQUI.parent if _AQUI.name == "pipeline" else _AQUI
 PASTA_SAIDA = PASTA / "data" / "processed"
+
+
+class _Tee:
+    """Mostra as mensagens na tela e também salva em log_processamento.txt."""
+    def __init__(self, *saidas):
+        self.saidas = saidas
+    def write(self, texto):
+        for s in self.saidas:
+            s.write(texto)
+            s.flush()
+    def flush(self):
+        for s in self.saidas:
+            s.flush()
+
+
+_ARQ_LOG = open(PASTA / "log_processamento.txt", "w", encoding="utf-8")
+sys.stdout = _Tee(sys.__stdout__, _ARQ_LOG)
+sys.stderr = _Tee(sys.__stderr__, _ARQ_LOG)
 
 TAMANHO_QUADRADINHO = 0.1    # graus (0,1° ≈ 11 km)  -> decisão #5
 FUSO = "America/Sao_Paulo"   # mês contado no horário de Brasília -> decisão #5
@@ -224,11 +246,18 @@ def processar_zip(caminho_zip, sensor):
 # PROGRAMA PRINCIPAL
 # ----------------------------------------------------------------------
 def main():
+    print(f"Python {platform.python_version()} | pasta do projeto: {PASTA}")
     # Procura os .zip do FIRMS em qualquer subpasta do projeto
-    zips = sorted(PASTA.rglob("DL_FIRE_*.zip"))
+    zips = []
+    for raiz, _, arquivos in os.walk(PASTA):
+        for nome in arquivos:
+            if fnmatch.fnmatch(nome.lower(), "dl_fire_*.zip"):
+                zips.append(Path(raiz) / nome)
+    zips.sort()
     if not zips:
-        print(f"Nenhum arquivo DL_FIRE_*.zip encontrado dentro de {PASTA}")
-        return
+        print(f"ERRO: nenhum arquivo DL_FIRE_*.zip encontrado dentro de {PASTA}")
+        print("Conteúdo da pasta:", os.listdir(PASTA))
+        sys.exit(1)
     print("Arquivos encontrados:")
     for z in zips:
         print(f"  {z.relative_to(PASTA)}")
@@ -242,6 +271,10 @@ def main():
         print(f"\n=== {caminho.name} -> {sensor.upper()} ===")
         grades.append(processar_zip(caminho, sensor))
 
+    grades = [g for g in grades if len(g)]
+    if not grades:
+        print("ERRO: nenhum foco foi processado. Mande o arquivo log_processamento.txt para o Claude.")
+        sys.exit(1)
     if grades:
         grade = pd.concat(grades, ignore_index=True)
         # Centro de cada quadradinho, para desenhar no mapa

@@ -1,4 +1,4 @@
-# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_clara_pipeline-focos.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md
 """
 02_comparar_sensores.py
 -----------------------
