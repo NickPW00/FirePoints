@@ -1,6 +1,6 @@
 ---
 name: firepoints-registro
-description: Lê, analisa e salva o registro compartilhado do FirePoints (Space Apps 2026). Use com "abrir sessão", "checkpoint" ou "fechar sessão", ou ao falar de decisões e logs da dupla.
+description: Registro compartilhado do FirePoints (Space Apps 2026). Use com "abrir sessão", "checkpoint" ou "fechar sessão" e, sem pedido, sempre que surgir decisão, código, descoberta, bloqueio ou tarefa da dupla.
 ---
 
 # Registro compartilhado do FirePoints
@@ -22,7 +22,7 @@ Registros internos ficam em português. Documentos para os juízes ficam em ingl
 
 ## Modo 1: abrir sessão (início da conversa)
 
-Gatilhos: "abrir sessão", "o que a dupla já decidiu?", ou o início de uma conversa de trabalho no projeto.
+Gatilhos: "abrir sessão", "o que a dupla já decidiu?", ou **automaticamente** na primeira mensagem de trabalho sobre o FirePoints. No modo automático, faça a leitura em silêncio e mostre só o que for relevante para o pedido: conflitos, propostas que esperam revisão e pendências da pessoa, em no máximo 4 linhas antes da resposta. Se não houver nada relevante, não mostre nada.
 
 1. Leia `docs/decisions.md` e os 3 logs mais recentes de `docs/ai-log/`.
 2. Liste as pendências abertas. Com shell, rode `python docs/ai-log/ai_log.py pendencias <autor>`. Sem shell, procure as linhas `- [ ] @<autor>` nos logs.
@@ -79,6 +79,35 @@ Gatilhos: "fechar sessão", "registra essa conversa", "terminei por hoje".
 4. **Cabeçalho de IA:** todo arquivo de código gerado ou alterado deve ter no topo `# AI-assisted: Claude (Anthropic). See docs/ai-log/<arquivo-do-log>.md`. Com acesso de escrita, adicione o cabeçalho onde faltar. Sem acesso, avise quais arquivos precisam dele.
 5. Salve conforme "Como salvar".
 
+## Modo 4: registro automático (durante a conversa, sem pedido)
+
+Fica ativo em toda conversa sobre o FirePoints. A cada resposta, veja se apareceu algo importante para o projeto.
+
+**Conta como importante:**
+| Tipo | Exemplos | Vai para |
+|---|---|---|
+| Decisão técnica | dado/coleção, filtro, parâmetro, fórmula, métrica, biblioteca, arquitetura, estrutura do repo, formato de arquivo | `decisions.md` + log |
+| Mudança de decisão | trocar a grade, o período de calibração ou o fuso | `decisions.md` (`substitui #N`) + log |
+| Código para o repo | arquivo ou função gerada/alterada que vai ser usada | log (código com IA) + cabeçalho |
+| Descoberta sobre os dados | bug, limitação, peculiaridade do FIRMS, resultado de validação | log (decisões ou referências) |
+| Bloqueio ou risco ao prazo | API fora, dado faltando, algo que não termina até domingo | log (pendências) |
+| Tarefa ou pergunta para a dupla | "ela precisa ver X", divisão de tarefas, responsável | log (pendências `@nome`) |
+| Escopo, prazo ou entrega | cortar funcionalidade, mudar o formato da demo | `decisions.md` + log |
+
+**Não conta como importante:** explicações e conceitos, alternativas descartadas, passos intermediários de debug, ajustes cosméticos, conversa fora do projeto.
+
+**Como agir:**
+1. **Claro** (a pessoa decidiu ou aceitou de forma explícita, ou o código foi aceito): registre sem perguntar.
+2. **Parece importante, mas é incerto** (a sugestão foi sua e a pessoa não confirmou, ou soou como hipótese): ao fim da resposta, pergunte em uma linha: `📌 Registro como decisão: <resumo>? (s/n)`. Se a pessoa não responder, não registre.
+3. **Contradiz uma decisão `confirmada`:** avise logo, antes de seguir: `⚠️ Isso muda a decisão #N (<resumo>). Registro como substituição?`
+4. **Quando salvar:**
+   - Decisões e pendências para a outra pessoa: salve na hora, porque a dupla precisa ver logo. Faça commit e push se tiver acesso.
+   - O resto (código, descobertas): acumule e salve em lote junto da próxima decisão, num checkpoint, ou quando juntar 3 itens.
+   - Escreva sempre no log desta sessão, criando-o no primeiro registro e atualizando-o depois. Não crie um arquivo por item.
+   - Commit do modo automático: `log(<autor>): auto — <resumo curto>`.
+5. **Avise em uma linha só**, no fim da resposta: `📌 Registrado: <itens>`. Nunca interrompa a resposta principal para isso.
+6. **Sem escrita no repo:** acumule os itens na conversa e mostre `📌 Anotado (N itens pendentes de salvar)`. Entregue o bloco pronto para colar quando chegar a 5 itens, num checkpoint ou ao fechar a sessão.
+
 ## Como salvar
 
 **Com git e permissão de push:**
@@ -102,3 +131,4 @@ Se houver como criar um arquivo para download, entregue o log como arquivo `.md`
 - **Só registrar o que a pessoa disse ou aceitou.** Na dúvida, pergunte em uma linha ("Registro X como decisão?").
 - **Nunca registrar** a MAP_KEY do FIRMS, senhas ou tokens.
 - **Não ultrapassar o limite:** no máximo 20 linhas por log e 1–2 linhas de resposta no checkpoint.
+- **Modo automático sem ruído:** no máximo uma linha `📌` por resposta, e nenhuma quando não houver nada importante. Mesmo tema não se registra duas vezes: atualize a linha do log.
