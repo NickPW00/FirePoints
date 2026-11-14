@@ -21,7 +21,7 @@ Definir quais documentos a equipe precisa entregar no Space Apps e criar um luga
 - `docs/ai-log/ai_log.py` — script gerado com Claude.
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança
+- [x] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança *(feito: confirmadas nas #18–#21)*
 - [x] @mariaeliza criar o primeiro log dela usando o `_template.md` *(feito: log 1510)*
 - [ ] @nicholas definir responsáveis de cada documento do plano
 

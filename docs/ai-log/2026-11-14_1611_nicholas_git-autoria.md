@@ -20,8 +20,8 @@ Fazer os commits do Nicholas aparecerem na conta NickPW00 (iam para NickPW10) e 
 —
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza ressincronizar o clone após o force-push: `git fetch origin && git reset --hard origin/main` (salvar antes o que não foi enviado)
-- [ ] @mariaeliza conferir `git config user.email` — deve ser `217095895+Mariaeliza07@users.noreply.github.com`, senão os commits vão para a conta "clara"
+- [x] @mariaeliza ressincronizar o clone após o force-push: `git fetch origin && git reset --hard origin/main` (salvar antes o que não foi enviado) *(não se aplica: mariaeliza não tem clone local; os commits saem do Claude dela)*
+- [x] @mariaeliza conferir `git config user.email` — deve ser `217095895+Mariaeliza07@users.noreply.github.com`, senão os commits vão para a conta "clara" *(conferido: 217095895+Mariaeliza07@users.noreply.github.com)*
 
 ## Referências
 —

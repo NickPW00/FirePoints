@@ -21,7 +21,7 @@ Conectar ao repo, instalar a skill e começar a revisar as decisões #3–#6.
 - #app incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza revisar as decisões #3–#6
+- [x] @mariaeliza revisar as decisões #3–#6 *(feito: #18–#21)*
 
 ## Referências
 - —

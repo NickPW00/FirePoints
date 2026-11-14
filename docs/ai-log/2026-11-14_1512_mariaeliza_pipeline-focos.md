@@ -14,6 +14,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — mais focos, estatística mais confiável *(decisions #10)*
 - Série harmonizada de 2003 em diante, fator por mês e região (2012–2019); 2003–2011 estimado, 2000–2002 parcial *(decisions #11)*
 - Divisão de tarefas e contrato de dados pipeline → app (`docs/contrato-dados.md`) *(decisions #13)*
+- Confirma as decisões #3–#6 do nicholas (dados, filtros, grade, calibração) *(decisions #18–#21)*
 
 ## Código gerado ou alterado com IA
 - `pipeline/01_processar_focos.py` — lê o JSON direto do .zip (ijson), filtros da #4, grade 0,1° e mês em Brasília (#5), saída Parquet em `data/processed/` — gerado
@@ -22,6 +23,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - `pipeline/04_calendario.py` — calendário por Brasil, bioma e estado (IBGE BR_UF_2024): média do mês 2003–2025, anomalia, faixas de cor 1–5 — gerado
 - `pipeline/05_exportar_focos.py` — focos individuais divididos por ano e sensor, com bioma e estado, para o CSV do app — gerado
 - `docs/METHODOLOGY.md` — metodologia em inglês para os juízes (dados, filtros, harmonização por bioma, validação, calendário, limitações) — gerado
+- `README.md` e `docs/DATA.md` — página inicial e fontes de dados em inglês para os juízes — gerado
 
 ## Ideias (ainda não decididas)
 - —
