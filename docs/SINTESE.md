@@ -11,7 +11,10 @@
 
 **Propostas de mariaeliza:**
 
-- **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
+- **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ *(substituição proposta em #11)*
+
+**Propostas de mariaeliza:**
+
 
 **Propostas de nicholas:**
 
@@ -29,11 +32,11 @@
 
 ### #app
 
-- incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
+- incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 
 ### #dados
 
-- recortar a análise para o estado do Rio de Janeiro (nenhuma decisão atual limita a região) — *mariaeliza* ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
+- recortar a análise para o estado do Rio de Janeiro (nenhuma decisão atual limita a região) — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 
 ## ⚠️ Possíveis conflitos ou sobreposições
 
@@ -46,11 +49,14 @@
 **@mariaeliza:**
 
 - [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
-- [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
-- [ ] @mariaeliza rodar 01 e 02 com os dados reais e compartilhar o gráfico ([log](ai-log/2026-11-14_1512_clara_pipeline-focos.md))
+
+**@mariaeliza:**
+
+- [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
+- [ ] @mariaeliza rodar 01 e 02 com os dados reais e compartilhar o gráfico ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 
 **@nicholas:**
 
 - [ ] @nicholas definir responsáveis de cada documento do plano ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
-- [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_clara_pipeline-focos.md))
+- [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 
