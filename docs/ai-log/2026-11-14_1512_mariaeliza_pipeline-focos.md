@@ -12,6 +12,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 
 ## Decisões
 - Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — mais focos, estatística mais confiável *(decisions #10)*
+- Série harmonizada de 2003 em diante, fator por mês e região (2012–2019); 2003–2011 estimado, 2000–2002 parcial *(decisions #11)*
 
 ## Código gerado ou alterado com IA
 - `pipeline/01_processar_focos.py` — lê o JSON direto do .zip (ijson), filtros da #4, grade 0,1° e mês em Brasília (#5), saída Parquet em `data/processed/` — gerado
