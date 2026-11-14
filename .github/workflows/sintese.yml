@@ -1,0 +1,40 @@
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1454_nicholas_merge-ideias.md
+# Regenera docs/SINTESE.md (visão unificada das decisões e ideias da dupla) a cada push.
+name: Síntese da dupla
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/decisions.md"
+      - "docs/ai-log/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sintese
+  cancel-in-progress: false
+
+jobs:
+  sintese:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Gerar SINTESE.md
+        run: python docs/ai-log/ai_log.py sintese > docs/SINTESE.md
+      - name: Commit se mudou
+        run: |
+          if git diff --quiet -- docs/SINTESE.md && git ls-files --error-unmatch docs/SINTESE.md >/dev/null 2>&1; then
+            echo "Sem mudanças."; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add docs/SINTESE.md
+          git commit -m "chore: atualiza SINTESE.md [skip ci]"
+          for i in 1 2 3; do git pull --rebase && git push && exit 0; sleep 5; done
+          exit 1

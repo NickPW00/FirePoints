@@ -24,12 +24,13 @@ Registros internos ficam em português. Documentos para os juízes ficam em ingl
 
 Gatilhos: "abrir sessão", "o que a dupla já decidiu?", ou **automaticamente** na primeira mensagem de trabalho sobre o FirePoints. No modo automático, faça a leitura em silêncio e mostre só o que for relevante para o pedido: conflitos, propostas que esperam revisão e pendências da pessoa, em no máximo 4 linhas antes da resposta. Se não houver nada relevante, não mostre nada.
 
-1. Leia `docs/decisions.md` e os 3 logs mais recentes de `docs/ai-log/`.
+1. Leia primeiro `docs/SINTESE.md`, a visão unificada da dupla, que o GitHub Action regenera a cada push. Se ela não existir ou estiver desatualizada e houver shell, rode `python docs/ai-log/ai_log.py sintese`. Depois leia `docs/decisions.md` e os 3 logs mais recentes de `docs/ai-log/`, se precisar de detalhe.
 2. Liste as pendências abertas. Com shell, rode `python docs/ai-log/ai_log.py pendencias <autor>`. Sem shell, procure as linhas `- [ ] @<autor>` nos logs.
 3. Responda em no máximo 12 linhas:
    - **Decisões confirmadas** que tocam no assunto de hoje (uma linha cada).
    - **Propostas da outra pessoa** que esperam a sua revisão.
    - **Pendências para você.**
+   - **Ideias para combinar:** temas 🔀 ou conflitos ⚠️ da síntese que tocam no assunto de hoje. Se houver, rode o modo 5.
    - **Possíveis conflitos:** se o que a pessoa pediu hoje contradiz uma decisão `confirmada`, diga isso antes de seguir.
 4. Continue a tarefa. Daqui em diante, trate as decisões `confirmada` como premissas.
 
@@ -68,6 +69,8 @@ Gatilhos: "fechar sessão", "registra essa conversa", "terminei por hoje".
    - decisão — motivo *(decisions #N)*
    ## Código gerado ou alterado com IA
    - `arquivo` — `função` — gerado | alterado | revisado
+   ## Ideias (ainda não decididas)
+   - #tema ideia em uma linha
    ## Pendências / perguntas para a dupla
    - [ ] @nome ...
    ## Referências
@@ -93,6 +96,7 @@ Fica ativo em toda conversa sobre o FirePoints. A cada resposta, veja se aparece
 | Bloqueio ou risco ao prazo | API fora, dado faltando, algo que não termina até domingo | log (pendências) |
 | Tarefa ou pergunta para a dupla | "ela precisa ver X", divisão de tarefas, responsável | log (pendências `@nome`) |
 | Escopo, prazo ou entrega | cortar funcionalidade, mudar o formato da demo | `decisions.md` + log |
+| Ideia ainda não decidida | "e se mostrarmos X?", alternativa boa que ficou para depois | log (`## Ideias`, `- #tema ...`) |
 
 **Não conta como importante:** explicações e conceitos, alternativas descartadas, passos intermediários de debug, ajustes cosméticos, conversa fora do projeto.
 
@@ -107,6 +111,17 @@ Fica ativo em toda conversa sobre o FirePoints. A cada resposta, veja se aparece
    - Commit do modo automático: `log(<autor>): auto — <resumo curto>`.
 5. **Avise em uma linha só**, no fim da resposta: `📌 Registrado: <itens>`. Nunca interrompa a resposta principal para isso.
 6. **Sem escrita no repo:** acumule os itens na conversa e mostre `📌 Anotado (N itens pendentes de salvar)`. Entregue o bloco pronto para colar quando chegar a 5 itens, num checkpoint ou ao fechar a sessão.
+
+## Modo 5: juntar ideias da dupla
+
+Gatilhos: "juntar ideias", "o que ela/ele pensou sobre X?", ou automaticamente no "abrir sessão" quando a `SINTESE.md` tiver um tema 🔀 ou um conflito ⚠️ ligado ao assunto de hoje.
+
+1. Leia na `SINTESE.md` as ideias e propostas da outra pessoa sobre o tema. Abra os logs citados se precisar de contexto.
+2. Compare com o que a pessoa atual pensa ou pediu e classifique: **complementares** (dá para fazer as duas), **sobrepostas** (mesma ideia com outro nome) ou **conflitantes** (uma exclui a outra).
+3. Proponha uma síntese em no máximo 5 linhas: o que fica de cada um, o que se combina e, se houver conflito, o trade-off. Não decida pela pessoa.
+4. Se ela aceitar, registre uma decisão `proposta` com o motivo "combina ideias de <A> e <B>" e a pendência `- [ ] @<outra> validar combinação #N`. Nunca descarte uma proposta da outra pessoa: registre a alternativa e deixe a decisão final para as duas.
+
+Temas usados nas ideias: `#dados`, `#filtros`, `#harmonizacao`, `#validacao`, `#app`, `#mapa`, `#docs`, `#demo`, `#infra`. Um tema novo só pode ser criado se nenhum desses servir.
 
 ## Como salvar
 
@@ -130,5 +145,6 @@ Se houver como criar um arquivo para download, entregue o log como arquivo `.md`
 - **Resumo, nunca a transcrição.** Sem cumprimentos nem tentativas descartadas.
 - **Só registrar o que a pessoa disse ou aceitou.** Na dúvida, pergunte em uma linha ("Registro X como decisão?").
 - **Nunca registrar** a MAP_KEY do FIRMS, senhas ou tokens.
+- **Nunca editar nem commitar `docs/SINTESE.md`.** Quem gera esse arquivo é o GitHub Action. Localmente, só leia ou gere a síntese na saída do terminal.
 - **Não ultrapassar o limite:** no máximo 20 linhas por log e 1–2 linhas de resposta no checkpoint.
 - **Modo automático sem ruído:** no máximo uma linha `📌` por resposta, e nenhuma quando não houver nada importante. Mesmo tema não se registra duas vezes: atualize a linha do log.

@@ -16,6 +16,9 @@ O que se queria resolver nesta sessão (1–2 linhas).
 ## Código gerado ou alterado com IA
 - `caminho/arquivo.py` — `funcao()` — gerado | alterado | revisado
 
+## Ideias (ainda não decididas)
+- #tema ideia em uma linha   *(temas: dados, filtros, harmonizacao, validacao, app, mapa, docs, demo, infra)*
+
 ## Pendências / perguntas para a dupla
 - [ ] @nome pergunta ou tarefa
 

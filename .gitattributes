@@ -1,2 +1,5 @@
 # Linhas acrescentadas pelos dois ao mesmo tempo são mantidas no merge, sem conflito
 docs/decisions.md merge=union
+
+# SINTESE.md é gerado pelo GitHub Action: não edite; em conflito, aceite qualquer lado (o Action regenera)
+docs/SINTESE.md -diff linguist-generated=true

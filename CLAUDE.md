@@ -3,7 +3,7 @@
 Projeto do NASA Space Apps 2026 (desafio "Harmonization of MODIS and VIIRS Hot Spots"), feito em dupla. Cada integrante usa o próprio Claude; o registro compartilhado fica em `docs/`.
 
 ## Antes de começar
-- Leia `docs/decisions.md` para saber o que já foi decidido. Não contradiga uma decisão `confirmada` sem apontar isso explicitamente.
+- Leia `docs/SINTESE.md`, a visão unificada da dupla que é gerada sozinha (não edite esse arquivo), e o `docs/decisions.md` para saber o que já foi decidido. Não contradiga uma decisão `confirmada` sem apontar isso explicitamente.
 - Veja as pendências abertas: `python docs/ai-log/ai_log.py pendencias`.
 
 ## Durante o trabalho

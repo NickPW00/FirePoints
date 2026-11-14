@@ -19,6 +19,17 @@ Um lugar só para as conversas da dupla com Claude (ou outra IA). Ninguém lê a
 - **Arquivos de código feitos com IA** levam no topo:
   `# AI-assisted: Claude (Anthropic). See docs/ai-log/<arquivo-do-log>.md`
 
+## Síntese da dupla: `docs/SINTESE.md`
+
+A cada push, um GitHub Action junta os registros dos dois num arquivo só:
+- **estado atual:** as decisões confirmadas;
+- **propostas de cada um** que esperam a revisão do outro;
+- **ideias por tema**, com 🔀 quando os dois tiveram ideias no mesmo tema;
+- **possíveis conflitos** ⚠️;
+- **pendências** de cada pessoa.
+
+Não edite esse arquivo. Para juntar as ideias, diga ao seu Claude **"juntar ideias"**. Ele compara o que você pensou com o que a outra pessoa pensou e propõe uma combinação.
+
 ## Skill `firepoints-registro` (recomendado)
 
 Com a skill, basta dizer **"abrir sessão"**, **"checkpoint"** ou **"fechar sessão"**. O Claude lê as decisões e pendências, analisa a conversa e salva o log (ou entrega o texto pronto para colar, se não puder fazer push).
@@ -48,12 +59,16 @@ tema: <tema-curto-sem-espacos>
 - decisão — motivo
 ## Código gerado ou alterado com IA
 - `arquivo` — `função` — gerado | alterado | revisado
+## Ideias (ainda não decididas)
+- #tema ideia em uma linha
 ## Pendências / perguntas para a dupla
 - [ ] @nome ...
 ## Referências
 
-Regras: só decisões que eu aceitei (não as sugestões que descartei); liste todo arquivo de
-código que você gerou ou alterou; se não houver nada numa seção, escreva "—".
+Regras: só decisões que eu aceitei (não as sugestões que descartei); ideias que surgiram e
+ainda não foram decididas vão em "Ideias" com um tema (#dados, #filtros, #harmonizacao,
+#validacao, #app, #mapa, #docs, #demo, #infra); liste todo arquivo de código que você gerou
+ou alterou; se não houver nada numa seção, escreva "—".
 ```
 
 ## Para quem usa Projects no claude.ai
