@@ -23,7 +23,7 @@ Definir a stack e montar a primeira versão do app seguindo `docs/contrato-dados
 - #mapa mapa como imagem lat×lon (sem basemap/WebGL): renderiza sempre na demo
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza TO 2001–2004 quase todo "muito abaixo do normal": real (fronteira agrícola) ou fator subestimando os anos iniciais?
+- [x] @mariaeliza TO 2001–2004 quase todo "muito abaixo do normal": real (fronteira agrícola) ou fator subestimando os anos iniciais? *(respondido: não é o fator — o MODIS bruto mostra a mesma queda; 24 de 26 meses marcados são da estação chuvosa, com poucos focos; 2001–2002 só Terra. Ver log 1512 da mariaeliza)*
 - [ ] @nicholas testar "Draw on map" localmente e publicar no Streamlit Cloud (entrypoint `app/streamlit_app.py`)
 
 ## Referências
