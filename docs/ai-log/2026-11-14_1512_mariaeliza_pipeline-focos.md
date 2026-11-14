@@ -13,6 +13,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 ## Decisões
 - Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — mais focos, estatística mais confiável *(decisions #10)*
 - Série harmonizada de 2003 em diante, fator por mês e região (2012–2019); 2003–2011 estimado, 2000–2002 parcial *(decisions #11)*
+- Divisão de tarefas e contrato de dados pipeline → app (`docs/contrato-dados.md`) *(decisions #13)*
 
 ## Código gerado ou alterado com IA
 - `pipeline/01_processar_focos.py` — lê o JSON direto do .zip (ijson), filtros da #4, grade 0,1° e mês em Brasília (#5), saída Parquet em `data/processed/` — gerado
@@ -25,6 +26,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 ## Pendências / perguntas para a dupla
 - [x] @mariaeliza rodar 01 e 02 com os dados reais *(feito: 17,9 mi focos S-NPP e 9,5 mi MODIS mantidos)*
 - [ ] @nicholas tratar 2000-11 a 2002-06 (só Terra MODIS; Aqua começa em 04/07/2002) na harmonização
+- [ ] @nicholas ler `docs/contrato-dados.md` e confirmar a #13 (divisão de tarefas e formato das tabelas do app)
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`)
 
 ## Referências
