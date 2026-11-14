@@ -5,7 +5,7 @@
 
 ## ✅ Estado atual (confirmado pelos dois)
 
-- —
+- **#13** Divisão: mariaeliza no pipeline, nicholas no app. O pipeline entrega tabelas prontas em `data/processed/` (série harmonizada e calendário com média, anomalia e faixa de cor) e o app só lê; área desenhada pelo usuário é somada no app a partir da `serie_harmonizada.parquet`. Colunas em `docs/contrato-dados.md` — *mariaeliza*
 
 ## ⏳ Esperando revisão da outra pessoa
 
@@ -13,7 +13,6 @@
 
 - **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
 - **#11** Série harmonizada a partir de 2003: MODIS × fator por mês e região (calibrado em 2012–2019) até 2011, VIIRS S-NPP real a partir de 2012; 2003–2011 marcado como estimado no app; nov/2000–2002 marcado como parcial (só Terra até 07/2002) — Validação deixando um ano de fora: erro anual 0,7%, mensal 3%; fator por região reduz o erro local de 12,6% para 7,7%
-- **#13** Divisão: mariaeliza no pipeline, nicholas no app. O pipeline entrega tabelas prontas em `data/processed/` (série harmonizada e calendário com média, anomalia e faixa de cor) e o app só lê; área desenhada pelo usuário é somada no app a partir da `serie_harmonizada.parquet`. Colunas em `docs/contrato-dados.md` — Cada um trabalha sem esperar o outro; app leve
 
 **Propostas de nicholas:**
 
@@ -28,7 +27,8 @@
 - **#9** Merge automático: `docs/SINTESE.md` gerado por GitHub Action a cada push; ideias nos logs com `- #tema`; skill modo 5 "juntar ideias" — Visão central sempre atualizada; a IA de cada um faz a combinação semântica
 - **#12** Divisão de tarefas: nicholas fica responsável pelo app (`app/`) — Pipeline já está com mariaeliza; trabalho em paralelo usando o schema dos Parquet como contrato
 - **#14** Stack do app: Streamlit (front + back) + pandas sobre `serie_harmonizada.parquet`; DuckDB só para o CSV dos focos individuais — Prazo curto, um deploy só (Streamlit Cloud); DuckDB evita carregar 27 mi pontos na memória
-- **#15** CSV dos focos individuais fica por último; se os pontos não estiverem no repo até domingo de manhã, oferecer só os pontos da região da demo — Todo o resto do app depende só da série harmonizada, que já está no repo
+- **#15** CSV dos focos individuais fica por último; se os pontos não estiverem no repo até domingo de manhã, oferecer só os pontos da região da demo — Todo o resto do app depende só da série harmonizada, que já está no repo *(substituição proposta em #17)*
+- **#17** CSV dos focos lê `focos/ano=*/` via DuckDB, só os anos do período, até 1,5 mi pontos por download — Pontos já estão no repo; plano B da #15 não é mais necessário
 
 ## 💡 Ideias por tema
 
@@ -42,11 +42,11 @@
 
 ### #mapa
 
-- mapa como raster lat×lon (sem basemap/WebGL): sempre renderiza na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
+- mapa como imagem lat×lon (sem basemap/WebGL): renderiza sempre na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
 ### #validacao
 
-- gráfico MODIS×k vs VIIRS 2012–2026: razão ≈1,00 em 2012–2019 e +5–11% em 2023–2026 (deriva orbital) → bom argumento na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
+- gráfico MODIS×k vs VIIRS: razão ≈1,00 em 2012–2019, +5–11% em 2023–2026 (deriva) → usar na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
 ## ⚠️ Possíveis conflitos ou sobreposições
 
@@ -62,7 +62,7 @@
 - [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 - [ ] @mariaeliza ressincronizar o clone após o force-push: `git fetch origin && git reset --hard origin/main` (salvar antes o que não foi enviado) ([log](ai-log/2026-11-14_1611_nicholas_git-autoria.md))
 - [ ] @mariaeliza conferir `git config user.email` — deve ser `217095895+Mariaeliza07@users.noreply.github.com`, senão os commits vão para a conta "clara" ([log](ai-log/2026-11-14_1611_nicholas_git-autoria.md))
-- [ ] @mariaeliza subir os pontos particionados por ano em `data/processed/focos/ano=AAAA/` (colunas do 01; o app lê sozinho) ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
+- [ ] @mariaeliza TO 2001–2004 quase todo "muito abaixo do normal": real (fronteira agrícola) ou fator subestimando os anos iniciais? ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
 **@nicholas:**
 
@@ -71,5 +71,5 @@
 - [ ] @nicholas ler `docs/contrato-dados.md` e confirmar a #13 (divisão de tarefas e formato das tabelas do app) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas os pontos estão em `data/processed/focos/ano=AAAA/` (como pedido); colunas: lat, lon, data, sensor, confianca, frp, dia_noite, bioma, estado — sem gi/gj/origem (ver contrato 2c) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
-- [ ] @nicholas testar o "Draw on map" localmente (não deu para testar sem internet) ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
+- [ ] @nicholas testar "Draw on map" localmente e publicar no Streamlit Cloud (entrypoint `app/streamlit_app.py`) ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
