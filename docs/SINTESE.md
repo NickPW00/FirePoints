@@ -47,12 +47,12 @@
 
 - [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
 - [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
-- [ ] @mariaeliza rodar 01 e 02 com os dados reais e compartilhar o gráfico ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @mariaeliza ressincronizar o clone após o force-push: `git fetch origin && git reset --hard origin/main` (salvar antes o que não foi enviado) ([log](ai-log/2026-11-14_1611_nicholas_git-autoria.md))
 - [ ] @mariaeliza conferir `git config user.email` — deve ser `217095895+Mariaeliza07@users.noreply.github.com`, senão os commits vão para a conta "clara" ([log](ai-log/2026-11-14_1611_nicholas_git-autoria.md))
 
 **@nicholas:**
 
 - [ ] @nicholas definir responsáveis de cada documento do plano ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
+- [ ] @nicholas tratar 2000-11 a 2002-06 (só Terra MODIS; Aqua começa em 04/07/2002) na harmonização ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 
