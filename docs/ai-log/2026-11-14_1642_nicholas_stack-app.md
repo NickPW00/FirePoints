@@ -24,7 +24,7 @@ Definir a stack e montar a primeira versão do app seguindo `docs/contrato-dados
 
 ## Pendências / perguntas para a dupla
 - [x] @mariaeliza TO 2001–2004 quase todo "muito abaixo do normal": real (fronteira agrícola) ou fator subestimando os anos iniciais? *(respondido: não é o fator — o MODIS bruto mostra a mesma queda; 24 de 26 meses marcados são da estação chuvosa, com poucos focos; 2001–2002 só Terra. Ver log 1512 da mariaeliza)*
-- [ ] @nicholas testar "Draw on map" localmente e publicar no Streamlit Cloud (entrypoint `app/streamlit_app.py`)
+- [x] @nicholas publicar no Streamlit Cloud: https://firepoints.streamlit.app (Python 3.13, `app/streamlit_app.py`); "Draw on map" testado ok (tiles OSM; CARTO passou a exigir API key)
 
 ## Referências
 - Conferência: contagens do app = `calendario.parquet` (Brasil, dif. máx. 0,06 foco); pontos RJ 2024 = grade (8.201)
