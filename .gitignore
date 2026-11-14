@@ -1,6 +1,9 @@
-# Dados brutos e processados ficam fora do Git (arquivos grandes)
-data/
-graficos/
+# Arquivos grandes ficam fora do Git (o GitHub recusa arquivos acima de 100 MB).
+# Os dados brutos se baixam de novo pelo FIRMS e pelo IBGE: ver docs/ai-log (pipeline-focos).
+*.zip
+data/raw/
+data/processed/focos_*.parquet
+log_processamento.txt
 __pycache__/
 .env
 .streamlit/secrets.toml
