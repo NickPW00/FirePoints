@@ -9,6 +9,10 @@
 
 ## ⏳ Esperando revisão da outra pessoa
 
+**Propostas de mariaeliza:**
+
+- **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
+
 **Propostas de nicholas:**
 
 - **#1** Centralizar no próprio repo o que cada um conversa com sua IA (`docs/ai-log/` + este arquivo) — Fica junto do código, funciona com qualquer IA e alimenta a declaração de uso de IA
@@ -43,8 +47,10 @@
 
 - [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
 - [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
+- [ ] @mariaeliza rodar 01 e 02 com os dados reais e compartilhar o gráfico ([log](ai-log/2026-11-14_1512_clara_pipeline-focos.md))
 
 **@nicholas:**
 
 - [ ] @nicholas definir responsáveis de cada documento do plano ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
+- [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_clara_pipeline-focos.md))
 
