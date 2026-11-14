@@ -7,9 +7,10 @@ Prepara os focos individuais (pontos) para o download em CSV do app.
 Os arquivos focos_modis.parquet e focos_snpp.parquet passam de 100 MB e não cabem
 no GitHub. Este script divide por ano e sensor, já com o bioma e o estado de cada foco:
 
-  data/processed/focos/focos_<ano>_<sensor>.parquet
+  data/processed/focos/ano=<ano>/focos_<ano>_<sensor>.parquet   (partição por ano, como o app espera)
 
-O app lê só os anos do período escolhido, filtra a região e gera o CSV.
+O app lê com DuckDB: read_parquet('data/processed/focos/ano=*/*.parquet', hive_partitioning=true),
+filtra o período e a região e gera o CSV.
 
 Entrada:  data/processed/focos_modis.parquet, focos_snpp.parquet (01) e quadradinhos.parquet (04)
 Como rodar:  python 05_exportar_focos.py
@@ -49,7 +50,9 @@ def main():
             for col in ("sensor", "dia_noite", "bioma", "estado"):
                 df[col] = df[col].astype("category")
             df = df.sort_values(["data", "estado"]).reset_index(drop=True)
-            destino = SAIDA / f"focos_{ano}_{sensor}.parquet"
+            pasta_ano = SAIDA / f"ano={ano}"
+            pasta_ano.mkdir(exist_ok=True)
+            destino = pasta_ano / f"focos_{ano}_{sensor}.parquet"
             df.to_parquet(destino, index=False, compression="zstd")
             mb = destino.stat().st_size / 1e6
             resumo.append((ano, sensor, len(df), mb))

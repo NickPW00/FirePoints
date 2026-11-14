@@ -42,8 +42,9 @@ Sugestão para o app: duas visões do calendário, **Intensidade** (`faixa_inten
 Cada quadradinho (`gi`, `gj`, `lat_centro`, `lon_centro`) com o seu `bioma`, `estado` e `estado_nome`. O app junta com a tabela 1 para filtrar o mapa por estado.
 O estado é o do centro do quadradinho; quadradinhos na divisa contam para um só estado.
 
-## 2c. `focos/focos_<ano>_<sensor>.parquet` — para o download em CSV ✅ (42 arquivos, 27,4 milhões de focos, 267 MB) (`pipeline/05_exportar_focos.py`)
-Cada foco detectado (ponto), dividido por ano e sensor (`modis` ou `snpp`) para caber no GitHub. O app lê só os anos do período escolhido, filtra a região e gera o CSV.
+## 2c. `focos/ano=<ano>/focos_<ano>_<sensor>.parquet` — para o download em CSV ✅ (42 arquivos, 27,4 milhões de focos, 267 MB) (`pipeline/05_exportar_focos.py`)
+Cada foco detectado (ponto), dividido por ano e sensor (`modis` ou `snpp`) para caber no GitHub, em pastas `ano=AAAA/` (partição Hive). Leitura no app: `read_parquet('data/processed/focos/ano=*/*.parquet', hive_partitioning=true)` — a coluna `ano` vem da pasta.
+Cópia idêntica dos mesmos arquivos também fica solta em `focos/` (o Git guarda uma vez só). Diferente das colunas do 01: sem `gi`, `gj` e `origem`; com `bioma` e `estado`.
 
 | Coluna | Tipo | O que é |
 |---|---|---|

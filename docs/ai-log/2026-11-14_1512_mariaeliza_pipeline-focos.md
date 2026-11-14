@@ -31,6 +31,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - [ ] @nicholas tratar 2000-11 a 2002-06 (só Terra MODIS; Aqua começa em 04/07/2002) na harmonização
 - [ ] @nicholas ler `docs/contrato-dados.md` e confirmar a #13 (divisão de tarefas e formato das tabelas do app)
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`)
+- [ ] @nicholas os pontos estão em `data/processed/focos/ano=AAAA/` (como pedido); colunas: lat, lon, data, sensor, confianca, frp, dia_noite, bioma, estado — sem gi/gj/origem (ver contrato 2c)
 
 ## Referências
 - FIRMS Archive Download: pedidos 848817 (MODIS C6.1) e 848820 (S-NPP), Brasil, JSON; S-NPP disponível só até 02/11/2026; arquivo `archive` do S-NPP tem 7,9 GB descompactado
