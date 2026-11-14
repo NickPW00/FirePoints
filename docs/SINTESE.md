@@ -56,10 +56,6 @@
 
 ## 📋 Pendências abertas
 
-**@mariaeliza:**
-
-- [ ] @mariaeliza TO 2001–2004 quase todo "muito abaixo do normal": real (fronteira agrícola) ou fator subestimando os anos iniciais? ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
-
 **@nicholas:**
 
 - [ ] @nicholas definir responsáveis de cada documento do plano ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
