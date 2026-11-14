@@ -13,6 +13,7 @@
 
 - **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
 - **#11** Série harmonizada a partir de 2003: MODIS × fator por mês e região (calibrado em 2012–2019) até 2011, VIIRS S-NPP real a partir de 2012; 2003–2011 marcado como estimado no app; nov/2000–2002 marcado como parcial (só Terra até 07/2002) — Validação deixando um ano de fora: erro anual 0,7%, mensal 3%; fator por região reduz o erro local de 12,6% para 7,7%
+- **#13** Divisão: mariaeliza no pipeline, nicholas no app. O pipeline entrega tabelas prontas em `data/processed/` (série harmonizada e calendário com média, anomalia e faixa de cor) e o app só lê; área desenhada pelo usuário é somada no app a partir da `serie_harmonizada.parquet`. Colunas em `docs/contrato-dados.md` — Cada um trabalha sem esperar o outro; app leve
 
 **Propostas de nicholas:**
 
@@ -63,5 +64,6 @@
 
 - [ ] @nicholas definir responsáveis de cada documento do plano ([log](ai-log/2026-11-14_1430_nicholas_documentacao.md))
 - [ ] @nicholas tratar 2000-11 a 2002-06 (só Terra MODIS; Aqua começa em 04/07/2002) na harmonização ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas ler `docs/contrato-dados.md` e confirmar a #13 (divisão de tarefas e formato das tabelas do app) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 
