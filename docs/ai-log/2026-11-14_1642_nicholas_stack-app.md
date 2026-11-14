@@ -5,24 +5,26 @@ ferramenta: Claude
 tema: stack-app
 ---
 
-# Stack e divisão do app — 2026-11-14 — nicholas
+# Stack e 1ª versão do app — 2026-11-14 — nicholas
 
 ## Objetivo
-Definir a stack do projeto e quem fica com o app.
+Definir a stack e montar a primeira versão do app sobre os dados já no repo.
 
 ## Decisões
-- nicholas fica com o app (`app/`); avisa se mudar *(decisions #12)*
+- nicholas fica com o app (`app/`) *(decisions #12)*
+- Stack: Streamlit + pandas sobre `serie_harmonizada.parquet`; DuckDB só no CSV de pontos *(decisions #14)*
+- CSV de pontos por último; sem os pontos até dom. de manhã → só a região da demo *(decisions #15)*
 
 ## Código gerado ou alterado com IA
-—
+- `app/streamlit_app.py` (UI: área, período, abas), `app/data.py` (área, contagens, anomalia, pontos via DuckDB), `app/charts.py` (calendário, anomalia, mapa, método), `app/requirements.txt` — gerado
 
 ## Ideias (ainda não decididas)
-- #app stack: Streamlit (front + back num app só), lendo Parquet pré-processado; plotly no calendário; folium + Draw só para escolher a área (células agregadas no mapa, nunca focos brutos)
-- #app DuckDB só no CSV dos focos da busca: consulta `focos_*.parquet` (27 mi pontos) por bbox + período sem carregar tudo na memória; calendário/anomalia seguem com pandas sobre `grade_mensal`/`serie_harmonizada`
-- #infra `focos_*.parquet` não vai para o GitHub (>100 MB): particionar por ano ou hospedar fora (Release/Hugging Face) para o app em produção
+- #mapa mapa como raster lat×lon (sem basemap/WebGL): sempre renderiza na demo
+- #validacao gráfico MODIS×k vs VIIRS 2012–2026: razão ≈1,00 em 2012–2019 e +5–11% em 2023–2026 (deriva orbital) → bom argumento na demo
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza informar o tamanho de `focos_modis.parquet` e `focos_snpp.parquet` (define onde hospedar os pontos para o CSV da busca)
+- [ ] @mariaeliza subir os pontos particionados por ano em `data/processed/focos/ano=AAAA/` (colunas do 01; o app lê sozinho)
+- [ ] @nicholas testar o "Draw on map" localmente (não deu para testar sem internet)
 
 ## Referências
 —
