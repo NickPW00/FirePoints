@@ -1,0 +1,10 @@
+# App dependencies (Streamlit Community Cloud reads this file next to the entrypoint)
+streamlit==1.67.0
+pandas>=2.2
+numpy>=2.0
+pyarrow>=17
+plotly==7.1.0
+folium==0.20.0
+streamlit-folium>=0.25
+shapely>=2.0
+duckdb>=1.1
