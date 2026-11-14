@@ -35,6 +35,12 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`)
 - [ ] @nicholas os pontos estão em `data/processed/focos/ano=AAAA/` (como pedido); colunas: lat, lon, data, sensor, confianca, frp, dia_noite, bioma, estado — sem gi/gj/origem (ver contrato 2c)
 
+- [ ] @nicholas (pedidos de melhoria do app, da mariaeliza) mapa com as divisas dos estados e a sigla de cada um
+- [ ] @nicholas explicar melhor o que cada gráfico mostra, principalmente o mapa do Brasil (título claro + uma frase de leitura + legenda das cores)
+- [ ] @nicholas ao selecionar uma região, destacá-la sem cortar o mapa: o Brasil inteiro continua visível e a região fica em evidência (referência: mapa da Globo https://share.google/FZ8TOfijHjce0dI4b)
+- [ ] @nicholas zoom e arraste no mapa como no Google Maps, para ver a localidade de perto
+- [ ] @nicholas melhorar o design; se ajudar, animações para a experiência do usuário
+
 ## Referências
 - FIRMS Archive Download: pedidos 848817 (MODIS C6.1) e 848820 (S-NPP), Brasil, JSON; S-NPP disponível só até 02/11/2026; arquivo `archive` do S-NPP tem 7,9 GB descompactado
 - Resultado real: razão S-NPP/MODIS = 3,82 em 2012–2019, caindo para 3,4–3,6 em 2023–2025 → reforça calibrar só em 2012–2019 (#6)
