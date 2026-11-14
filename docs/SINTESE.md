@@ -63,4 +63,9 @@
 - [ ] @nicholas ler `docs/contrato-dados.md` e confirmar a #13 (divisão de tarefas e formato das tabelas do app) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas os pontos estão em `data/processed/focos/ano=AAAA/` (como pedido); colunas: lat, lon, data, sensor, confianca, frp, dia_noite, bioma, estado — sem gi/gj/origem (ver contrato 2c) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas (pedidos de melhoria do app, da mariaeliza) mapa com as divisas dos estados e a sigla de cada um ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas explicar melhor o que cada gráfico mostra, principalmente o mapa do Brasil (título claro + uma frase de leitura + legenda das cores) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas ao selecionar uma região, destacá-la sem cortar o mapa: o Brasil inteiro continua visível e a região fica em evidência (referência: mapa da Globo https://share.google/FZ8TOfijHjce0dI4b) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas zoom e arraste no mapa como no Google Maps, para ver a localidade de perto ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
+- [ ] @nicholas melhorar o design; se ajudar, animações para a experiência do usuário ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 
