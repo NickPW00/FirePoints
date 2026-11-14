@@ -25,16 +25,23 @@
 - **#7** Skill `firepoints-registro` (abrir sessão / checkpoint / fechar sessão) versionada em `.claude/skills/`; cada um instala na própria conta — Padroniza leitura e salvamento do registro nos dois Claudes
 - **#8** Skill passa a registrar automaticamente (modo 4) o que for importante e a abrir a sessão sozinha; incerto → pergunta em 1 linha — Não depender de lembrar dos comandos; menos coisa perdida entre os dois Claudes
 - **#9** Merge automático: `docs/SINTESE.md` gerado por GitHub Action a cada push; ideias nos logs com `- #tema`; skill modo 5 "juntar ideias" — Visão central sempre atualizada; a IA de cada um faz a combinação semântica
+- **#12** Divisão de tarefas: nicholas fica responsável pelo app (`app/`) — Pipeline já está com mariaeliza; trabalho em paralelo usando o schema dos Parquet como contrato
 
 ## 💡 Ideias por tema
 
-### #app
+### #app 🔀 *ideias dos dois — combinar*
 
 - incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
+- stack: Streamlit (front + back num app só), lendo Parquet pré-processado; plotly no calendário; folium + Draw só para escolher a área (células agregadas no mapa, nunca focos brutos) — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
+- DuckDB só no CSV dos focos da busca: consulta `focos_*.parquet` (27 mi pontos) por bbox + período sem carregar tudo na memória; calendário/anomalia seguem com pandas sobre `grade_mensal`/`serie_harmonizada` — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
 ### #dados
 
 - recortar a análise para o estado do Rio de Janeiro (nenhuma decisão atual limita a região) — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
+
+### #infra
+
+- `focos_*.parquet` não vai para o GitHub (>100 MB): particionar por ano ou hospedar fora (Release/Hugging Face) para o app em produção — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
 ## ⚠️ Possíveis conflitos ou sobreposições
 
@@ -50,6 +57,7 @@
 - [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 - [ ] @mariaeliza ressincronizar o clone após o force-push: `git fetch origin && git reset --hard origin/main` (salvar antes o que não foi enviado) ([log](ai-log/2026-11-14_1611_nicholas_git-autoria.md))
 - [ ] @mariaeliza conferir `git config user.email` — deve ser `217095895+Mariaeliza07@users.noreply.github.com`, senão os commits vão para a conta "clara" ([log](ai-log/2026-11-14_1611_nicholas_git-autoria.md))
+- [ ] @mariaeliza informar o tamanho de `focos_modis.parquet` e `focos_snpp.parquet` (define onde hospedar os pontos para o CSV da busca) ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 
 **@nicholas:**
 
