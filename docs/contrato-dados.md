@@ -19,7 +19,7 @@ Uma linha por quadradinho de 0,1° × mês. Usar para o **mapa** e para a **áre
 
 Período: nov/2000 a out/2026. Meses sem nenhum foco não aparecem (tratar como 0).
 
-## 2. `calendario.parquet` — pronto para gerar ✅ (`pipeline/04_calendario.py`)
+## 2. `calendario.parquet` — pronto ✅ (`pipeline/04_calendario.py`)
 Uma linha por região × ano × mês, de nov/2000 a out/2026, **com os meses sem foco preenchidos com 0**. Usar para o **calendário** (grade meses × anos).
 
 | Coluna | Tipo | O que é |
