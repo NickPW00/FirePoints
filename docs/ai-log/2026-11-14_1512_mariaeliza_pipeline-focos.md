@@ -21,7 +21,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - —
 
 ## Pendências / perguntas para a dupla
-- [x] @mariaeliza rodar 01 e 02 com os dados reais *(feito 16:1x: 17,9 mi focos S-NPP e 9,5 mi MODIS mantidos)*
+- [x] @mariaeliza rodar 01 e 02 com os dados reais *(feito: 17,9 mi focos S-NPP e 9,5 mi MODIS mantidos)*
 - [ ] @nicholas tratar 2000-11 a 2002-06 (só Terra MODIS; Aqua começa em 04/07/2002) na harmonização
 - [ ] @nicholas revisar os scripts em `pipeline/` (também criados `requirements.txt` e `.gitignore` com `data/`)
 
