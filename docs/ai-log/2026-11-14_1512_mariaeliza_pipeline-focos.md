@@ -21,6 +21,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - `pipeline/03_harmonizar.py` — fator k por bioma × mês (2012–2019), validação deixando um ano de fora, série harmonizada com status observado/estimado/parcial — gerado
 - `pipeline/04_calendario.py` — calendário por Brasil, bioma e estado (IBGE BR_UF_2024): média do mês 2003–2025, anomalia, faixas de cor 1–5 — gerado
 - `pipeline/05_exportar_focos.py` — focos individuais divididos por ano e sensor, com bioma e estado, para o CSV do app — gerado
+- `docs/METHODOLOGY.md` — metodologia em inglês para os juízes (dados, filtros, harmonização por bioma, validação, calendário, limitações) — gerado
 
 ## Ideias (ainda não decididas)
 - —
