@@ -22,7 +22,7 @@ Definir quais documentos a equipe precisa entregar no Space Apps e criar um luga
 
 ## Pendências / perguntas para a dupla
 - [ ] @mariaeliza revisar as decisões #3–#6 e marcar como `confirmada` ou propor mudança
-- [ ] @mariaeliza criar o primeiro log dela usando o `_template.md`
+- [x] @mariaeliza criar o primeiro log dela usando o `_template.md` *(feito: log 1510)*
 - [ ] @nicholas definir responsáveis de cada documento do plano
 
 ## Referências

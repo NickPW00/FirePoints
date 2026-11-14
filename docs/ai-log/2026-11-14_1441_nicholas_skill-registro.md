@@ -18,7 +18,7 @@ Criar uma skill que faça leitura, análise e salvamento do registro no começo,
 - `docs/ai-log/README.md` — alterado (seção da skill)
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza instalar a skill na conta dela (zip da pasta → Configurações → Skills) e testar "abrir sessão"
+- [x] @mariaeliza instalar a skill na conta dela (zip da pasta → Configurações → Skills) e testar "abrir sessão" *(dispensado: a skill carrega pelo repo)*
 
 ## Referências
 - —

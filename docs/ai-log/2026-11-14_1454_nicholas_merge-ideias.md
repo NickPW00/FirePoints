@@ -22,7 +22,7 @@ Juntar automaticamente as decisões e ideias dos dois num lugar central.
 - —
 
 ## Pendências / perguntas para a dupla
-- [ ] @mariaeliza reinstalar a skill (zip novo) e testar "juntar ideias"
+- [x] @mariaeliza reinstalar a skill (zip novo) e testar "juntar ideias" *(dispensado: a skill carrega pelo repo)*
 
 ## Referências
 - —
