@@ -19,19 +19,28 @@ Uma linha por quadradinho de 0,1° × mês. Usar para o **mapa** e para a **áre
 
 Período: nov/2000 a out/2026. Meses sem nenhum foco não aparecem (tratar como 0).
 
-## 2. `calendario.parquet` — em construção ⏳ (`pipeline/04_calendario.py`)
-Uma linha por região × ano × mês. Usar para o **calendário** (grade meses × anos).
+## 2. `calendario.parquet` — pronto para gerar ✅ (`pipeline/04_calendario.py`)
+Uma linha por região × ano × mês, de nov/2000 a out/2026, **com os meses sem foco preenchidos com 0**. Usar para o **calendário** (grade meses × anos).
 
 | Coluna | Tipo | O que é |
 |---|---|---|
-| `regiao_tipo` | texto | `brasil`, `bioma` ou `estado` (estado depende do contorno de UFs do IBGE) |
-| `regiao` | texto | nome da região (ex.: `Brasil`, `Cerrado`, `RJ`) |
-| `ano`, `mes` | int | |
+| `regiao_tipo` | texto | `brasil`, `bioma` ou `estado` |
+| `regiao` | texto | `Brasil`, nome do bioma ou sigla da UF (ex.: `RJ`) |
+| `regiao_nome` | texto | nome por extenso (ex.: `Rio de Janeiro`) |
+| `ano`, `mes` | int | mês no horário de Brasília |
 | `focos` | float | focos na escala VIIRS |
-| `status` | texto | igual à tabela 1 |
-| `media_mes` | float | média histórica daquele mês na região (2003–2025) |
+| `status` | texto | igual à tabela 1 (`observado`, `estimado`, `parcial`) |
+| `media_mes` | float | média histórica daquele mês na região (anos completos 2003–2025) |
 | `anomalia_pct` | float | `(focos ÷ media_mes − 1) × 100` |
-| `faixa` | int 1–5 | faixa de cor (1 = muito abaixo do normal … 5 = muito acima), para a escala acessível |
+| `faixa_anomalia` | int 1–5 | cor da comparação com o normal: 1 muito abaixo (<0,5×), 2 abaixo (0,5–0,8×), 3 normal (0,8–1,25×), 4 acima (1,25–2×), 5 muito acima (>2×) |
+| `faixa_anomalia_nome` | texto | o mesmo em palavras |
+| `faixa_intensidade` | int 0–5 | cor da quantidade de focos: 0 sem focos; 1–5 quintis dos meses com focos daquela região |
+
+Sugestão para o app: duas visões do calendário, **Intensidade** (`faixa_intensidade`) e **Comparado ao normal** (`faixa_anomalia`), com escala acessível para daltonismo.
+
+## 2b. `quadradinhos.parquet` — gerado junto com o calendário
+Cada quadradinho (`gi`, `gj`, `lat_centro`, `lon_centro`) com o seu `bioma`, `estado` e `estado_nome`. O app junta com a tabela 1 para filtrar o mapa por estado.
+O estado é o do centro do quadradinho; quadradinhos na divisa contam para um só estado.
 
 ## 3. Arquivos de apoio
 - `fatores_bioma_mes.csv` — fator S-NPP ÷ MODIS por bioma e mês (calibrado em 2012–2019).

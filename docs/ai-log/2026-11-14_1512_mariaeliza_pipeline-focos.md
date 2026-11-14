@@ -19,6 +19,7 @@ Baixar MODIS e VIIRS S-NPP do FIRMS (Brasil) e montar o primeiro processamento d
 - `pipeline/01_processar_focos.py` — lê o JSON direto do .zip (ijson), filtros da #4, grade 0,1° e mês em Brasília (#5), saída Parquet em `data/processed/` — gerado
 - `pipeline/02_comparar_sensores.py` — gráfico mensal MODIS × S-NPP e razão média no período comum — gerado
 - `pipeline/03_harmonizar.py` — fator k por bioma × mês (2012–2019), validação deixando um ano de fora, série harmonizada com status observado/estimado/parcial — gerado
+- `pipeline/04_calendario.py` — calendário por Brasil, bioma e estado (IBGE BR_UF_2024): média do mês 2003–2025, anomalia, faixas de cor 1–5 — gerado
 
 ## Ideias (ainda não decididas)
 - —
