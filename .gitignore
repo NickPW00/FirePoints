@@ -1,0 +1,6 @@
+# Dados brutos e processados ficam fora do Git (arquivos grandes)
+data/
+graficos/
+__pycache__/
+.env
+.streamlit/secrets.toml
