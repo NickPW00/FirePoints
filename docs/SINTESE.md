@@ -23,7 +23,13 @@
 
 ## 💡 Ideias por tema
 
-- —
+### #app
+
+- incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
+
+### #dados
+
+- recortar a análise para o estado do Rio de Janeiro (nenhuma decisão atual limita a região) — *mariaeliza* ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
 
 ## ⚠️ Possíveis conflitos ou sobreposições
 
@@ -32,6 +38,10 @@
 - —
 
 ## 📋 Pendências abertas
+
+**@mariaeliza:**
+
+- [ ] @mariaeliza revisar as decisões #3–#6 ([log](ai-log/2026-11-14_1510_clara_revisao-inicial.md))
 
 **@nicholas:**
 
