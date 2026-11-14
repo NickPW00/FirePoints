@@ -111,7 +111,7 @@ if mode == "Draw on map":
     from streamlit_folium import st_folium
 
     st.markdown("Draw a **rectangle** or **polygon** on the map. The last shape drawn is used.")
-    fmap = folium.Map(location=[-14, -52], zoom_start=4, tiles="cartodbpositron")
+    fmap = folium.Map(location=[-14, -52], zoom_start=4, tiles="OpenStreetMap")
     Draw(export=False, draw_options={"polyline": False, "circle": False, "marker": False,
                                      "circlemarker": False, "polygon": True, "rectangle": True}).add_to(fmap)
     out = st_folium(fmap, height=420, use_container_width=True,  # streamlit-folium API
