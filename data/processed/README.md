@@ -12,6 +12,8 @@
 | `quadradinhos.parquet` | `04_calendario.py` | Each grid cell with its biome and state |
 | `ufs_simplificado.geojson` | `07_divisas.py` | State borders (IBGE 2024), simplified for the map, with UF, name and region |
 | `municipios/<UF>.geojson` | `07_divisas.py` | Municipal borders (IBGE 2024) of each state, simplified for the map |
+| `grade_fina.parquet` | `08_grade_fina.py` | Harmonized counts on a 0.025° grid (≈2.8 km) per month, only for the map picture |
+| `cidades.json` | `09_cidades.py` | City names for the map labels (GeoNames, CC BY 4.0) |
 | `focos/ano=<year>/focos_<year>_<sensor>.parquet` | `05_exportar_focos.py` | Individual detections (raw, not harmonized), split by year and sensor |
 | `teste_previsao.csv` | `06_teste_previsao.py` | Outlook test: forecast error by region and horizon (METHODOLOGY § 8); not used by the app |
 

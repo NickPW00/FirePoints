@@ -8,3 +8,4 @@ tzdata
 geopandas
 pyogrio
 shapely
+geonamescache   # only for pipeline/09_cidades.py (city names of the map)
