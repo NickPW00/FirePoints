@@ -19,7 +19,7 @@ NASA's MODIS sensors (Terra and Aqua) have recorded active fires since 2000 but 
 ## What we built
 
 1. **Harmonized series, Nov 2000 – Oct 2026.** VIIRS S-NPP detections where they exist; before February 2012, MODIS counts converted to the VIIRS scale with a factor for each **biome and month**, calibrated on 2012–2019, when both sensors overlap and the MODIS orbits were stable.
-2. **Validation.** Leaving each year of 2012–2019 out in turn, the predicted national total differs from the observed VIIRS total by **0.9% on average** (per biome: 1.3% Amazônia to 7.4% Pampa).
+2. **Validation.** Leaving each year of 2012–2019 out in turn, the predicted national total differs from the observed VIIRS total by **0.9% on average** (per biome: 1.3% Amazon to 7.4% Pampa).
 3. **Burning calendar** for Brazil, its 6 biomes and 27 states: detections per month, the month's historical mean, the anomaly (for example "+37% above normal") and accessible color classes for intensity and anomaly.
 4. **Web app** (Streamlit): choose a state, a biome or draw an area, pick a period, read the calendar and anomalies on a map, and download the detections as CSV.
 5. **Transparency:** every month is labelled *observed*, *estimated* (2003–Jan 2012) or *partial* (Nov 2000–2002, when only Terra flew).
@@ -72,6 +72,8 @@ The solution idea is entirely the team's own. We developed it with the help of *
 | **NASA** — FIRMS | VIIRS S-NPP 375 m active fires, Collection 2 (standard VNP14IMGT + near-real-time VNP14IMGTDL_NRT) | [FIRMS Archive Download](https://firms.modaps.eosdis.nasa.gov/download/), area = Brazil, JSON | [doi:10.5067/FIRMS/VIIRS/VNP14IMGT_NRT.002](https://doi.org/10.5067/FIRMS/VIIRS/VNP14IMGT_NRT.002) |
 | **IBGE** | Biomes of Brazil, 1:250,000 (2019) — `Biomas_250mil.zip` | [geoftp.ibge.gov.br — biomas/vetores](https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/) | Free use with attribution |
 | **IBGE** | State boundaries, 2024 territorial mesh — `BR_UF_2024.zip` | [geoftp.ibge.gov.br — malhas municipais 2024](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | Free use with attribution |
+| **IBGE** | Municipal boundaries, 2024 territorial mesh — `BR_Municipios_2024.zip` (map borders of the selected area) | [geoftp.ibge.gov.br — malhas municipais 2024](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | Free use with attribution |
+| **Esri World Light Gray Canvas** | Basemap and place-name tiles of the app map (no API key) | [Esri attribution](https://www.esri.com/en-us/legal/terms/data-attributions) · [openstreetmap.org/copyright](https://www.openstreetmap.org/copyright) | Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors |
 | **OpenStreetMap** contributors | Basemap of the app's map (loaded live through folium) | OpenStreetMap standard tiles | © OpenStreetMap contributors, [ODbL](https://www.openstreetmap.org/copyright) |
 
 FIRMS downloads require a free [NASA Earthdata Login](https://urs.earthdata.nasa.gov) account. Full download steps: [`docs/DATA.md`](docs/DATA.md).
@@ -106,4 +108,4 @@ All open source. Versions in [`requirements.txt`](requirements.txt) (pipeline) a
 
 We acknowledge the use of data and imagery from NASA's Fire Information for Resource Management System ([FIRMS](https://www.earthdata.nasa.gov/data/tools/firms)), part of NASA's Earth Observing System Data and Information System (EOSDIS). Biome and state boundaries: IBGE (Instituto Brasileiro de Geografia e Estatística). Basemap: © OpenStreetMap contributors.
 
-Full reference list in APA 7 format: [`docs/METHODOLOGY.md` § 9](docs/METHODOLOGY.md#9-references).
+Full reference list in APA 7 format: [`docs/METHODOLOGY.md` § 10](docs/METHODOLOGY.md#10-references).

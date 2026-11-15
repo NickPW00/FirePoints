@@ -11,7 +11,7 @@ tema: contraste-tema
 Avaliar o que vale aplicar do Brand Guide do Space Apps no app e na demo, e corrigir o que custa pouco no site.
 
 ## Decisões
-- Cor principal do app (`primaryColor`) de `#d94801` para `#c44100`: botões e links passam de 4,5:1 (antes 4,19:1 no fundo e 4,31:1 sob texto branco; agora 5,0:1 e 5,1:1) *(decisions #29)*
+- Cor principal do app (`primaryColor`) de `#d94801` para `#c44100`: botões e links passam de 4,5:1 (antes 4,19:1 no fundo e 4,31:1 sob texto branco; agora 5,0:1 e 5,1:1) *(decisions #31)*
 
 ## Código gerado ou alterado com IA
 - `.streamlit/config.toml` — `primaryColor` — alterado

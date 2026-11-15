@@ -31,16 +31,17 @@ https://doi.org/10.5067/FIRMS/MODIS/MCD14ML
 NASA FIRMS. (2026). *VIIRS (S-NPP) I band 375 m active fire product VNP14IMGT* [Data set]. NASA Fire Information for Resource Management System.\
 https://doi.org/10.5067/FIRMS/VIIRS/VNP14IMGT_NRT.002
 
-Full reference list: [`METHODOLOGY.md` § 9](METHODOLOGY.md#9-references).
+Full reference list: [`METHODOLOGY.md` § 10](METHODOLOGY.md#10-references).
 
 ## 2. Boundaries — IBGE
 
 | Dataset | File | Used for |
 |---|---|---|
 | Biomes of Brazil, 1:250,000 (2019) | `Biomas_250mil.zip` — [geoftp.ibge.gov.br/…/biomas/vetores/](https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/) | biome of each 0.1° cell → harmonization factors |
-| States (Unidades da Federação), 2024 territorial mesh | `BR_UF_2024.zip` — [geoftp.ibge.gov.br/…/municipio_2024/Brasil/](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | state of each cell → state calendars |
+| States (Unidades da Federação), 2024 territorial mesh | `BR_UF_2024.zip` — [geoftp.ibge.gov.br/…/municipio_2024/Brasil/](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | state of each cell → state calendars; smooth state borders on the map (`07_divisas.py`) |
+| Municipalities, 2024 territorial mesh | `BR_Municipios_2024.zip` — same folder | municipal borders of the selected area on the map (`07_divisas.py`) |
 
-Both zips can stay compressed inside the project folder.
+The zips can stay compressed inside the project folder. IBGE data are public; the source must be cited and changes must be stated: the data keep the IBGE biome names, and the app shows **Amazon** and **Atlantic Forest** in English (Cerrado, Caatinga, Pantanal and Pampa are used as they are in English); borders are simplified for display.
 
 **Citation (APA 7):**
 
@@ -64,6 +65,8 @@ The app's map draws OpenStreetMap standard tiles under the data (loaded live by 
 | `validacao_harmonizacao.csv` | 03 | leave-one-year-out error per biome |
 | `calendario.parquet` | 04 | burning calendar for Brazil, biomes and states |
 | `quadradinhos.parquet` | 04 | biome and state of each cell |
+| `ufs_simplificado.geojson` | 07 | 27 state borders, simplified for display (~1 km), with UF, name and IBGE region |
+| `municipios/<UF>.geojson` | 07 | municipal borders of each state, simplified for display (~400 m) |
 | `focos/ano=<year>/focos_<year>_<sensor>.parquet` | 05 | individual detections for CSV download |
 
 Column definitions: [`contrato-dados.md`](contrato-dados.md) (data contract) and the glossary in [`data/processed/README.md`](../data/processed/README.md).

@@ -10,7 +10,10 @@
 | `validacao_harmonizacao.csv` | `03_harmonizar.py` | Leave-one-year-out validation error per biome |
 | `calendario.parquet` | `04_calendario.py` | Region × year × month: detections, historical mean, anomaly and color classes |
 | `quadradinhos.parquet` | `04_calendario.py` | Each grid cell with its biome and state |
+| `ufs_simplificado.geojson` | `07_divisas.py` | State borders (IBGE 2024), simplified for the map, with UF, name and region |
+| `municipios/<UF>.geojson` | `07_divisas.py` | Municipal borders (IBGE 2024) of each state, simplified for the map |
 | `focos/ano=<year>/focos_<year>_<sensor>.parquet` | `05_exportar_focos.py` | Individual detections (raw, not harmonized), split by year and sensor |
+| `teste_previsao.csv` | `06_teste_previsao.py` | Outlook test: forecast error by region and horizon (METHODOLOGY § 8); not used by the app |
 
 Full column descriptions: [`docs/contrato-dados.md`](../../docs/contrato-dados.md).
 

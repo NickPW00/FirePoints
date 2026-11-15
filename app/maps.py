@@ -1,4 +1,5 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
 """Map layers for the FirePoints app.
 
 The 0.1° grid is drawn as an image (one pixel per cell) so that 60,000 cells stay light:
@@ -18,28 +19,40 @@ from dataclasses import dataclass, field
 import folium
 import numpy as np
 import pandas as pd
+from branca.element import MacroElement
 from folium.plugins import Draw
 from folium.raster_layers import ImageOverlay
+from jinja2 import Template
+
+from i18n import month as month_name, num
+from i18n import t as _t   # "t" is used below for positions on the colour scale
 
 CELL = 0.1
-MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 # Sequential ramp for "how much" (one hue, light -> dark; ColorBrewer Oranges, colour-blind safe)
 FIRE_RAMP = ["#feedde", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#8c2d04"]
 # Peak season: three classes, validated for colour-vision deficiencies as a set (all pairs)
 SEASONS = [
-    ("Jun–Aug (early dry season)", (6, 7, 8), "#2a78d6"),
-    ("Sep–Oct (late dry season)", (9, 10), "#eb6834"),
-    ("Nov–May", (11, 12, 1, 2, 3, 4, 5), "#1baf7a"),
+    ("season_jja", (6, 7, 8), "#2a78d6"),      # i18n keys
+    ("season_so", (9, 10), "#eb6834"),
+    ("season_nm", (11, 12, 1, 2, 3, 4, 5), "#1baf7a"),
 ]
 NO_FIRE = "#ecebe6"      # inside Brazil, no detection (Plotly fallback)
 OUTLINE = "#1f1f1f"
-MIN_ZOOM, MAX_ZOOM = 3, 10   # 0.1° cells are ≈11 km: zooming further only shows bigger squares
+MIN_ZOOM, MAX_ZOOM = 4, 11   # 0.1° cells are ≈11 km: zooming further only shows bigger squares
+# The map cannot be dragged or zoomed out beyond Brazil and its neighbours
+PAN_LIMITS = dict(min_lat=-40.0, max_lat=10.0, min_lon=-82.0, max_lon=-25.0)
+# Basemap without labels under the data; place names on top of the data (as on Windy), both from Esri's Light Gray Canvas (CARTO now asks for an API key)
+TILES_ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/{}/MapServer/tile/{{z}}/{{y}}/{{x}}"
+TILES_BASE = TILES_ESRI.format("World_Light_Gray_Base")        # light grey basemap without names (no API key)
+TILES_LABELS = TILES_ESRI.format("World_Light_Gray_Reference")  # place names only, drawn above the data
+TILES_ATTR = ('Tiles &copy; <a href="https://www.esri.com">Esri</a>, HERE, Garmin, '
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors')
 
-METRICS = {
-    "fires": "Fires per year",
-    "pct": "% of years with fire",
-    "season": "Peak season",
+METRICS = {          # metric -> i18n key of its label
+    "fires": "metric_fires",
+    "pct": "metric_pct",
+    "season": "metric_season",
 }
 
 
@@ -266,7 +279,7 @@ def _nice_ticks(vmax: float, log: bool) -> list[float]:
 
 
 def _fmt(v: float) -> str:
-    return f"{v:,.0f}" if v >= 10 or float(v).is_integer() else f"{v:,.1f}"
+    return num(v) if v >= 10 or float(v).is_integer() else num(v, 1)
 
 
 def season_class(peak_month) -> np.ndarray:
@@ -289,15 +302,15 @@ def render(grid: Grid, freq: pd.DataFrame, metric: str, sel_keys, log: bool = Tr
     """
     keys = freq["key"].to_numpy()
     sel = grid.mask(sel_keys)
-    when = f" in {MONTHS[month - 1]}" if month else ""
+    when = _t("in_month", m=month_name(month)) if month else ""
     if metric == "season":
         value = grid.raster(keys, season_class(freq["peak_month"]))
         t = value / (len(SEASONS) - 1)
         rgb = np.zeros(grid.shape + (3,))
         for k, (_, _, color) in enumerate(SEASONS):
             rgb[value == k] = _rgb(color)
-        legend = {"kind": "classes", "title": "Season with most fires in each cell",
-                  "items": [(color, name) for name, _, color in SEASONS]}
+        legend = {"kind": "classes", "title": _t("leg_season"),
+                  "items": [(color, _t(name)) for name, _, color in SEASONS]}
     else:
         col = "fires_per_year" if metric == "fires" else "pct_years"
         value = grid.raster(keys, freq[col].to_numpy(dtype=float))
@@ -306,7 +319,7 @@ def render(grid: Grid, freq: pd.DataFrame, metric: str, sel_keys, log: bool = Tr
         if metric == "pct":
             vmax, t = 100.0, value / 100.0
             ticks = [(v / 100, f"{v}%") for v in (0, 25, 50, 75, 100)]
-            title = f"% of years with at least one fire{when}"
+            title = _t("leg_pct", when=when)
         else:
             # top of the scale = 99th percentile of the selected area (a few extreme cells do not flatten the rest)
             vmax = float(np.percentile(inside_sel, 99)) if len(inside_sel) else 1.0
@@ -319,7 +332,7 @@ def render(grid: Grid, freq: pd.DataFrame, metric: str, sel_keys, log: bool = Tr
                 ticks = [(v / vmax, _fmt(v)) for v in _nice_ticks(vmax, False)]
             if ticks:
                 ticks[-1] = (ticks[-1][0], ticks[-1][1] + ("+" if ticks[-1][0] > 0.9 else ""))
-            title = f"Fires per year{when} in each 0.1° cell" + (" (log scale)" if log else "")
+            title = _t("leg_fires", when=when) + (_t("leg_log") if log else "")
         rgb = _ramp(t, FIRE_RAMP)
         legend = {"kind": "ramp", "title": title, "stops": FIRE_RAMP, "ticks": ticks}
 
@@ -353,31 +366,28 @@ def takeaway(freq: pd.DataFrame, sel_keys, metric: str, month: int | None = None
              n_years: int | None = None) -> str:
     """One sentence that reads the map for the selected area."""
     f = freq[freq["key"].isin(sel_keys)]
-    when = f" in {MONTHS[month - 1]}" if month else ""
+    when = _t("in_month", m=month_name(month)) if month else ""
     burned = f[f["total_fires"] > 0]
     if burned.empty:
-        return f"No fire was detected in this area{when} in the period."
+        return _t("tk_none", when=when)
     if metric == "fires":
         v = np.sort(burned["total_fires"].to_numpy())[::-1]
         n_half = int(np.searchsorted(np.cumsum(v), v.sum() / 2) + 1)
-        return (f"Fire is concentrated: **half of the fires{when} come from {n_half / len(f) * 100:.0f}% of the cells** "
-                f"({n_half:,} of {len(f):,}). Darker = more fires per year.")
+        return _t("tk_fires", when=when, pct=num(n_half / len(f) * 100), n=num(n_half), total=num(len(f)))
     if metric == "pct":
         often = (f["pct_years"] >= 50).mean() * 100
         n = n_years if n_years is not None else freq.attrs.get("n_years", 0)
-        return (f"**{often:.0f}% of the cells burned{when} in at least half of the {n} years** compared. "
-                "Darker = fire comes back more often.")
+        return _t("tk_pct", pct=num(often), when=when, n=n)
     cls = season_class(burned["peak_month"])
-    share = [(np.nanmean(cls == k) * 100, name.split(" (")[0]) for k, (name, _, _) in enumerate(SEASONS)]
+    share = [(np.nanmean(cls == k) * 100, _t(name).split(" (")[0]) for k, (name, _, _) in enumerate(SEASONS)]
     share.sort(reverse=True)
-    return (f"**{share[0][1]} is the peak season in {share[0][0]:.0f}% of the cells that burned**; "
-            f"{share[1][1]} in {share[1][0]:.0f}% and {share[2][1]} in {share[2][0]:.0f}%. "
-            "The colour shows when each place burns most, not how much.")
+    return _t("tk_season", s1=share[0][1], p1=num(share[0][0]), s2=share[1][1], p2=num(share[1][0]),
+             s3=share[2][1], p3=num(share[2][0]))
 
 
 def legend_html(legend: dict) -> str:
     """Colour legend as a small HTML block (shown above the map)."""
-    note = ('<span class="fp-chip"><i style="background:#b9b9b9"></i>faded = outside the selected area</span>'
+    note = (f'<span class="fp-chip"><i style="background:#b9b9b9"></i>{_t("leg_faded")}</span>'
             if legend.get("faded") else "")
     css = ("<style>.fp-leg{font-size:.82rem;line-height:1.3;color:#31333f;margin:.2rem 0 .5rem}"
            ".fp-leg b{font-weight:600}.fp-bar{position:relative;height:12px;border-radius:3px;max-width:420px;"
@@ -394,7 +404,7 @@ def legend_html(legend: dict) -> str:
                         for p, label in legend["ticks"])
         gradient = ", ".join(legend["stops"])
         body = (f'<div class="fp-bar" style="background:linear-gradient(90deg, {gradient})">{ticks}</div>'
-                f'<div><span class="fp-chip"><i style="background:transparent"></i>no colour = no fire detected</span>{note}</div>')
+                f'<div><span class="fp-chip"><i style="background:transparent"></i>{_t("leg_nocolour")}</span>{note}</div>')
     return f'{css}<div class="fp-leg"><b>{legend["title"]}</b>{body}</div>'
 
 
@@ -403,10 +413,15 @@ def legend_html(legend: dict) -> str:
 # ---------------------------------------------------------------------------
 _MAP_CSS = """<style>
 .leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.92); }   /* quiet basemap: the data carries the colour */
-.fp-uf { font: 600 11px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #1f1f1f; white-space: nowrap;
-         transform: translate(-50%, -50%); pointer-events: none;
-         text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 3px #fff; }
-.leaflet-image-layer { image-rendering: pixelated; image-rendering: crisp-edges; }
+.fp-uf { font: 700 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #111; white-space: nowrap;
+         letter-spacing: .04em; transform: translate(-50%, -50%); pointer-events: none;
+         text-shadow: 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 6px #fff; }
+.fp-px { image-rendering: pixelated; image-rendering: crisp-edges; }      /* sharp 0.1° cells */
+.fp-smooth { image-rendering: auto; }                                    /* smoothed for reading (Windy-like) */
+.leaflet-fp-labels-pane { pointer-events: none; }
+.fp-hint { background: rgba(255,255,255,.92); padding: 3px 8px; border-radius: 4px; font: 12px system-ui, sans-serif;
+           color: #31333f; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: opacity .3s; }
+.leaflet-container { cursor: grab; }
 .leaflet-control-scale-line:nth-child(2) { display: none; }                          /* metric scale only */
 </style>"""
 
@@ -448,22 +463,67 @@ def view_for(bounds: list[list[float]], width: int = 760, height: int = 600) -> 
     return [lat, (west + east) / 2], zoom
 
 
+class ScrollZoomOnClick(MacroElement):
+    """Wheel zoom only after the user clicks the map; leaving the map gives the wheel back to the page.
+
+    Avoids the page "scroll trap": scrolling the page over the map does not zoom it by accident.
+    A small hint in the corner says how to activate it.
+    """
+
+    _template = Template("""
+        {% macro script(this, kwargs) %}
+        (function () {
+            var map = {{ this._parent.get_name() }};
+            map.scrollWheelZoom.disable();
+            var hint = L.control({position: 'topright'});
+            hint.onAdd = function () {
+                var d = L.DomUtil.create('div', 'fp-hint');
+                d.innerHTML = {{ this.text|tojson }};
+                return d;
+            };
+            hint.addTo(map);
+            var box = hint.getContainer();
+            map.on('click focus', function () { map.scrollWheelZoom.enable(); box.style.opacity = 0; });
+            map.getContainer().addEventListener('mouseleave', function () {
+                map.scrollWheelZoom.disable(); box.style.opacity = 1;
+            });
+        })();
+        {% endmacro %}
+    """)
+
+    def __init__(self, text: str):
+        super().__init__()
+        self._name = "ScrollZoomOnClick"
+        self.text = text
+
+
 def base_map(grid: Grid, fit: list[list[float]] | None = None, draw: bool = False,
-             states_geojson: dict | None = None, height: int = 600) -> folium.Map:
+             states_geojson: dict | None = None, height: int = 600, municipalities: list[dict] | None = None,
+             hint: str = "Click the map, then scroll to zoom") -> folium.Map:
     """Basemap with state boundaries and labels. Data goes on top with ``data_layer``.
 
     Everything here depends only on the area to show, so the map is not rebuilt (and keeps
-    the user's zoom) when the metric or the month changes.
+    the user's zoom) when the metric, the month or the smoothing changes.
+    ``municipalities``: GeoJSON of the municipalities of the selected states (thin lines).
     """
     center, zoom = view_for(fit or grid.bounds, height=height)
     m = folium.Map(location=center, zoom_start=zoom, min_zoom=MIN_ZOOM, max_zoom=MAX_ZOOM, tiles=None,
-                   control_scale=True, zoom_snap=0.25, zoom_delta=0.5)
-    folium.TileLayer("OpenStreetMap", max_zoom=MAX_ZOOM, control=False).add_to(m)
+                   control_scale=True, zoom_snap=0.25, zoom_delta=0.5, wheelPxPerZoomLevel=120,
+                   minZoom=MIN_ZOOM, maxZoom=MAX_ZOOM,          # Leaflet options (min_zoom alone only limits tiles)
+                   max_bounds=True, maxBoundsViscosity=1.0, **PAN_LIMITS)
+    folium.TileLayer(TILES_BASE, attr=TILES_ATTR, name="Basemap", max_zoom=MAX_ZOOM, control=False).add_to(m)
     m.get_root().header.add_child(folium.Element(_MAP_CSS))
     folium.map.CustomPane("fp-grid", z_index=350).add_to(m)        # above the tiles, below lines and labels
+    folium.map.CustomPane("fp-labels", z_index=450, pointer_events=False).add_to(m)  # place names over the data
+    folium.TileLayer(TILES_LABELS, attr=TILES_ATTR, name="Labels", max_zoom=MAX_ZOOM, control=False,
+                     pane="fp-labels").add_to(m)
+    for fc in municipalities or []:
+        folium.GeoJson(fc, interactive=False,
+                       style_function=lambda _: {"color": "#5c5b57", "weight": 0.6, "opacity": 0.7,
+                                                 "fill": False}).add_to(m)
     if states_geojson:
         folium.GeoJson(states_geojson, interactive=False,
-                       style_function=lambda _: {"color": OUTLINE, "weight": 1, "opacity": 0.65, "fill": False}).add_to(m)
+                       style_function=lambda _: {"color": OUTLINE, "weight": 1.2, "opacity": 0.75, "fill": False}).add_to(m)
     elif grid.border_lines:
         folium.PolyLine(grid.border_lines, color=OUTLINE, weight=1, opacity=0.6, interactive=False).add_to(m)
     for uf, lat, lon in grid.labels:
@@ -473,21 +533,34 @@ def base_map(grid: Grid, fit: list[list[float]] | None = None, draw: bool = Fals
     if draw:
         Draw(export=False, draw_options={"polyline": False, "circle": False, "marker": False,
                                          "circlemarker": False, "polygon": True, "rectangle": True}).add_to(m)
+    ScrollZoomOnClick(hint).add_to(m)
     return m
 
 
-def data_layer(grid: Grid, rgba: np.ndarray, area: dict | None = None, sel: np.ndarray | None = None) -> folium.FeatureGroup:
-    """Grid image plus the outline of the selected area, as a layer that can be swapped on a live map."""
+def data_layer(grid: Grid, rgba: np.ndarray, area: dict | None = None, sel: np.ndarray | None = None,
+               smooth: bool = True, states_geojson: dict | None = None,
+               selected_states: list[str] | None = None) -> folium.FeatureGroup:
+    """Grid image plus the outline of the selected area, as a layer that can be swapped on a live map.
+
+    ``smooth``: let the browser blend neighbouring cells (easier to read, Windy-like) instead of
+    sharp 0.1° squares. ``selected_states``: outline these states with the smooth IBGE border.
+    """
     fg = folium.FeatureGroup(name="FirePoints")
     (south, west), (north, east) = grid.bounds
     ImageOverlay(mercator_image(rgba, south, north), bounds=grid.bounds, pane="fp-grid", interactive=False,
-                 pixelated=True, mercator_project=False).add_to(fg)
+                 pixelated=not smooth, mercator_project=False, className="fp-smooth" if smooth else "fp-px").add_to(fg)
     kind = (area or {}).get("type", "brazil")
     style = dict(color=OUTLINE, weight=2.5, opacity=0.95, fill=False, interactive=False)
     if kind == "polygon":
         folium.Polygon([[lat, lon] for lon, lat in area["coords"]], **style).add_to(fg)
     elif kind == "bbox":
         folium.Rectangle([[area["lat_min"], area["lon_min"]], [area["lat_max"], area["lon_max"]]], **style).add_to(fg)
-    elif kind in ("states", "biomes") and sel is not None and sel.any() and not (sel == grid.present).all():
+    elif selected_states and states_geojson:
+        feats = [f for f in states_geojson["features"] if f["properties"].get("uf") in set(selected_states)]
+        if feats:
+            folium.GeoJson({"type": "FeatureCollection", "features": feats}, interactive=False,
+                           style_function=lambda _: {"color": OUTLINE, "weight": 2.8, "opacity": 0.95,
+                                                     "fill": False}).add_to(fg)
+    elif kind in ("states", "biomes", "regions") and sel is not None and sel.any() and not (sel == grid.present).all():
         folium.PolyLine(outline_lines(grid, sel), **{k: v for k, v in style.items() if k != "fill"}).add_to(fg)
     return fg
