@@ -36,11 +36,10 @@
 | `requirements.txt`, `.gitignore`, `rodar*.bat` | Wrote the pipeline dependencies, ignore rules and Windows run scripts | Maria Eliza | [1512](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md) |
 | `docs/METHODOLOGY.md`, `README.md`, `docs/DATA.md` | Drafted the methodology, home page and data sources; later added APA 7 references | Maria Eliza, Nicholas | [1512](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md), [2303](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md) |
 | `app/streamlit_app.py`, `app/data.py`, `app/charts.py`, `app/requirements.txt` | Wrote the first app (area selection, calendar, anomaly, map, method tab, 3 CSV downloads), then improved it | Nicholas | [1642](ai-log/2026-11-14_1642_nicholas_stack-app.md), [1800](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md) |
-| `app/maps.py`, `.streamlit/config.toml` | Wrote the map with basemap and the app theme | Nicholas | [1800](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md) |
+| `app/maps.py`, `.streamlit/config.toml` | Wrote the map with basemap and the app theme; later darkened the theme's primary colour for contrast | Nicholas | [1800](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md), [1751](ai-log/2026-11-15_1751_nicholas_contraste-tema.md) |
 | `pipeline/*.py`, `rodar*.bat`, `docs/contrato-dados.md`, `graficos/modis_vs_snpp.html`, `data/processed/README.md`, this page | Translated comments, messages and docs into English; added the AI marks | Nicholas | [1515](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md) |
 | `README.md` (Credits), `docs/DATA.md`, `app/streamlit_app.py` (Space Apps credit in the sidebar) | Checked every link in the repository; organized credits for data sources, libraries and frameworks; added the Space Apps small logo (official file, unaltered) | Maria Eliza | [2331](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md) |
 | `app/i18n.py`, `app/maps.py`, `app/streamlit_app.py`, `app/charts.py`, `app/data.py`, `pipeline/07_divisas.py`, `data/processed/ufs_simplificado.geojson`, `data/processed/municipios/` | Map design (scroll zoom after a click, map locked to Brazil, smooth zoom, place names over the data, smoothing option, IBGE state and municipal borders), regions, English biome names and the English/Portuguese language switch | Maria Eliza | [1732](ai-log/2026-11-15_1732_mariaeliza_design-app.md) |
-
 | `pipeline/06_teste_previsao.py`, `data/processed/teste_previsao.csv`, METHODOLOGY § 8 | Wrote the outlook test (rolling-origin forecasts, climatology vs recent anomaly) and the Future work section | Nicholas | [1733](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md) |
 
 Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template for Streamlit).
@@ -64,6 +63,7 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 15 Nov, 15:15 | Nicholas | Check the project against the Space Apps rules, add the AI marks and translate the remaining Portuguese |
 | 15 Nov, 17:33 | Nicholas | Evaluate a fire outlook model; keep it as future work, backed by a first forecast test |
 | 15 Nov, 17:32 | Maria Eliza | Review the app design (desktop and mobile), get Nicholas's approval and build the top-priority improvements (map, regions, biome names, EN/PT) |
+| 15 Nov, 17:51 | Nicholas | Assess which Space Apps brand guidelines are worth applying to the app and the demo; fix the theme contrast |
 
 ## Team decisions (summary of `docs/decisions.md`)
 
@@ -85,5 +85,6 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 23 | Reading rules: partial months not compared with normal; same totals in map, calendar and CSV | proposed |
 | 24 | References in APA 7 | proposed |
 | 27 | No NASA logos; only the Space Apps small logo (no text) in the README and the app | proposed |
+| 31 | App primary colour darkened to `#c44100` for WCAG AA contrast (≥ 4.5:1) on buttons and links | proposed |
 
 "Proposed" means one teammate recorded it and the other had not yet marked it as reviewed in the log; all of them are implemented in the delivered project.
