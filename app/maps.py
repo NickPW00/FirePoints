@@ -1,5 +1,6 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md
 """Map layers for the FirePoints app.
 
 The 0.1° grid is drawn as an image (one pixel per cell) so that 60,000 cells stay light:
@@ -14,6 +15,8 @@ If ``data/processed/ufs_simplificado.geojson`` exists, the app draws that instea
 
 from __future__ import annotations
 
+import base64
+import io
 from dataclasses import dataclass, field
 
 import folium
@@ -29,7 +32,7 @@ from i18n import t as _t   # "t" is used below for positions on the colour scale
 
 CELL = 0.1
 
-# Sequential ramp for "how much" (one hue, light -> dark; ColorBrewer Oranges, colour-blind safe)
+# Sequential ramp of the calendar and the other charts (one hue, light -> dark; ColorBrewer Oranges)
 FIRE_RAMP = ["#feedde", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#8c2d04"]
 # Peak season: three classes, validated for colour-vision deficiencies as a set (all pairs)
 SEASONS = [
@@ -37,15 +40,31 @@ SEASONS = [
     ("season_so", (9, 10), "#eb6834"),
     ("season_nm", (11, 12, 1, 2, 3, 4, 5), "#1baf7a"),
 ]
-NO_FIRE = "#ecebe6"      # inside Brazil, no detection (Plotly fallback)
-OUTLINE = "#1f1f1f"
-MIN_ZOOM, MAX_ZOOM = 4, 11   # 0.1° cells are ≈11 km: zooming further only shows bigger squares
-# The map cannot be dragged or zoomed out beyond Brazil and its neighbours
-PAN_LIMITS = dict(min_lat=-40.0, max_lat=10.0, min_lon=-82.0, max_lon=-25.0)
-# Basemap without labels under the data; place names on top of the data (as on Windy), both from Esri's Light Gray Canvas (CARTO now asks for an API key)
+# Look of the map. One sequential ramp with a wide lightness range (so that places differ visibly),
+# place names and borders that stay readable over it, and a quiet basemap. "direction" says which
+# end of the ramp means "more" (used by the texts that explain the map).
+THEMES = {
+    "dark": dict(      # glowing fire over a dark basemap, white names (Windy-like)
+        ramp=["#1b0c41", "#4a0c6b", "#781c6d", "#a52c60", "#cf4446", "#ed6925", "#fb9b06", "#f7d13d", "#fcffa4"],
+        direction="brighter", base="World_Dark_Gray_Base", labels="World_Dark_Gray_Reference",
+        label_filter="brightness(0) invert(1) drop-shadow(0 0 1px rgba(0,0,0,.95)) drop-shadow(0 0 2px rgba(0,0,0,.75))",
+        line="#ffffff", casing="#000000", ink="#ffffff", halo="rgba(0,0,0,.9)", alpha=0.92,
+        faded=(0.30, 58), faded_alpha=0.6, no_fire="#3b3b3b", faded_scale=("#4a4a4a", "#8a8a8a"), plot_bg="#262626",
+    ),
+    "light": dict(     # pale yellow -> red -> dark plum over a light basemap, dark names
+        ramp=["#ffffd4", "#fee68f", "#fdc04a", "#fb8d2c", "#ee5a24", "#cf2a2a", "#9b1239", "#5c0a3c", "#2d0628"],
+        direction="darker", base="World_Light_Gray_Base", labels="World_Light_Gray_Reference",
+        label_filter="brightness(0) drop-shadow(0 0 1px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 2px #fff)",
+        line="#1f1f1f", casing="#ffffff", ink="#111111", halo="#ffffff", alpha=0.92,
+        faded=(0.45, 140), faded_alpha=0.38, no_fire="#ecebe6", faded_scale=("#e3e2de", "#9d9c97"), plot_bg=None,
+    ),
+}
+THEME = THEMES["dark"]
+OUTLINE = "#1f1f1f"      # lines of the Plotly fallback and the draw tools
+MIN_ZOOM, MAX_ZOOM = 3, 12   # free camera; beyond 12 the 0.1° (≈11 km) cells only get bigger
+SMOOTH_SCALE = 3         # pixels per cell side of the smoothed image
+# Basemap without names under the data and place names above it (as on Windy): Esri canvas maps, no API key
 TILES_ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/{}/MapServer/tile/{{z}}/{{y}}/{{x}}"
-TILES_BASE = TILES_ESRI.format("World_Light_Gray_Base")        # light grey basemap without names (no API key)
-TILES_LABELS = TILES_ESRI.format("World_Light_Gray_Reference")  # place names only, drawn above the data
 TILES_ATTR = ('Tiles &copy; <a href="https://www.esri.com">Esri</a>, HERE, Garmin, '
               '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors')
 
@@ -269,6 +288,12 @@ def _ramp(t: np.ndarray, stops: list[str]) -> np.ndarray:
     return rgb[lo] * (1 - f) + rgb[lo + 1] * f
 
 
+def _faded(rgb: np.ndarray) -> np.ndarray:
+    """Grey, low-contrast version of colours (cells outside the selected area)."""
+    k, offset = THEME["faded"]
+    return k * (np.asarray(rgb, dtype=float) * [0.299, 0.587, 0.114]).sum(axis=-1, keepdims=True) + offset
+
+
 def _nice_ticks(vmax: float, log: bool) -> list[float]:
     if log:
         ticks = [t for t in (1, 3, 10, 30, 100, 300, 1_000, 3_000, 10_000, 30_000, 100_000) if t <= vmax * 1.001]
@@ -333,16 +358,15 @@ def render(grid: Grid, freq: pd.DataFrame, metric: str, sel_keys, log: bool = Tr
             if ticks:
                 ticks[-1] = (ticks[-1][0], ticks[-1][1] + ("+" if ticks[-1][0] > 0.9 else ""))
             title = _t("leg_fires", when=when) + (_t("leg_log") if log else "")
-        rgb = _ramp(t, FIRE_RAMP)
-        legend = {"kind": "ramp", "title": title, "stops": FIRE_RAMP, "ticks": ticks}
+        rgb = _ramp(t, THEME["ramp"])
+        legend = {"kind": "ramp", "title": title, "stops": THEME["ramp"], "ticks": ticks}
 
     shown = np.isfinite(value)
-    alpha = np.where(shown, 0.92, 0.0)
+    alpha = np.where(shown, THEME["alpha"], 0.0)
     # outside the selected area: same pattern in grey, faded (Brazil stays visible for context)
     out_sel = shown & ~sel
-    grey = (rgb * [0.299, 0.587, 0.114]).sum(axis=-1, keepdims=True)
-    rgb = np.where(out_sel[..., None], 0.45 * grey + 140, rgb)
-    alpha = np.where(out_sel, 0.38, alpha)
+    rgb = np.where(out_sel[..., None], _faded(rgb), rgb)
+    alpha = np.where(out_sel, THEME["faded_alpha"], alpha)
     rgba = np.dstack([rgb, alpha * 255]).round().clip(0, 255).astype(np.uint8)
     legend["faded"] = bool(out_sel.any())
     return {"value": value, "t": np.clip(np.nan_to_num(t), 0, 1), "sel": sel, "rgba": rgba, "legend": legend}
@@ -373,11 +397,12 @@ def takeaway(freq: pd.DataFrame, sel_keys, metric: str, month: int | None = None
     if metric == "fires":
         v = np.sort(burned["total_fires"].to_numpy())[::-1]
         n_half = int(np.searchsorted(np.cumsum(v), v.sum() / 2) + 1)
-        return _t("tk_fires", when=when, pct=num(n_half / len(f) * 100), n=num(n_half), total=num(len(f)))
+        return (_t("tk_fires", when=when, pct=num(n_half / len(f) * 100), n=num(n_half), total=num(len(f)))
+                + _t(f"more_fires_{THEME['direction']}"))
     if metric == "pct":
         often = (f["pct_years"] >= 50).mean() * 100
         n = n_years if n_years is not None else freq.attrs.get("n_years", 0)
-        return _t("tk_pct", pct=num(often), when=when, n=n)
+        return _t("tk_pct", pct=num(often), when=when, n=n) + _t(f"more_pct_{THEME['direction']}")
     cls = season_class(burned["peak_month"])
     share = [(np.nanmean(cls == k) * 100, _t(name).split(" (")[0]) for k, (name, _, _) in enumerate(SEASONS)]
     share.sort(reverse=True)
@@ -387,7 +412,7 @@ def takeaway(freq: pd.DataFrame, sel_keys, metric: str, month: int | None = None
 
 def legend_html(legend: dict) -> str:
     """Colour legend as a small HTML block (shown above the map)."""
-    note = (f'<span class="fp-chip"><i style="background:#b9b9b9"></i>{_t("leg_faded")}</span>'
+    note = (f'<span class="fp-chip"><i style="background:{THEME['faded_scale'][1]}"></i>{_t("leg_faded")}</span>'
             if legend.get("faded") else "")
     css = ("<style>.fp-leg{font-size:.82rem;line-height:1.3;color:#31333f;margin:.2rem 0 .5rem}"
            ".fp-leg b{font-weight:600}.fp-bar{position:relative;height:12px;border-radius:3px;max-width:420px;"
@@ -411,37 +436,116 @@ def legend_html(legend: dict) -> str:
 # ---------------------------------------------------------------------------
 # Folium (real basemap, pan and zoom)
 # ---------------------------------------------------------------------------
-_MAP_CSS = """<style>
-.leaflet-tile-pane { filter: grayscale(1) brightness(1.06) contrast(0.92); }   /* quiet basemap: the data carries the colour */
-.fp-uf { font: 700 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; color: #111; white-space: nowrap;
-         letter-spacing: .04em; transform: translate(-50%, -50%); pointer-events: none;
-         text-shadow: 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 6px #fff; }
-.fp-px { image-rendering: pixelated; image-rendering: crisp-edges; }      /* sharp 0.1° cells */
-.fp-smooth { image-rendering: auto; }                                    /* smoothed for reading (Windy-like) */
-.leaflet-fp-labels-pane { pointer-events: none; }
-.fp-hint { background: rgba(255,255,255,.92); padding: 3px 8px; border-radius: 4px; font: 12px system-ui, sans-serif;
-           color: #31333f; box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: opacity .3s; }
-.leaflet-container { cursor: grab; }
-.leaflet-control-scale-line:nth-child(2) { display: none; }                          /* metric scale only */
+def _map_css() -> str:
+    th = THEME
+    return f"""<style>
+.leaflet-container {{ cursor: grab; background: {'#262626' if th['direction'] == 'brighter' else '#f3f2ee'}; }}
+.leaflet-fp-labels-pane {{ pointer-events: none; filter: {th['label_filter']}; }}   /* names readable over any colour */
+.fp-uf {{ font: 700 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; color: {th['ink']}; white-space: nowrap;
+         letter-spacing: .06em; transform: translate(-50%, -50%); pointer-events: none;
+         text-shadow: 0 0 2px {th['halo']}, 0 0 3px {th['halo']}, 0 0 5px {th['halo']}; }}
+.fp-near .fp-uf {{ display: none; }}                          /* zoomed in: the place names take over */
+.fp-far .leaflet-fp-labels-pane {{ display: none; }}           /* zoomed out: state codes only */
+.fp-wide .leaflet-fp-towns-pane {{ display: none; }}           /* municipal borders only when zoomed in */
+.fp-px {{ image-rendering: pixelated; image-rendering: crisp-edges; }}      /* sharp 0.1° cells */
+.fp-smooth {{ image-rendering: auto; }}                                    /* continuous field */
+.fp-wheel {{ text-align: right; }}
+.fp-wheel button {{ font: 600 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif; padding: 7px 10px; border-radius: 16px;
+                   border: 1px solid rgba(0,0,0,.25); background: rgba(255,255,255,.94); color: #31333f; cursor: pointer;
+                   box-shadow: 0 1px 4px rgba(0,0,0,.3); }}
+.fp-wheel button.on {{ background: #c44100; border-color: #c44100; color: #fff; }}
+.fp-tip {{ margin-top: 6px; display: inline-block; max-width: 230px; padding: 6px 9px; border-radius: 6px; text-align: left;
+          font: 12px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif; background: rgba(20,20,20,.88); color: #fff;
+          opacity: 0; transition: opacity .25s; pointer-events: none; }}
+.fp-tip.show {{ opacity: 1; }}
+.leaflet-control-scale-line:nth-child(2) {{ display: none; }}                          /* metric scale only */
 </style>"""
 
 
-def mercator_image(rgba: np.ndarray, lat_south: float, lat_north: float, scale: int = 4) -> np.ndarray:
+def mercator_image(img: np.ndarray, lat_south: float, lat_north: float, scale: int = 1) -> np.ndarray:
     """Re-sample the rows of a lat/lon raster (row 0 = south) to Web-Mercator, north at the top.
 
     Leaflet stretches an image linearly in Mercator y; without this step the grid would sit
-    up to ~1° (100 km) away from the basemap in the middle of Brazil. Nearest-neighbour, so
-    cells keep hard edges.
+    up to ~1° (100 km) away from the basemap in the middle of Brazil. Rows are picked
+    nearest-neighbour (``scale`` output rows per input row), so sharp cells keep hard edges.
     """
     def merc(lat):
         return np.arcsinh(np.tan(np.radians(lat)))
 
-    n = rgba.shape[0]
+    n = img.shape[0]
     h = n * scale
     y = merc(lat_north) - (np.arange(h) + 0.5) / h * (merc(lat_north) - merc(lat_south))
     lat = np.degrees(np.arctan(np.sinh(y)))
-    src = np.clip(np.floor((lat - lat_south) / CELL).astype(int), 0, n - 1)
-    return rgba[src]
+    src = np.clip(np.floor((lat - lat_south) / (lat_north - lat_south) * n).astype(int), 0, n - 1)
+    return img[src]
+
+
+def _gauss(a: np.ndarray, sigma: float) -> np.ndarray:
+    """Gaussian blur (separable, zero outside the array)."""
+    r = int(np.ceil(3 * sigma))
+    k = np.exp(-0.5 * (np.arange(-r, r + 1) / sigma) ** 2)
+    k /= k.sum()
+    for axis in (0, 1):
+        n = a.shape[axis]
+        p = np.pad(a, [(r, r) if ax == axis else (0, 0) for ax in (0, 1)])
+        a = sum(w * np.take(p, np.arange(i, i + n), axis=axis) for i, w in enumerate(k))
+    return a
+
+
+def _upsample(a: np.ndarray, s: int) -> np.ndarray:
+    """Bilinear up-sampling by ``s`` (values at the cell centres are kept)."""
+    def axis(n):
+        x = np.clip((np.arange(n * s) + 0.5) / s - 0.5, 0, n - 1)
+        lo = np.minimum(np.floor(x).astype(int), max(n - 2, 0))
+        return lo, np.minimum(lo + 1, n - 1), (x - lo).astype(np.float32)
+
+    (r0, r1, fr), (c0, c1, fc) = axis(a.shape[0]), axis(a.shape[1])
+    rows = a[r0] * (1 - fr)[:, None] + a[r1] * fr[:, None]
+    return rows[:, c0] * (1 - fc) + rows[:, c1] * fc
+
+
+def smooth_image(grid: Grid, layer: dict, scale: int = SMOOTH_SCALE) -> str:
+    """The map as a continuous colour field (like a weather map), as a PNG data URI in Web-Mercator.
+
+    The values are lightly blurred and interpolated between the centres of the 0.1° cells before
+    they are coloured, so there are no squares. Cells of Brazil without fire count as zero and
+    the colour fades out towards them; nothing is drawn outside Brazil. The picture is a reading
+    aid: clicking the map still reads the exact cell. Stored as a palette image to stay small.
+    """
+    from PIL import Image
+
+    value, sel = layer["value"], layer["sel"]
+    shown = np.isfinite(value)
+    inside = (grid.inside | shown).astype(np.float32)
+    in_hi = _upsample(inside, scale) >= 0.5
+    sel_hi = _upsample(sel.astype(np.float32), scale) >= 0.5
+    full_a, faded_a = THEME["alpha"] * 255, THEME["faded_alpha"] * 255
+    if layer["legend"]["kind"] == "classes":
+        colors = np.array([_rgb(c) for c, _ in layer["legend"]["items"]], dtype=float)
+        votes = np.stack([_upsample(_gauss((value == k).astype(np.float32), 0.8), scale) for k in range(len(colors))])
+        level = votes.argmax(axis=0)
+        drawn = in_hi & (votes.max(axis=0) > 0.12)
+        alpha = np.full(len(colors), 1.0)
+    else:
+        n = 120                                           # 1 + 2 × 120 palette entries (limit: 256)
+        den = _gauss(inside, 0.6)
+        field_ = _gauss(np.where(shown, layer["t"], 0).astype(np.float32) * inside, 0.6) / np.maximum(den, 1e-6)
+        t_hi = np.clip(_upsample(field_.astype(np.float32), scale), 0, 1)
+        level = np.round(t_hi * (n - 1)).astype(int)
+        drawn = in_hi & (level > 0)
+        pos = np.arange(n) / (n - 1)
+        colors = _ramp(pos, layer["legend"]["stops"])
+        alpha = np.clip(pos / 0.03, 0, 1)                 # fades in from "no fire"
+    n = len(colors)
+    idx = np.where(drawn, 1 + level + np.where(sel_hi, 0, n), 0).astype(np.uint8)   # 0 = transparent
+    palette = np.vstack([[0, 0, 0], colors, np.repeat(_faded(colors), 3, axis=1)]).round().clip(0, 255).astype(np.uint8)
+    trns = np.concatenate([[0], alpha * full_a, alpha * faded_a]).round().astype(np.uint8)
+    (south, _), (north, _) = grid.bounds
+    im = Image.fromarray(mercator_image(idx, south, north), "P")
+    im.putpalette(palette.tobytes())
+    buf = io.BytesIO()
+    im.save(buf, "PNG", transparency=trns.tobytes(), compress_level=6)
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
 def view_for(bounds: list[list[float]], width: int = 760, height: int = 600) -> tuple[list[float], float]:
@@ -463,69 +567,124 @@ def view_for(bounds: list[list[float]], width: int = 760, height: int = 600) -> 
     return [lat, (west + east) / 2], zoom
 
 
-class ScrollZoomOnClick(MacroElement):
-    """Wheel zoom only after the user clicks the map; leaving the map gives the wheel back to the page.
+WHEEL_TEXT = {"off": "Scroll zoom: off", "on": "Scroll zoom: on",
+              "tip": "Hold Ctrl and scroll to zoom the map, or turn on scroll zoom"}
 
-    Avoids the page "scroll trap": scrolling the page over the map does not zoom it by accident.
-    A small hint in the corner says how to activate it.
+
+class WheelZoom(MacroElement):
+    """The user decides what the mouse wheel does over the map.
+
+    * A button on the map turns scroll zoom on or off. Off (default): the wheel scrolls the page,
+      as anywhere else. On: the wheel zooms the map and the page stays still. The choice is kept
+      for the browser session.
+    * Ctrl/⌘ + wheel, and the trackpad pinch (browsers send it as Ctrl + wheel), always zoom the
+      map around the pointer and never zoom the page.
+
+    Also keeps the map uncluttered: zoomed out it shows the state codes only; zoomed in, the place
+    names of the basemap and, closer still, the municipal borders.
     """
 
     _template = Template("""
         {% macro script(this, kwargs) %}
         (function () {
-            var map = {{ this._parent.get_name() }};
-            map.scrollWheelZoom.disable();
-            var hint = L.control({position: 'topright'});
-            hint.onAdd = function () {
-                var d = L.DomUtil.create('div', 'fp-hint');
-                d.innerHTML = {{ this.text|tojson }};
+            var map = {{ this._parent.get_name() }}, box = map.getContainer(), T = {{ this.text|tojson }};
+            var on = false, btn, tip, target = null, idle, hide;
+            try { on = window.sessionStorage.getItem('fp-wheel') === '1'; } catch (e) {}
+            function set(v) {
+                on = v;
+                try { window.sessionStorage.setItem('fp-wheel', v ? '1' : '0'); } catch (e) {}
+                if (v) { map.scrollWheelZoom.enable(); } else { map.scrollWheelZoom.disable(); }
+                btn.textContent = v ? T.on : T.off;
+                btn.title = T.tip;
+                btn.classList.toggle('on', v);
+                tip.classList.remove('show');
+            }
+            var ctl = L.control({position: 'topright'});
+            ctl.onAdd = function () {
+                var d = L.DomUtil.create('div', 'fp-wheel');
+                btn = L.DomUtil.create('button', '', d);
+                btn.type = 'button';
+                L.DomUtil.create('br', '', d);
+                tip = L.DomUtil.create('div', 'fp-tip', d);
+                tip.textContent = T.tip;
+                L.DomEvent.disableClickPropagation(d);
+                L.DomEvent.on(btn, 'click', function (e) { L.DomEvent.stop(e); set(!on); });
                 return d;
             };
-            hint.addTo(map);
-            var box = hint.getContainer();
-            map.on('click focus', function () { map.scrollWheelZoom.enable(); box.style.opacity = 0; });
-            map.getContainer().addEventListener('mouseleave', function () {
-                map.scrollWheelZoom.disable(); box.style.opacity = 1;
-            });
+            ctl.addTo(map);
+            set(on);
+            box.addEventListener('wheel', function (e) {
+                if (on) { return; }
+                if (!(e.ctrlKey || e.metaKey)) {             // plain wheel: the page scrolls; remind how to zoom
+                    tip.classList.add('show');
+                    clearTimeout(hide);
+                    hide = setTimeout(function () { tip.classList.remove('show'); }, 1800);
+                    return;
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                var px = e.deltaMode === 1 ? e.deltaY * 20 : (e.deltaMode === 2 ? e.deltaY * 60 : e.deltaY);
+                if (target === null) { target = map.getZoom(); }
+                target -= px * (Math.abs(px) < 40 ? 0.02 : 0.01);       // pinch sends small steps
+                target = Math.max(map.getMinZoom(), Math.min(map.getMaxZoom(), target));
+                map.setZoomAround(map.mouseEventToContainerPoint(e), target, {animate: false});
+                clearTimeout(idle);
+                idle = setTimeout(function () { target = null; }, 300);
+            }, {passive: false});
+            function detail() {
+                var z = map.getZoom();
+                box.classList.toggle('fp-near', z >= 5.25);
+                box.classList.toggle('fp-far', z < 5.25);
+                box.classList.toggle('fp-wide', z < 7);
+            }
+            map.on('zoomend', detail);
+            detail();
         })();
         {% endmacro %}
     """)
 
-    def __init__(self, text: str):
+    def __init__(self, text: dict | None = None):
         super().__init__()
-        self._name = "ScrollZoomOnClick"
-        self.text = text
+        self._name = "WheelZoom"
+        self.text = {**WHEEL_TEXT, **(text or {})}
 
 
 def base_map(grid: Grid, fit: list[list[float]] | None = None, draw: bool = False,
              states_geojson: dict | None = None, height: int = 600, municipalities: list[dict] | None = None,
-             hint: str = "Click the map, then scroll to zoom") -> folium.Map:
+             wheel: dict | None = None) -> folium.Map:
     """Basemap with state boundaries and labels. Data goes on top with ``data_layer``.
 
     Everything here depends only on the area to show, so the map is not rebuilt (and keeps
-    the user's zoom) when the metric, the month or the smoothing changes.
-    ``municipalities``: GeoJSON of the municipalities of the selected states (thin lines).
+    the user's zoom) when the metric, the month or the smoothing changes. The camera is free:
+    the map can be dragged and zoomed anywhere. ``municipalities``: GeoJSON of the municipalities
+    of the selected states (hairlines). ``wheel``: texts of the scroll-zoom button (``WHEEL_TEXT``).
     """
+    th = THEME
     center, zoom = view_for(fit or grid.bounds, height=height)
     m = folium.Map(location=center, zoom_start=zoom, min_zoom=MIN_ZOOM, max_zoom=MAX_ZOOM, tiles=None,
                    control_scale=True, zoom_snap=0.25, zoom_delta=0.5, wheelPxPerZoomLevel=120,
                    minZoom=MIN_ZOOM, maxZoom=MAX_ZOOM,          # Leaflet options (min_zoom alone only limits tiles)
-                   max_bounds=True, maxBoundsViscosity=1.0, **PAN_LIMITS)
-    folium.TileLayer(TILES_BASE, attr=TILES_ATTR, name="Basemap", max_zoom=MAX_ZOOM, control=False).add_to(m)
-    m.get_root().header.add_child(folium.Element(_MAP_CSS))
+                   keyboard=False)    # Leaflet focuses the map on click, which makes the page jump in an iframe
+    folium.TileLayer(TILES_ESRI.format(th["base"]), attr=TILES_ATTR, name="Basemap", max_zoom=MAX_ZOOM,
+                     control=False).add_to(m)
+    m.get_root().header.add_child(folium.Element(_map_css()))
     folium.map.CustomPane("fp-grid", z_index=350).add_to(m)        # above the tiles, below lines and labels
+    folium.map.CustomPane("fp-towns", z_index=410, pointer_events=False).add_to(m)
+    folium.map.CustomPane("fp-states", z_index=420, pointer_events=False).add_to(m)
     folium.map.CustomPane("fp-labels", z_index=450, pointer_events=False).add_to(m)  # place names over the data
-    folium.TileLayer(TILES_LABELS, attr=TILES_ATTR, name="Labels", max_zoom=MAX_ZOOM, control=False,
-                     pane="fp-labels").add_to(m)
+    folium.TileLayer(TILES_ESRI.format(th["labels"]), attr=TILES_ATTR, name="Labels", max_zoom=MAX_ZOOM,
+                     control=False, pane="fp-labels").add_to(m)
     for fc in municipalities or []:
-        folium.GeoJson(fc, interactive=False,
-                       style_function=lambda _: {"color": "#5c5b57", "weight": 0.6, "opacity": 0.7,
+        folium.GeoJson(fc, interactive=False, pane="fp-towns",
+                       style_function=lambda _: {"color": th["line"], "weight": 0.6, "opacity": 0.4,
                                                  "fill": False}).add_to(m)
     if states_geojson:
-        folium.GeoJson(states_geojson, interactive=False,
-                       style_function=lambda _: {"color": OUTLINE, "weight": 1.2, "opacity": 0.75, "fill": False}).add_to(m)
+        for color, weight, opacity in ((th["casing"], 2.6, 0.22), (th["line"], 1.0, 0.7)):   # hairline with a soft edge
+            folium.GeoJson(states_geojson, interactive=False, pane="fp-states",
+                           style_function=lambda _, c=color, w=weight, o=opacity: {"color": c, "weight": w, "opacity": o,
+                                                                                   "fill": False}).add_to(m)
     elif grid.border_lines:
-        folium.PolyLine(grid.border_lines, color=OUTLINE, weight=1, opacity=0.6, interactive=False).add_to(m)
+        folium.PolyLine(grid.border_lines, color=th["line"], weight=1, opacity=0.6, interactive=False).add_to(m)
     for uf, lat, lon in grid.labels:
         folium.Marker([lat, lon], interactive=False, keyboard=False,
                       icon=folium.DivIcon(icon_size=(0, 0), icon_anchor=(0, 0), html=f'<div class="fp-uf">{uf}</div>')
@@ -533,34 +692,38 @@ def base_map(grid: Grid, fit: list[list[float]] | None = None, draw: bool = Fals
     if draw:
         Draw(export=False, draw_options={"polyline": False, "circle": False, "marker": False,
                                          "circlemarker": False, "polygon": True, "rectangle": True}).add_to(m)
-    ScrollZoomOnClick(hint).add_to(m)
+    WheelZoom(wheel).add_to(m)
     return m
 
 
-def data_layer(grid: Grid, rgba: np.ndarray, area: dict | None = None, sel: np.ndarray | None = None,
-               smooth: bool = True, states_geojson: dict | None = None,
-               selected_states: list[str] | None = None) -> folium.FeatureGroup:
-    """Grid image plus the outline of the selected area, as a layer that can be swapped on a live map.
+def data_layer(grid: Grid, layer: dict, area: dict | None = None, smooth: bool = True,
+               states_geojson: dict | None = None, selected_states: list[str] | None = None) -> folium.FeatureGroup:
+    """Map image plus the outline of the selected area, as a layer that can be swapped on a live map.
 
-    ``smooth``: let the browser blend neighbouring cells (easier to read, Windy-like) instead of
-    sharp 0.1° squares. ``selected_states``: outline these states with the smooth IBGE border.
+    ``layer``: output of ``render``. ``smooth``: draw a continuous colour field (``smooth_image``)
+    instead of sharp 0.1° squares. ``selected_states``: outline these states with the smooth IBGE border.
     """
+    th = THEME
     fg = folium.FeatureGroup(name="FirePoints")
     (south, west), (north, east) = grid.bounds
-    ImageOverlay(mercator_image(rgba, south, north), bounds=grid.bounds, pane="fp-grid", interactive=False,
-                 pixelated=not smooth, mercator_project=False, className="fp-smooth" if smooth else "fp-px").add_to(fg)
+    image = smooth_image(grid, layer) if smooth else mercator_image(layer["rgba"], south, north, scale=4)
+    ImageOverlay(image, bounds=grid.bounds, pane="fp-grid", interactive=False, pixelated=not smooth,
+                 mercator_project=False, className="fp-smooth" if smooth else "fp-px").add_to(fg)
     kind = (area or {}).get("type", "brazil")
-    style = dict(color=OUTLINE, weight=2.5, opacity=0.95, fill=False, interactive=False)
-    if kind == "polygon":
-        folium.Polygon([[lat, lon] for lon, lat in area["coords"]], **style).add_to(fg)
-    elif kind == "bbox":
-        folium.Rectangle([[area["lat_min"], area["lon_min"]], [area["lat_max"], area["lon_max"]]], **style).add_to(fg)
-    elif selected_states and states_geojson:
-        feats = [f for f in states_geojson["features"] if f["properties"].get("uf") in set(selected_states)]
-        if feats:
-            folium.GeoJson({"type": "FeatureCollection", "features": feats}, interactive=False,
-                           style_function=lambda _: {"color": OUTLINE, "weight": 2.8, "opacity": 0.95,
-                                                     "fill": False}).add_to(fg)
-    elif kind in ("states", "biomes", "regions") and sel is not None and sel.any() and not (sel == grid.present).all():
-        folium.PolyLine(outline_lines(grid, sel), **{k: v for k, v in style.items() if k != "fill"}).add_to(fg)
+    sel = layer["sel"]
+    strokes = ((th["casing"], 5.0, 0.35), (th["line"], 2.2, 1.0))     # bright line over a soft dark edge (or the reverse)
+    for color, weight, opacity in strokes:
+        style = dict(color=color, weight=weight, opacity=opacity, fill=False, interactive=False, pane="fp-states")
+        if kind == "polygon":
+            folium.Polygon([[lat, lon] for lon, lat in area["coords"]], **style).add_to(fg)
+        elif kind == "bbox":
+            folium.Rectangle([[area["lat_min"], area["lon_min"]], [area["lat_max"], area["lon_max"]]], **style).add_to(fg)
+        elif selected_states and states_geojson:
+            feats = [f for f in states_geojson["features"] if f["properties"].get("uf") in set(selected_states)]
+            if feats:
+                folium.GeoJson({"type": "FeatureCollection", "features": feats}, interactive=False, pane="fp-states",
+                               style_function=lambda _, c=color, w=weight, o=opacity: {
+                                   "color": c, "weight": w, "opacity": o, "fill": False}).add_to(fg)
+        elif kind in ("states", "biomes", "regions") and sel.any() and not (sel == grid.present).all():
+            folium.PolyLine(outline_lines(grid, sel), **{k: v for k, v in style.items() if k != "fill"}).add_to(fg)
     return fg
