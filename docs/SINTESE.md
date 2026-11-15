@@ -38,6 +38,7 @@
 - **#25** Código (comentários, docstrings, mensagens), `.bat`, gráfico e contrato de dados em inglês; logs internos seguem em PT, com resumo em EN em `docs/AI_USE.md` — Regra do Space Apps: tudo o que estiver linkado na submissão deve estar em inglês
 - **#26** Declaração de uso de IA: a ideia da solução é da equipe; o desenvolvimento a partir dela foi feito com o Claude; toda escolha técnica confirmada pelos dois — Regra: a IA não pode criar a ideia; o texto precisa dizer exatamente como foi usada
 - **#29** Modelo preditivo fica fora do app nesta entrega: entra como "Future work" (METHODOLOGY § 8 e descrição da submissão), com o teste `pipeline/06_teste_previsao.py` — Ganho real só de 1 a 3 meses (Brasil: erro 34,2% → 29,1%); o app já mostra a faixa histórica; prioridade é a demo e o critério Validity
+- **#31** Cor principal do app (`primaryColor`) de `#d94801` para `#c44100` — Contraste WCAG AA ≥ 4,5:1 em botões e links (antes 4,19:1 e 4,31:1), pedido pelo Brand Guide do Space Apps; continua na família do laranja de fogo
 
 ## 💡 Ideias por tema
 
@@ -47,6 +48,7 @@
 - botão "passo a passo" em cada gráfico, explicando para leigos como ler e quais ferramentas estão disponíveis — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 - depois: números do topo cortados, faixa de abertura, cores (tirar o azul), contraste das siglas, calendário e celular — *mariaeliza* ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 - modelo por quantis (mediana + faixa de 80%) com FWI/Drought Code defasados do GFWED e ENSO; aba "Outlook" só se ganhar da climatologia no mesmo teste — *nicholas* ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
+- manter as paletas de dados (laranja = quanto fogo; RdBu = abaixo/acima do normal, seguras para daltonismo) e as fontes do app; a paleta azul do Brand Guide é da marca, não de dados — *nicholas* ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 
 ### #dados
 
@@ -55,6 +57,7 @@
 ### #demo
 
 - aplicar o Brand Guide na demo: logo do Space Apps sem alterar, paleta azul + Rocket Red, Fira Sans/Overpass, contraste ≥ 4,5:1 — *nicholas* ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
+- slides: fundo Deep Blue `#07173F` ou Electric Blue `#0042A6` com texto branco, Fira Sans (títulos) + Overpass (corpo), prints do app em cartão branco, Rocket Red só como destaque — *nicholas* ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 
 ### #docs
 
@@ -95,6 +98,7 @@
 - [ ] @mariaeliza abrir firepoints.streamlit.app numa janela anônima para confirmar que é público (o guia exige) ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @mariaeliza revisar a tradução do `pipeline/` e do `contrato-dados.md` no PR (só texto mudou) ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
 - [ ] @mariaeliza onde estão os arquivos do GFWED e até que mês vão? (não estão no repo) ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
+- [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 
 **@nicholas:**
 
