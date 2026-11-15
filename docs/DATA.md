@@ -53,7 +53,11 @@ https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_
 
 ## 2b. Basemap — Esri Dark Gray Canvas
 
-The app's map draws Esri's *World Dark Gray Canvas* under the data and its place-name layer above the data (tiles loaded live by folium, no API key; nothing stored in this repository). Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors ([ODbL](https://www.openstreetmap.org/copyright)).
+The app's map draws Esri's *World Dark Gray Canvas* (without names) under the data (tiles loaded live by folium, no API key; nothing stored in this repository). City names are drawn by the app as text, from `cidades.json` (section 2c). Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors ([ODbL](https://www.openstreetmap.org/copyright)).
+
+## 2c. City names — GeoNames
+
+The names on the app's map come from [GeoNames](https://www.geonames.org) (*cities15000*: places above 15,000 inhabitants), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), read through the Python package [geonamescache](https://pypi.org/project/geonamescache/). `pipeline/09_cidades.py` keeps the places in Brazil and, for context, the cities above 500,000 in the other South American countries; coordinates are rounded to 3 decimals and population to thousands (used only to choose which names to show at each zoom).
 
 ## 3. Outputs in this repository
 
@@ -67,6 +71,8 @@ The app's map draws Esri's *World Dark Gray Canvas* under the data and its place
 | `quadradinhos.parquet` | 04 | biome and state of each cell |
 | `ufs_simplificado.geojson` | 07 | 27 state borders, simplified for display (~1 km), with UF, name and IBGE region |
 | `municipios/<UF>.geojson` | 07 | municipal borders of each state, simplified for display (~400 m) |
+| `grade_fina.parquet` | 08 | the same harmonized counts on a 4× finer grid (0.025° ≈ 2.8 km): `fi`, `fj`, `ano`, `mes`, `focos`. Used only to draw the app map with small pixels; all statistics use the 0.1° series |
+| `cidades.json` | 09 | city names for the map labels: name, latitude, longitude, population (thousands), capital flag |
 | `focos/ano=<year>/focos_<year>_<sensor>.parquet` | 05 | individual detections for CSV download |
 
 Column definitions: [`contrato-dados.md`](contrato-dados.md) (data contract) and the glossary in [`data/processed/README.md`](../data/processed/README.md).

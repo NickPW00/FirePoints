@@ -1,6 +1,7 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md
 """Data access for the FirePoints app.
 
 Reads the pre-processed Parquet files in ``data/processed/`` (built by
@@ -34,6 +35,9 @@ LAST_MONTH = (2026, 10)   # last complete S-NPP month in the series (pipeline/03
 
 STATES_GEOJSON = PROCESSED / "ufs_simplificado.geojson"   # smooth state borders (pipeline/07_divisas.py)
 MUNICIPALITIES_DIR = PROCESSED / "municipios"               # <UF>.geojson (pipeline/07_divisas.py)
+FINE_FILE = PROCESSED / "grade_fina.parquet"                # same counts on a 0.025° grid (pipeline/08_grade_fina.py)
+FINE = 4                                                    # fine pixels per side of a 0.1° cell (0.025° ≈ 2.8 km)
+CITIES_FILE = PROCESSED / "cidades.json"                    # city names for the map (pipeline/09_cidades.py)
 
 # IBGE macro-regions (internal key = IBGE name) -> states
 REGIONS = {
@@ -323,6 +327,82 @@ def fire_frequency(sub: pd.DataFrame, cells: pd.DataFrame, keys: np.ndarray, mon
     out["peak_month"] = out["key"].map(peak)
     out.attrs["n_years"] = len(valid)
     return out
+
+
+# ---------------------------------------------------------------------------
+# Fine grid for the map (optional: only if data/processed/grade_fina.parquet exists)
+# ---------------------------------------------------------------------------
+def load_fine(i0: int, j0: int, shape: tuple[int, int]) -> dict | None:
+    """The fine grid (0.025°) as flat arrays aligned with the raster frame of the 0.1° grid.
+
+    ``i0``, ``j0``, ``shape``: frame of the 0.1° raster (``maps.Grid``). The fine raster has
+    ``FINE`` × more rows and columns; ``idx`` is the position of each row of the table in it.
+    Rows are sorted by month, and ``start[k]`` is the first row of month number ``k``
+    (``(year - 2000) * 12 + month - 1``), so one month, or one year, is a slice.
+    """
+    if not FINE_FILE.exists():
+        return None
+    t = pd.read_parquet(FINE_FILE)
+    rows, cols = shape[0] * FINE, shape[1] * FINE
+    r = t["fi"].to_numpy(dtype=np.int32) - i0 * FINE
+    c = t["fj"].to_numpy(dtype=np.int32) - j0 * FINE
+    ym = (t["ano"].to_numpy(dtype=np.int32) - 2000) * 12 + t["mes"].to_numpy(dtype=np.int32) - 1
+    ok = (r >= 0) & (r < rows) & (c >= 0) & (c < cols)
+    order = np.argsort(ym[ok], kind="stable")
+    ym = ym[ok][order]
+    return {"shape": (rows, cols), "idx": (r[ok] * cols + c[ok])[order].astype(np.int32),
+            "focos": t["focos"].to_numpy(dtype=np.float32)[ok][order],
+            "start": np.searchsorted(ym, np.arange(int(ym.max()) + 2))}
+
+
+def _fine_rows(fine: dict, pairs) -> np.ndarray:
+    """Row numbers of the fine table for a list of (year, month)."""
+    start = fine["start"]
+    parts = [np.arange(start[k], start[k + 1]) for k in ((y - 2000) * 12 + m - 1 for y, m in pairs)
+             if 0 <= k < len(start) - 1]
+    return np.concatenate(parts) if parts else np.zeros(0, dtype=np.int64)
+
+
+def fine_peak_month(fine: dict, years: tuple[int, int]) -> np.ndarray:
+    """Calendar month with most fires in the period, per fine pixel (0 = no fire). int8 raster."""
+    size = fine["shape"][0] * fine["shape"][1]
+    best = np.zeros(size, dtype=np.float32)
+    peak = np.zeros(size, dtype=np.int8)
+    for m in range(1, 13):
+        rows = _fine_rows(fine, data_months(years, m))
+        total = np.bincount(fine["idx"][rows], weights=fine["focos"][rows], minlength=size).astype(np.float32)
+        better = total > best
+        peak[better] = m
+        best[better] = total[better]
+    return peak.reshape(fine["shape"])
+
+
+def fine_frequency(fine: dict, month: int | None, years: tuple[int, int]) -> dict:
+    """Same numbers as ``fire_frequency``, per fine pixel, as rasters (row 0 = south).
+
+    ``fires_per_year`` (VIIRS-equivalent fires per year of data, in ``month`` if one is chosen) and
+    ``pct_years`` (% of the comparable years with at least one fire in the pixel).
+    """
+    size = fine["shape"][0] * fine["shape"][1]
+    idx, focos = fine["idx"], fine["focos"]
+    pairs = data_months(years, month)
+    rows = _fine_rows(fine, pairs)
+    total = np.bincount(idx[rows], weights=focos[rows], minlength=size)
+    n_data_years = len(pairs) / (12 if month is None else 1)
+    valid = comparable_years(years, month)
+    n_years = np.zeros(size, dtype=np.int16)
+    for year in valid:                      # the table has one row per pixel and month
+        seen = np.unique(idx[_fine_rows(fine, data_months((year, year), month))])
+        n_years[seen] += 1
+    return {"fires_per_year": (total / max(n_data_years, 1e-9)).astype(np.float32).reshape(fine["shape"]),
+            "pct_years": (n_years / max(len(valid), 1) * 100).astype(np.float32).reshape(fine["shape"])}
+
+
+def load_cities() -> list:
+    """[[name, lat, lon, population in thousands, capital], ...] sorted by importance; [] if missing."""
+    import json
+
+    return json.loads(CITIES_FILE.read_text(encoding="utf-8")) if CITIES_FILE.exists() else []
 
 
 # ---------------------------------------------------------------------------

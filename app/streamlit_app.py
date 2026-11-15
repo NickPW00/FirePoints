@@ -4,6 +4,7 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md
 """FirePoints — harmonized MODIS + VIIRS fire calendar for Brazil.
 
 Run locally:  streamlit run app/streamlit_app.py
@@ -83,6 +84,36 @@ def get_municipalities(states: tuple[str, ...]) -> list[dict]:
         if f.exists():
             out.append(json.loads(f.read_text(encoding="utf-8")))
     return out
+
+
+@st.cache_resource(show_spinner="Loading the map grid…")
+def get_fine() -> dict | None:
+    """Fine grid (0.025°) for the map picture; None if the file is not there (the map then shows 0.1° cells)."""
+    grid = get_grid()
+    return data.load_fine(grid.i0, grid.j0, grid.shape)
+
+
+@st.cache_resource(show_spinner=False, max_entries=3)
+def get_fine_peak(years: tuple[int, int]) -> np.ndarray:
+    return data.fine_peak_month(get_fine(), years)
+
+
+@st.cache_resource
+def get_cities() -> list:
+    return data.load_cities()
+
+
+def fine_layer(metric: str, sel_keys, month: int | None, period: tuple[int, int], log: bool) -> dict | None:
+    """Map picture with small pixels (None if the fine grid is not available)."""
+    fine = get_fine()
+    if fine is None:
+        return None
+    stats = {"factor": data.FINE, "cell": f"{num(data.CELL / data.FINE, 3)}°"}
+    if metric == "season":
+        stats["peak_month"] = get_fine_peak(period)
+    else:
+        stats.update(data.fine_frequency(fine, month, period))
+    return maps.fine_layer(get_grid(), stats, metric, sel_keys, log=log, month=month)
 
 
 @st.cache_data(show_spinner=False)
@@ -225,9 +256,12 @@ if mode == "draw":
     st.markdown(t("draw_intro"))
     grid = get_grid()
     record = (y_min, y_max)
-    overview = maps.render(grid, get_frequency(record, None), "fires", get_cells()["key"].to_numpy(), log=True)
+    all_keys = get_cells()["key"].to_numpy()
+    overview = (fine_layer("fires", all_keys, None, record, True)
+                or maps.render(grid, get_frequency(record, None), "fires", all_keys, log=True))
     drawn = area if area["type"] == "polygon" else None
-    out = st_folium(maps.base_map(grid, draw=True, states_geojson=get_states_geojson(), height=520, wheel=wheel_text()),
+    out = st_folium(maps.base_map(grid, draw=True, states_geojson=get_states_geojson(), height=520, wheel=wheel_text(),
+                                  cities=get_cities()),
                     key=f"draw_map_{st.session_state.get('draw_gen', 0)}", height=520, use_container_width=True,
                     feature_group_to_add=maps.data_layer(grid, overview, drawn),
                     returned_objects=["last_active_drawing"], pixelated=True)
@@ -367,11 +401,15 @@ def render_map() -> None:
     m_choice = c2.selectbox(t("month"), list(range(13)), key="map_month", disabled=metric == "season",
                             format_func=lambda m: t("any_month") if m == 0 else mname(m), help=t("month_help"))
     basemap = c3.toggle(t("basemap"), value=True, key="map_basemap", help=t("basemap_help"))
-    smooth = c3.toggle(t("smooth"), value=True, key="map_smooth", help=t("smooth_help"), disabled=not basemap)
+    smooth = c3.toggle(t("smooth"), value=False, key="map_smooth", help=t("smooth_help"), disabled=not basemap)
     month = None if metric == "season" or m_choice == 0 else int(m_choice)
 
     freq = get_frequency(years, month)
-    layer = maps.render(grid, freq, metric, keys, log=log_scale, month=month)
+    # Map picture: small pixels from the fine grid when available; otherwise (and offline) the 0.1° cells
+    layer = fine_layer(metric, keys, month, years, log_scale) if basemap else None
+    fine_px = layer is not None
+    if layer is None:
+        layer = maps.render(grid, freq, metric, keys, log=log_scale, month=month)
     n_years = len(data.comparable_years(years, month))
     st.markdown(maps.takeaway(freq, keys, metric, month, n_years))
     st.html(maps.legend_html(layer["legend"]))
@@ -383,7 +421,7 @@ def render_map() -> None:
 
         states_geo = get_states_geojson()
         base = maps.base_map(grid, fit=fit, states_geojson=states_geo, height=640, wheel=wheel_text(),
-                             municipalities=get_municipalities(tuple(sel_states)))
+                             municipalities=get_municipalities(tuple(sel_states)), cities=get_cities())
         out = st_folium(base, key="fire_map", height=640, use_container_width=True, pixelated=not smooth,
                         feature_group_to_add=maps.data_layer(grid, layer, area, smooth=smooth,
                                                              states_geojson=states_geo, selected_states=sel_states),
@@ -414,7 +452,7 @@ def render_map() -> None:
     hint = t("hint_click") if basemap else t("hint_hover")
     if not basemap:
         hint += t("hint_grey")
-    st.caption(hint + t("map_caption"))
+    st.caption(hint + (t("map_caption_fine", cell=num(data.CELL / data.FINE, 3)) if fine_px else t("map_caption")))
 
     if playing is not None:
         time.sleep(1.2)

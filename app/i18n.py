@@ -1,5 +1,6 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md
 """English / Portuguese text for the FirePoints app (English is the default).
 
 ``t("key", **values)`` returns the text in the language chosen in the sidebar
@@ -239,11 +240,10 @@ TEXT = {
     "basemap_help": _("Pan and zoom over a real map with place names. Turn it off for the built-in map, which works offline.",
                       "Arraste e dê zoom sobre um mapa real com nomes de lugares. Desligue para o mapa embutido, que funciona sem internet."),
     "smooth": _("Smooth colours", "Suavizar cores"),
-    "smooth_help": _("Draws the 0.1° cells as a continuous colour field, like a weather map (values are lightly blended "
-                     "between neighbouring cells). Turn it off to see each cell as a sharp square with its exact colour.",
-                     "Desenha as células de 0,1° como um campo contínuo de cor, como um mapa do tempo (os valores são "
-                     "levemente misturados entre células vizinhas). Desligue para ver cada célula como um quadrado "
-                     "nítido, com a cor exata."),
+    "smooth_help": _("Blends the colours of neighbouring pixels. Off (default): each pixel is a sharp square with its "
+                     "exact colour.",
+                     "Mistura as cores dos pixels vizinhos. Desligado (padrão): cada pixel é um quadrado nítido, com "
+                     "a cor exata."),
     "wheel_off": _("Scroll zoom: off", "Zoom com rolagem: desligado"),
     "wheel_on": _("Scroll zoom: on", "Zoom com rolagem: ligado"),
     "wheel_tip": _("Hold Ctrl and scroll to zoom the map, or turn on scroll zoom",
@@ -267,6 +267,13 @@ TEXT = {
     "hint_hover": _("Hover to read a cell; scroll to zoom, drag to move. ",
                     "Passe o mouse para ler uma célula; role para dar zoom, arraste para mover. "),
     "hint_grey": _("Plain grey = Brazil without fire detections. ", "Cinza liso = Brasil sem focos. "),
+    "map_caption_fine": _("Each pixel of the map is {cell}° wide (≈2.8 km) and counts the same harmonized fires as "
+                          "the rest of the app; a click reads the 0.1° cell (≈11 km) around it. Borders: IBGE 2024; "
+                          "city names: GeoNames. The selected area is in colour; the rest of Brazil stays visible in grey.",
+                          "Cada pixel do mapa tem {cell}° de lado (≈2,8 km) e conta os mesmos focos harmonizados do "
+                          "resto do app; o clique lê a célula de 0,1° (≈11 km) em volta. Divisas: IBGE 2024; nomes "
+                          "das cidades: GeoNames. A área escolhida fica colorida; o resto do Brasil continua visível "
+                          "em cinza."),
     "map_caption": _("The data are 0.1° grid cells (≈11 km); with *Smooth colours* on, the map blends them into a "
                      "continuous field. State and municipality borders: IBGE 2024. The selected area is in colour; "
                      "the rest of Brazil stays visible in grey.",
@@ -279,9 +286,10 @@ TEXT = {
     "season_jja": _("Jun–Aug (early dry season)", "Jun–Ago (início da seca)"),
     "season_so": _("Sep–Oct (late dry season)", "Set–Out (fim da seca)"),
     "season_nm": _("Nov–May", "Nov–Mai"),
-    "leg_season": _("Season with most fires in each cell", "Estação com mais focos em cada célula"),
-    "leg_pct": _("% of years with at least one fire{when}", "% de anos com pelo menos um foco{when}"),
-    "leg_fires": _("Fires per year{when} in each 0.1° cell", "Focos por ano{when} em cada célula de 0,1°"),
+    "leg_season": _("Season with most fires in each {cell} cell", "Estação com mais focos em cada célula de {cell}"),
+    "leg_pct": _("% of years with at least one fire{when} in each {cell} cell",
+                 "% de anos com pelo menos um foco{when} em cada célula de {cell}"),
+    "leg_fires": _("Fires per year{when} in each {cell} cell", "Focos por ano{when} em cada célula de {cell}"),
     "leg_log": _(" (log scale)", " (escala log)"),
     "leg_faded": _("faded = outside the selected area", "esmaecido = fora da área escolhida"),
     "leg_nocolour": _("no colour = no fire detected", "sem cor = nenhum foco detectado"),
@@ -366,10 +374,12 @@ Filtros: confiança MODIS ≥ 30, confiança VIIRS nominal/alta, só fogo em veg
     # ---------------------------------------------------------------- footer
     "footer": _("Built by the FirePoints team for the NASA Space Apps Challenge 2026, with AI assistance (Claude, "
                 "Anthropic): [how we used AI](https://github.com/NickPW00/FirePoints/blob/main/docs/AI_USE.md). "
-                "Basemap © Esri, HERE, Garmin, © OpenStreetMap contributors. Borders: IBGE.",
+                "Basemap © Esri, HERE, Garmin, © OpenStreetMap contributors. Borders: IBGE. City names: GeoNames "
+                "(CC BY 4.0).",
                 "Feito pela equipe FirePoints para o NASA Space Apps Challenge 2026, com ajuda de IA (Claude, "
                 "Anthropic): [como usamos IA](https://github.com/NickPW00/FirePoints/blob/main/docs/AI_USE.md). "
-                "Mapa de fundo © Esri, HERE, Garmin, © colaboradores do OpenStreetMap. Divisas: IBGE."),
+                "Mapa de fundo © Esri, HERE, Garmin, © colaboradores do OpenStreetMap. Divisas: IBGE. Nomes das cidades: "
+                "GeoNames (CC BY 4.0)."),
     # ---------------------------------------------------------------- charts
     "c_no_data": _("No data", "Sem dados"),
     "c_fires_eq": _("{n} fires (VIIRS-eq.)", "{n} focos (equiv. VIIRS)"),
@@ -416,11 +426,11 @@ Before 2012 this is MODIS × k (see *Method*).
 in the same area. Bands: far below (<0.5×), below (0.5–0.8×), normal (0.8–1.25×), above (1.25–2×), far above (>2×).
 Nov/2000–2002 are not compared: only MODIS Terra was flying, so those months are under-counted.
 
-**Map.** Each pixel is a 0.1° cell (≈11 km), over a real map you can pan and zoom (+/−, Ctrl + scroll, or the *Scroll zoom* button).
-Place names sit on top of the colours. Three readings: *fires per year* (how much it burns), *% of years with fire*
+**Map.** Each pixel is 0.025° wide (≈2.8 km: the 0.1° cells split in 4 × 4), over a real map you can pan and zoom (+/−, Ctrl + scroll, or the *Scroll zoom* button).
+City names sit on top of the colours. Three readings: *fires per year* (how much it burns), *% of years with fire*
 (how often fire comes back: share of the years with at least one detection in that cell, in the chosen month) and
 *peak season* (when it burns most). The selected area is in colour and outlined, with its municipalities; the rest of
-Brazil stays visible in grey. Click a cell to read its numbers.
+Brazil stays visible in grey. Click the map to read the numbers of the 0.1° cell at that point.
 
 **Limitations.** A hot spot is not burned area; clouds hide fires; the factor assumes a stable MODIS/VIIRS relation
 per biome and month; the most recent months may still be near-real-time (provisional) data.
@@ -445,11 +455,11 @@ Antes de 2012 é MODIS × k (veja *Método*).
 Faixas: muito abaixo (<0,5×), abaixo (0,5–0,8×), normal (0,8–1,25×), acima (1,25–2×), muito acima (>2×).
 Nov/2000–2002 não são comparados: só o MODIS Terra voava, então esses meses estão subcontados.
 
-**Mapa.** Cada pixel é uma célula de 0,1° (≈11 km), sobre um mapa real que dá para arrastar e dar zoom (+/−, Ctrl + rolagem
-ou o botão *Zoom com rolagem*). Os nomes dos lugares ficam por cima das cores. Três leituras: *focos por ano* (quanto queima), *% de anos
+**Mapa.** Cada pixel tem 0,025° de lado (≈2,8 km: as células de 0,1° divididas em 4 × 4), sobre um mapa real que dá para arrastar e dar zoom (+/−, Ctrl + rolagem
+ou o botão *Zoom com rolagem*). Os nomes das cidades ficam por cima das cores. Três leituras: *focos por ano* (quanto queima), *% de anos
 com fogo* (com que frequência o fogo volta: fração dos anos com pelo menos um foco naquela célula, no mês escolhido) e
 *estação de pico* (quando queima mais). A área escolhida fica colorida e contornada, com seus municípios; o resto do
-Brasil continua visível em cinza. Clique numa célula para ler os números dela.
+Brasil continua visível em cinza. Clique no mapa para ler os números da célula de 0,1° daquele ponto.
 
 **Limitações.** Foco de calor não é área queimada; nuvens escondem fogos; o fator supõe uma relação MODIS/VIIRS estável
 por bioma e mês; os meses mais recentes podem ainda ser dados quase em tempo real (provisórios).
