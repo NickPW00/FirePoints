@@ -23,9 +23,8 @@ Avaliar o que vale aplicar do Brand Guide do Space Apps no app e na demo, e corr
 - #demo slides: fundo Deep Blue `#07173F` ou Electric Blue `#0042A6` com texto branco, Fira Sans (títulos) + Overpass (corpo), prints do app em cartão branco, Rocket Red só como destaque
 
 ## Pendências / perguntas para a dupla
-- [ ] @nicholas declarar os slides da demo em `docs/AI_USE.md` (feitos com IA) e pôr o link público da demo no rascunho da submissão
-- [ ] @nicholas confirmar o nome da equipe nos slides (usado: 2XLero)
-- [ ] @mariaeliza avisar quando o mapa estiver fechado: os prints dos slides 5 e 6 são tirados no fim, de uma vez, com o app em inglês
+- [x] @nicholas declarar os slides da demo em `docs/AI_USE.md` (feitos com IA) e pôr o link público da demo no rascunho da submissão *(feito no log 1931)*
+- [x] @mariaeliza avisar quando o mapa estiver fechado: os prints dos slides 5 e 6 são tirados no fim, de uma vez, com o app em inglês *(prints tirados em 15/11, log 1931)*
 - [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões
 
 ## Referências

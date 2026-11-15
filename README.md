@@ -10,6 +10,7 @@
 FirePoints merges 26 years of satellite fire detections into **one consistent record**, so emergency teams, scientists and land managers can see when and where Brazil burns, compare any month with its history and download the detections behind every number.
 
 - **Live app:** <https://firepoints.streamlit.app>
+- **Demo (7 slides):** [`docs/demo/FirePoints-demo.pdf`](docs/demo/FirePoints-demo.pdf)
 - **Methodology:** [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) · **Data sources:** [`docs/DATA.md`](docs/DATA.md)
 
 ## The problem
@@ -55,7 +56,7 @@ These are **hotspot detections, not fire events or burned area**. Clouds are not
 
 ## Use of AI
 
-The solution idea is entirely the team's own. We developed it with the help of **Claude (Anthropic)**, a large language model: to work out the technical details of the method with us, write and debug the pipeline and the app, and draft and translate the documentation. Every technical choice was confirmed by both teammates in [`docs/decisions.md`](docs/decisions.md). No images, video or audio were generated with AI.
+The solution idea is entirely the team's own. We developed it with the help of **Claude (Anthropic)**, a large language model: to work out the technical details of the method with us, write and debug the pipeline and the app, and draft and translate the documentation and the demo slides. Every technical choice was confirmed by both teammates in [`docs/decisions.md`](docs/decisions.md). No images, video or audio were generated with AI.
 
 - **Full declaration, list of AI-assisted files and English summary of our AI sessions:** [`docs/AI_USE.md`](docs/AI_USE.md)
 - AI-assisted code files start with a header pointing to their session log in [`docs/ai-log/`](docs/ai-log/) (internal logs, kept in Portuguese).

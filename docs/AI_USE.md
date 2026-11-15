@@ -7,6 +7,7 @@
 - **The idea is ours.** The solution idea — merge MODIS and VIIRS into one comparable fire record for Brazil and turn it into a burning calendar that anyone can query for their own area — is entirely the team's own.
 - **We developed it with AI.** From that idea, we used **Claude (Anthropic)**, a large language model, as an assistant to develop the solution: to work out the technical details of the method with us (filters, grid, calibration period, validation design), to write and debug the Python pipeline and the Streamlit app, and to draft and translate the documentation.
 - **The team decided.** Every technical choice was recorded in `docs/decisions.md` as a proposal and only became final after both teammates confirmed it (for example, decisions #3–#6 on data, filters, grid and calibration were confirmed in #18–#21). We ran the pipeline, checked the numbers and tested the app ourselves.
+- **The demo slides too.** The seven demo slides ([`docs/demo/`](demo/)) were made with Claude: text, layout and two charts drawn from our processed data. The app screenshots in them are real screens.
 - **Nothing else was generated.** No images, video or audio were generated with AI. No NASA branding was used or modified.
 
 ## How AI-assisted content is marked
@@ -43,6 +44,7 @@
 | `app/maps.py`, `app/charts.py`, `app/streamlit_app.py`, `app/i18n.py` | Windy-like map (continuous colour field, new colour ramp on a dark basemap, white place names, thin borders), scroll-zoom button and Ctrl + scroll, free camera, fallback-map fix | Maria Eliza | [1815](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md) |
 | `pipeline/08_grade_fina.py`, `pipeline/09_cidades.py`, `data/processed/grade_fina.parquet`, `data/processed/cidades.json`, `app/data.py`, `app/maps.py`, `app/streamlit_app.py`, `app/i18n.py` | Map with small sharp pixels (0.025° display grid, checked against the 0.1° series) and city names drawn as text | Maria Eliza | [1855](ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md) |
 | `pipeline/06_teste_previsao.py`, `data/processed/teste_previsao.csv`, METHODOLOGY § 8 | Wrote the outlook test (rolling-origin forecasts, climatology vs recent anomaly) and the Future work section | Nicholas | [1733](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md) |
+| `docs/demo/FirePoints-demo.pdf`, `docs/demo/README.md` | Drafted the seven demo slides (text, layout, charts from `data/processed/`), captured the app screenshots and applied the Space Apps brand guidelines | Nicholas | [1751](ai-log/2026-11-15_1751_nicholas_contraste-tema.md), [1931](ai-log/2026-11-15_1931_nicholas_demo-slides.md) |
 
 Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template for Streamlit).
 
@@ -68,6 +70,7 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 15 Nov, 17:51 | Nicholas | Assess which Space Apps brand guidelines are worth applying to the app and the demo; fix the theme contrast |
 | 15 Nov, 18:15 | Maria Eliza | Rework the map look after seeing it live (compare with Windy) and let the user choose when the wheel zooms the map |
 | 15 Nov, 18:55 | Maria Eliza | Fix the map after seeing it live: blurry place names and colours that merged when zooming in; draw smaller sharp pixels |
+| 15 Nov, 19:31 | Nicholas | Finish the demo slides: creators and GitHub links, app screenshots, map slide, PDF in the repository |
 
 ## Team decisions (summary of `docs/decisions.md`)
 
@@ -90,5 +93,6 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 24 | References in APA 7 | proposed |
 | 27 | No NASA logos; only the Space Apps small logo (no text) in the README and the app | proposed |
 | 31 | App primary colour darkened to `#c44100` for WCAG AA contrast (≥ 4.5:1) on buttons and links | proposed |
+| 32, 39 | Demo as seven slides in English, following the Space Apps brand guidelines; PDF kept in `docs/demo/` | proposed |
 
 "Proposed" means one teammate recorded it and the other had not yet marked it as reviewed in the log; all of them are implemented in the delivered project.
