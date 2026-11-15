@@ -1,5 +1,6 @@
-# Arquivos grandes ficam fora do Git (o GitHub recusa arquivos acima de 100 MB).
-# Os dados brutos se baixam de novo pelo FIRMS e pelo IBGE: ver docs/ai-log (pipeline-focos).
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md
+# Large files stay out of Git (GitHub rejects files over 100 MB).
+# The raw data can be downloaded again from FIRMS and IBGE: see docs/DATA.md.
 *.zip
 data/raw/
 data/processed/focos_*.parquet

@@ -50,7 +50,12 @@ These are **hotspot detections, not fire events or burned area**. Clouds are not
 
 ## Use of AI
 
-We used Claude (Anthropic) to help write code and documentation. Every AI-assisted file starts with a header pointing to its log in [`docs/ai-log/`](docs/ai-log/), and every team decision is recorded in [`docs/decisions.md`](docs/decisions.md).
+The solution idea is entirely the team's own. We developed it with the help of **Claude (Anthropic)**, a large language model: to work out the technical details of the method with us, write and debug the pipeline and the app, and draft and translate the documentation. Every technical choice was confirmed by both teammates in [`docs/decisions.md`](docs/decisions.md). No images, video or audio were generated with AI.
+
+- **Full declaration, list of AI-assisted files and English summary of our AI sessions:** [`docs/AI_USE.md`](docs/AI_USE.md)
+- AI-assisted code files start with a header pointing to their session log in [`docs/ai-log/`](docs/ai-log/) (internal logs, kept in Portuguese).
+- The processed data in `data/processed/` are outputs of the AI-assisted pipeline: see [`data/processed/README.md`](data/processed/README.md).
+- Variable and column names in `pipeline/` and `data/processed/` are in Portuguese; a glossary is in [`data/processed/README.md`](data/processed/README.md#glossary-of-portuguese-names).
 
 ## Acknowledgements
 

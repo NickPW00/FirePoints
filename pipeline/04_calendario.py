@@ -1,17 +1,18 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
 """
-04_calendario.py
+04_calendario.py  (step 4: burning calendar)
 ----------------
-Monta as tabelas do calendário de queimadas para o app (contrato em docs/contrato-dados.md):
+Builds the burning-calendar tables for the app (data contract in docs/contrato-dados.md):
 
-  calendario.parquet    região × ano × mês: focos (escala VIIRS), status, média histórica do mês,
-                        anomalia (%), faixa de anomalia (1–5) e faixa de intensidade (0–5)
-  quadradinhos.parquet  cada quadradinho de 0,1° com o seu bioma e estado (para filtros no mapa)
+  calendario.parquet    region × year × month: detections (VIIRS scale), status, historical mean
+                        of the month, anomaly (%), anomaly class (1–5) and intensity class (0–5)
+  quadradinhos.parquet  each 0.1° grid cell with its biome and state (for map filters)
 
-Regiões: Brasil, cada bioma e cada estado (contorno de UFs do IBGE, ex.: BR_UF_2024.zip).
+Regions: Brazil, each biome and each state (IBGE state boundaries, e.g. BR_UF_2024.zip).
 
-Entrada:  data/processed/serie_harmonizada.parquet (gerado pelo 03_harmonizar.py)
-Como rodar:  python 04_calendario.py
+Input:  data/processed/serie_harmonizada.parquet (written by 03_harmonizar.py)
+How to run:  python 04_calendario.py
 """
 
 import os
@@ -26,16 +27,17 @@ _AQUI = Path(__file__).resolve().parent
 PASTA = _AQUI.parent if _AQUI.name == "pipeline" else _AQUI
 PROCESSADOS = PASTA / "data" / "processed"
 
-INICIO, FIM = "2000-11", "2026-10"   # meses cobertos pela série harmonizada
-ANOS_MEDIA = (2003, 2025)            # anos completos usados na média histórica de cada mês
+INICIO, FIM = "2000-11", "2026-10"   # months covered by the harmonized series
+ANOS_MEDIA = (2003, 2025)            # full years used for the historical mean of each month
 
-# Faixas de anomalia: focos ÷ média do mês
-LIMITES_ANOMALIA = [0.5, 0.8, 1.25, 2.0]   # <0,5 | 0,5–0,8 | 0,8–1,25 | 1,25–2 | >2
+# Anomaly classes: detections ÷ mean of the month
+LIMITES_ANOMALIA = [0.5, 0.8, 1.25, 2.0]   # <0.5 | 0.5–0.8 | 0.8–1.25 | 1.25–2 | >2
+# Class names are stored in Portuguese (data values): far below, below, normal, above, far above
 NOMES_ANOMALIA = {1: "muito abaixo", 2: "abaixo", 3: "normal", 4: "acima", 5: "muito acima"}
 
 
 def achar_ufs():
-    """Procura o contorno das UFs do IBGE (ex.: BR_UF_2024.zip) dentro do projeto."""
+    """Looks for the IBGE state boundaries (e.g. BR_UF_2024.zip) inside the project."""
     candidatos = []
     for raiz, _, arquivos in os.walk(PASTA):
         for nome in arquivos:
@@ -43,11 +45,11 @@ def achar_ufs():
             if ("_uf_" in n or n.startswith("br_uf")) and n.endswith((".zip", ".shp", ".gpkg", ".geojson", ".json")):
                 candidatos.append(Path(raiz) / nome)
     if not candidatos:
-        print("ERRO: não achei o contorno dos estados (ex.: BR_UF_2024.zip) dentro de", PASTA)
+        print("ERROR: state boundaries (e.g. BR_UF_2024.zip) not found inside", PASTA)
         sys.exit(1)
     candidatos.sort(key=lambda p: p.suffix.lower() == ".zip")
     arq = candidatos[0]
-    print(f"Contorno dos estados: {arq.relative_to(PASTA)}")
+    print(f"State boundaries: {arq.relative_to(PASTA)}")
     ufs = gpd.read_file(arq)
     sigla = next(c for c in ufs.columns if "sigla" in c.lower())
     nome = next((c for c in ufs.columns if c.lower().startswith("nm_uf")), sigla)
@@ -55,11 +57,12 @@ def achar_ufs():
 
 
 def estado_por_quadradinho(cel, ufs):
+    """Adds the state (estado, estado_nome) of each grid cell, using the cell center."""
     pts = gpd.GeoDataFrame(cel, geometry=gpd.points_from_xy(cel["lon_centro"], cel["lat_centro"]), crs="EPSG:4326")
     dentro = gpd.sjoin(pts, ufs, how="left", predicate="within")
     dentro = dentro[~dentro.index.duplicated()]
     fora = dentro["estado"].isna()
-    if fora.any():   # centro no mar ou exatamente na divisa: estado mais próximo
+    if fora.any():   # center at sea or exactly on a border: nearest state
         perto = gpd.sjoin_nearest(pts[fora].to_crs("EPSG:5880"), ufs.to_crs("EPSG:5880"), how="left")
         perto = perto[~perto.index.duplicated()]
         dentro.loc[fora, ["estado", "estado_nome"]] = perto[["estado", "estado_nome"]].values
@@ -67,7 +70,7 @@ def estado_por_quadradinho(cel, ufs):
 
 
 def montar(serie, coluna, tipo, nomes=None):
-    """Soma os focos por região × mês e completa os meses sem foco com zero."""
+    """Sums detections per region × month and fills months without detections with zero."""
     if coluna is None:
         soma = serie.groupby(["ano", "mes"], as_index=False)["focos"].sum()
         soma["regiao"] = "Brasil"
@@ -86,7 +89,7 @@ def main():
     serie = pd.read_parquet(PROCESSADOS / "serie_harmonizada.parquet")
     status_mes = serie.groupby(["ano", "mes"])["status"].first()
 
-    # Bioma e estado de cada quadradinho
+    # Biome and state of each grid cell
     cel = serie[["gi", "gj", "lat_centro", "lon_centro", "bioma"]].drop_duplicates(["gi", "gj"]).reset_index(drop=True)
     cel = estado_por_quadradinho(cel, achar_ufs())
     cel.to_parquet(PROCESSADOS / "quadradinhos.parquet", index=False)
@@ -99,10 +102,10 @@ def main():
         montar(serie, "estado", "estado", nomes_uf),
     ], ignore_index=True)
 
-    # Status do mês (observado / estimado / parcial) é o mesmo para todas as regiões
+    # The month status (observed / estimated / partial) is the same for every region
     cal = cal.merge(status_mes.rename("status").reset_index(), on=["ano", "mes"], how="left")
 
-    # Média histórica de cada mês, por região (anos completos 2003–2025)
+    # Historical mean of each month, per region (full years 2003–2025)
     base = cal[cal["ano"].between(*ANOS_MEDIA)]
     media = base.groupby(["regiao_tipo", "regiao", "mes"])["focos"].mean().rename("media_mes").reset_index()
     cal = cal.merge(media, on=["regiao_tipo", "regiao", "mes"], how="left")
@@ -111,7 +114,7 @@ def main():
     cal["faixa_anomalia"] = (np.digitize(razao.fillna(1.0), LIMITES_ANOMALIA) + 1).astype("int8")
     cal["faixa_anomalia_nome"] = cal["faixa_anomalia"].map(NOMES_ANOMALIA)
 
-    # Intensidade: 0 = sem focos; 1–5 = quintis dos meses com focos daquela região
+    # Intensity: 0 = no detections; 1–5 = quintiles of that region's months with detections
     def quintis(g):
         f = g["focos"]
         faixa = pd.Series(0, index=g.index, dtype="int8")
@@ -130,16 +133,16 @@ def main():
     cal = cal[colunas].sort_values(["regiao_tipo", "regiao", "ano", "mes"]).reset_index(drop=True)
     cal.to_parquet(PROCESSADOS / "calendario.parquet", index=False)
 
-    # ---------- Resumo na tela ----------
-    print(f"\nRegiões: {cal.groupby('regiao_tipo')['regiao'].nunique().to_dict()}")
-    print(f"Linhas: {len(cal):,}".replace(",", "."))
+    # ---------- Summary on screen ----------
+    print(f"\nRegions: {cal.groupby('regiao_tipo')['regiao'].nunique().to_dict()}")
+    print(f"Rows: {len(cal):,}")
     br = cal[cal["regiao_tipo"] == "brasil"]
     pico = br.loc[br["focos"].idxmax()]
-    print(f"Mês com mais focos no Brasil: {int(pico['mes']):02d}/{int(pico['ano'])} ({pico['focos']:,.0f} focos)".replace(",", "."))
-    print("Média histórica por mês no Brasil (mil focos):")
+    print(f"Month with the most detections in Brazil: {int(pico['mes']):02d}/{int(pico['ano'])} ({pico['focos']:,.0f} detections)")
+    print("Historical mean per month in Brazil (thousand detections):")
     print((br.groupby("mes")["media_mes"].first() / 1000).round(0).to_string())
-    print(f"\nSalvo em {PROCESSADOS / 'calendario.parquet'}")
-    print("Pronto!")
+    print(f"\nSaved to {PROCESSADOS / 'calendario.parquet'}")
+    print("Done!")
 
 
 if __name__ == "__main__":

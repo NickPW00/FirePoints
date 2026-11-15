@@ -3,6 +3,9 @@ name: firepoints-registro
 description: Registro compartilhado do FirePoints (Space Apps 2026). Use com "abrir sessão", "checkpoint" ou "fechar sessão" e, sem pedido, sempre que surgir decisão, código, descoberta, bloqueio ou tarefa da dupla.
 ---
 
+<!-- AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1441_nicholas_skill-registro.md -->
+> *Assistant skill (in Portuguese) that keeps the team's shared AI log, written with Claude (Anthropic). See [`docs/AI_USE.md`](../../../docs/AI_USE.md).*
+
 # Registro compartilhado do FirePoints
 
 Repo: `NickPW00/FirePoints`. Dupla do NASA Space Apps 2026, desafio "Harmonization of MODIS and VIIRS Hot Spots". Cada integrante usa o próprio Claude, e o que importa de cada conversa vai para:

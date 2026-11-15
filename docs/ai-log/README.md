@@ -1,5 +1,8 @@
 # ai-log — o que cada um conversou com sua IA
 
+<!-- AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1430_nicholas_documentacao.md -->
+> *Internal AI session logs, kept in Portuguese. Each log is a short summary written with Claude (Anthropic) at the end of a session. English summary: [`../AI_USE.md`](../AI_USE.md).*
+
 Um lugar só para as conversas da dupla com Claude (ou outra IA). Ninguém lê a conversa inteira: cada sessão vira um **resumo curto** aqui.
 
 ## Fluxo (2 minutos por sessão)

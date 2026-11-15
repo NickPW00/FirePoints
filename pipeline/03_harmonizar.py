@@ -1,29 +1,31 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
 """
-03_harmonizar.py
+03_harmonizar.py  (step 3: harmonize)
 ----------------
-Junta MODIS e VIIRS S-NPP numa série única de focos, na escala do VIIRS
-(decisões #6 e #11 em docs/decisions.md):
+Merges MODIS and VIIRS S-NPP into a single detection series, on the VIIRS scale
+(decisions #6 and #11 in docs/decisions.md):
 
-  1. Descobre o bioma de cada quadradinho de 0,1° (contorno de biomas do IBGE).
-  2. Calcula o fator k[bioma, mês] = focos S-NPP ÷ focos MODIS em 2012–2019.
-  3. Valida deixando um ano de fora (2012–2019) e salva o erro por bioma.
-  4. Monta a série harmonizada:
-       nov/2000–dez/2002  MODIS × k   -> "parcial"   (só o Terra até 07/2002)
-       2003–jan/2012      MODIS × k   -> "estimado"
-       fev/2012 em diante VIIRS S-NPP -> "observado" (o S-NPP começa em 20/01/2012)
+  1. Finds the biome of each 0.1° grid cell (IBGE biome boundaries).
+  2. Computes the factor k[biome, month] = S-NPP detections ÷ MODIS detections in 2012–2019.
+  3. Validates by leaving one year out (2012–2019) and saves the error per biome.
+  4. Builds the harmonized series:
+       Nov 2000–Dec 2002   MODIS × k   -> "parcial"   (partial: only Terra until Jul 2002)
+       2003–Jan 2012       MODIS × k   -> "estimado"  (estimated)
+       Feb 2012 onward     VIIRS S-NPP -> "observado" (observed; S-NPP starts on 20 Jan 2012)
+     The status values are stored in Portuguese; the app shows them in English.
 
-Entrada:
-  data/processed/grade_mensal.parquet        (gerado pelo 01_processar_focos.py)
-  contorno de biomas do IBGE em qualquer subpasta do projeto
-  (ex.: Biomas_250mil.zip, sem precisar extrair)
+Input:
+  data/processed/grade_mensal.parquet        (written by 01_processar_focos.py)
+  IBGE biome boundaries in any subfolder of the project
+  (e.g. Biomas_250mil.zip, no need to extract it)
 
-Saída (data/processed/):
-  serie_harmonizada.parquet   quadradinho × mês: focos na escala VIIRS + status
-  fatores_bioma_mes.csv       o fator k de cada bioma e mês
-  validacao_harmonizacao.csv  erro da validação por bioma
+Output (data/processed/):
+  serie_harmonizada.parquet   grid cell × month: detections on the VIIRS scale + status
+  fatores_bioma_mes.csv       the factor k for each biome and month
+  validacao_harmonizacao.csv  validation error per biome
 
-Como rodar:  python 03_harmonizar.py
+How to run:  python 03_harmonizar.py
 """
 
 import os
@@ -39,15 +41,15 @@ PASTA = _AQUI.parent if _AQUI.name == "pipeline" else _AQUI
 PROCESSADOS = PASTA / "data" / "processed"
 
 TAMANHO_QUADRADINHO = 0.1
-CALIBRACAO = ("2012-02", "2019-12")   # decisão #6 (fev/2012: 1º mês completo do S-NPP)
-INICIO_VIIRS = "2012-02"               # a partir daqui a série usa o S-NPP observado
-FIM_TERRA_SO = "2002-12"               # até aqui: "parcial" (Aqua só começa em 04/07/2002)
-ULTIMO_MES = "2026-10"                 # último mês completo do S-NPP
-MIN_FOCOS_MODIS = 300                  # abaixo disso, o fator do bioma no mês usa o fator nacional
+CALIBRACAO = ("2012-02", "2019-12")   # decision #6 (Feb 2012: first full month of S-NPP)
+INICIO_VIIRS = "2012-02"               # from here on the series uses observed S-NPP
+FIM_TERRA_SO = "2002-12"               # up to here: "partial" (Aqua only starts on 4 Jul 2002)
+ULTIMO_MES = "2026-10"                 # last full month of S-NPP
+MIN_FOCOS_MODIS = 300                  # below this, the biome-month factor falls back to the national factor
 
 
 def achar_biomas():
-    """Procura o contorno de biomas (zip, shp, gpkg ou geojson) dentro do projeto."""
+    """Looks for the biome boundaries (zip, shp, gpkg or geojson) inside the project."""
     candidatos = []
     for raiz, _, arquivos in os.walk(PASTA):
         for nome in arquivos:
@@ -55,25 +57,26 @@ def achar_biomas():
             if "bioma" in n and n.endswith((".zip", ".shp", ".gpkg", ".geojson", ".json")):
                 candidatos.append(Path(raiz) / nome)
     if not candidatos:
-        print("ERRO: não achei o contorno de biomas do IBGE dentro de", PASTA)
-        print("Baixe o Biomas_250mil.zip do IBGE e coloque na pasta do projeto.")
+        print("ERROR: IBGE biome boundaries not found inside", PASTA)
+        print("Download Biomas_250mil.zip from IBGE and put it in the project folder.")
         sys.exit(1)
-    # Prefere .shp/.gpkg extraídos; senão, lê direto do .zip
+    # Prefers extracted .shp/.gpkg; otherwise reads straight from the .zip
     candidatos.sort(key=lambda p: p.suffix.lower() == ".zip")
     arq = candidatos[0]
-    print(f"Contorno de biomas: {arq.relative_to(PASTA)}")
+    print(f"Biome boundaries: {arq.relative_to(PASTA)}")
     biomas = gpd.read_file(arq)
     texto = [c for c in biomas.columns
              if c != "geometry" and not pd.api.types.is_numeric_dtype(biomas[c])]
     col = next((c for c in texto if "bioma" in c.lower()), None) or texto[0]
     biomas = biomas[[col, "geometry"]].rename(columns={col: "bioma"}).to_crs("EPSG:4326")
-    # Deixa só os biomas terrestres (o IBGE inclui o Sistema Costeiro-Marinho em algumas versões)
+    # Keeps only land biomes (some IBGE versions include the Coastal-Marine System)
     biomas = biomas[~biomas["bioma"].str.contains("Costeiro|Marinho", case=False, na=False)]
-    print("Biomas:", ", ".join(sorted(biomas["bioma"].unique())))
+    print("Biomes:", ", ".join(sorted(biomas["bioma"].unique())))
     return biomas
 
 
 def bioma_por_quadradinho(grade, biomas):
+    """Returns the biome of each grid cell (gi, gj), using the cell center."""
     cel = grade[["gi", "gj"]].drop_duplicates().copy()
     cel["lat"] = (cel["gi"] + 0.5) * TAMANHO_QUADRADINHO
     cel["lon"] = (cel["gj"] + 0.5) * TAMANHO_QUADRADINHO
@@ -82,7 +85,7 @@ def bioma_por_quadradinho(grade, biomas):
     dentro = dentro[~dentro.index.duplicated()]
     fora = dentro["bioma"].isna()
     if fora.any():
-        # Quadradinhos com centro no mar ou na fronteira: usa o bioma mais próximo
+        # Cells centered at sea or on a border: use the nearest biome
         perto = gpd.sjoin_nearest(pts[fora].to_crs("EPSG:5880"), biomas.to_crs("EPSG:5880"), how="left")
         perto = perto[~perto.index.duplicated()]
         dentro.loc[fora, "bioma"] = perto["bioma"]
@@ -90,6 +93,7 @@ def bioma_por_quadradinho(grade, biomas):
 
 
 def mes_ref(df):
+    """Monthly period (year-month) built from the ano/mes columns."""
     return pd.PeriodIndex.from_fields(year=df["ano"], month=df["mes"], freq="M")
 
 
@@ -100,7 +104,7 @@ def main():
     grade = grade.merge(mapa, on=["gi", "gj"], how="left")
     grade["periodo"] = mes_ref(grade)
 
-    # Tabela larga: uma linha por quadradinho × mês, com MODIS e S-NPP lado a lado
+    # Wide table: one row per grid cell × month, with MODIS and S-NPP side by side
     larga = (grade.pivot_table(index=["gi", "gj", "bioma", "ano", "mes", "periodo"],
                                columns="sensor", values="n_focos", aggfunc="sum", fill_value=0)
                   .reset_index())
@@ -111,8 +115,9 @@ def main():
     ini, fim = pd.Period(CALIBRACAO[0], "M"), pd.Period(CALIBRACAO[1], "M")
     cal = larga[(larga["periodo"] >= ini) & (larga["periodo"] <= fim)]
 
-    # ---------- Fator k[bioma, mês] ----------
+    # ---------- Factor k[biome, month] ----------
     def fatores(dados):
+        """k per biome and calendar month, plus the national k per month (fallback)."""
         nac = dados.groupby("mes")[["snpp", "modis"]].sum()
         k_nac = nac["snpp"] / nac["modis"]
         bm = dados.groupby(["bioma", "mes"])[["snpp", "modis"]].sum()
@@ -123,7 +128,7 @@ def main():
 
     k, k_nac = fatores(cal)
 
-    # ---------- Validação: deixa um ano de fora ----------
+    # ---------- Validation: leave one year out ----------
     linhas = []
     for ano in range(ini.year, fim.year + 1):
         treino, teste = cal[cal["ano"] != ano], cal[cal["ano"] == ano]
@@ -142,7 +147,7 @@ def main():
     total = val.groupby("ano")[["snpp", "prev"]].sum()
     erro_br = ((total["prev"] / total["snpp"] - 1).abs().mean() * 100)
 
-    # ---------- Série harmonizada ----------
+    # ---------- Harmonized series ----------
     larga = larga.merge(k.reset_index(), on=["bioma", "mes"], how="left")
     larga["k"] = larga["k"].fillna(larga["mes"].map(k_nac))
     viirs = larga["periodo"] >= pd.Period(INICIO_VIIRS, "M")
@@ -162,18 +167,18 @@ def main():
         .to_csv(PROCESSADOS / "fatores_bioma_mes.csv")
     resumo.to_csv(PROCESSADOS / "validacao_harmonizacao.csv")
 
-    # ---------- Resumo na tela ----------
-    print("\nFator k (S-NPP ÷ MODIS) por bioma — média dos 12 meses:")
+    # ---------- Summary on screen ----------
+    print("\nFactor k (S-NPP ÷ MODIS) per biome — mean of the 12 months:")
     print(k.groupby("bioma").mean().round(2).sort_values().to_string())
-    print(f"\nValidação 2012–2019 (deixando um ano de fora): erro anual médio no Brasil = {erro_br:.1f}%")
-    print("Erro anual médio por bioma (%):")
+    print(f"\nValidation 2012–2019 (leaving one year out): mean annual error for Brazil = {erro_br:.1f}%")
+    print("Mean annual error per biome (%):")
     print(resumo.to_string())
     anual = saida.groupby(["ano"]).agg(focos=("focos", "sum"), status=("status", "last"))
     anual["focos"] = (anual["focos"] / 1000).round(0)
-    print("\nSérie harmonizada (mil focos por ano, escala VIIRS):")
+    print("\nHarmonized series (thousand detections per year, VIIRS scale):")
     print(anual.to_string())
-    print(f"\nSalvo em {PROCESSADOS / 'serie_harmonizada.parquet'}")
-    print("Pronto!")
+    print(f"\nSaved to {PROCESSADOS / 'serie_harmonizada.parquet'}")
+    print("Done!")
 
 
 if __name__ == "__main__":
