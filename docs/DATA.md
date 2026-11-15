@@ -12,8 +12,8 @@ All inputs are public and free. Raw files are not stored in this repository (the
 | VIIRS S-NPP 375 m, Collection 2 (standard + near-real-time) | Suomi NPP, 375 m | 20 Jan 2012 – 2 Nov 2026 | whole period |
 
 **How we downloaded them**
-1. Create a free NASA **Earthdata Login** account (urs.earthdata.nasa.gov).
-2. Open the **FIRMS Archive Download** page (firms.modaps.eosdis.nasa.gov/download), sign in with Earthdata and create one request per sensor: area = Brazil, dates = full period, format = JSON (CSV and SHP also work).
+1. Create a free NASA **Earthdata Login** account ([urs.earthdata.nasa.gov](https://urs.earthdata.nasa.gov)).
+2. Open the **FIRMS Archive Download** page ([firms.modaps.eosdis.nasa.gov/download](https://firms.modaps.eosdis.nasa.gov/download/)), sign in with Earthdata and create one request per sensor: area = Brazil, dates = full period, format = JSON (CSV and SHP also work).
 3. FIRMS emails a link to a zip (`DL_FIRE_M-C61_<id>.zip` for MODIS, `DL_FIRE_SV-C2_<id>.zip` for S-NPP), kept on its server for 45 days. Each zip has an **archive** file (standard, quality-controlled processing) and an **nrt** file (near-real-time, the most recent ~5 months, provisional).
 4. Put the zips anywhere inside the project folder; `pipeline/01_processar_focos.py` reads them without unzipping.
 
@@ -21,7 +21,7 @@ Our requests: 848817 (MODIS) and 848820 (VIIRS S-NPP), made on 14 Nov 2026.
 
 **Fields used:** latitude, longitude, acquisition date and time (UTC), confidence, fire radiative power (FRP), day/night flag and `type` (0 = presumed vegetation fire; 1 = active volcano; 2 = other static land source; 3 = offshore).
 
-**Programmatic alternative:** the FIRMS API (`/api/area/csv/...`) needs a free MAP_KEY requested at firms.modaps.eosdis.nasa.gov/api/map_key. Never commit a MAP_KEY; use an environment variable or `st.secrets`.
+**Programmatic alternative:** the FIRMS API (`/api/area/csv/...`) needs a free MAP_KEY requested at [firms.modaps.eosdis.nasa.gov/api/map_key](https://firms.modaps.eosdis.nasa.gov/api/map_key). Never commit a MAP_KEY; use an environment variable or `st.secrets`.
 
 **Citation (APA 7):**
 
@@ -37,8 +37,8 @@ Full reference list: [`METHODOLOGY.md` § 9](METHODOLOGY.md#9-references).
 
 | Dataset | File | Used for |
 |---|---|---|
-| Biomes of Brazil, 1:250,000 (2019) | `Biomas_250mil.zip` — geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/ | biome of each 0.1° cell → harmonization factors |
-| States (Unidades da Federação), 2024 territorial mesh | `BR_UF_2024.zip` — geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/ | state of each cell → state calendars |
+| Biomes of Brazil, 1:250,000 (2019) | `Biomas_250mil.zip` — [geoftp.ibge.gov.br/…/biomas/vetores/](https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/) | biome of each 0.1° cell → harmonization factors |
+| States (Unidades da Federação), 2024 territorial mesh | `BR_UF_2024.zip` — [geoftp.ibge.gov.br/…/municipio_2024/Brasil/](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | state of each cell → state calendars |
 
 Both zips can stay compressed inside the project folder.
 
@@ -49,6 +49,10 @@ https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/veto
 
 Instituto Brasileiro de Geografia e Estatística. (2024). *Malha territorial: Unidades da Federação (BR_UF_2024)* [Data set]. IBGE.\
 https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/
+
+## 2b. Basemap — OpenStreetMap
+
+The app's map draws OpenStreetMap standard tiles under the data (loaded live by folium; nothing stored in this repository). © OpenStreetMap contributors, [ODbL](https://www.openstreetmap.org/copyright).
 
 ## 3. Outputs in this repository
 
@@ -66,4 +70,4 @@ Column definitions: [`contrato-dados.md`](contrato-dados.md) (data contract) and
 
 ## 4. Terms of use
 
-NASA Earth science data are not subject to copyright and are freely available. IBGE data are free to use with attribution. FirePoints outputs inherit these terms.
+NASA Earth science data are not subject to copyright and are freely available. IBGE data are free to use with attribution. OpenStreetMap data are available under the ODbL with attribution. FirePoints outputs inherit these terms.

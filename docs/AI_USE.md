@@ -38,6 +38,7 @@
 | `app/streamlit_app.py`, `app/data.py`, `app/charts.py`, `app/requirements.txt` | Wrote the first app (area selection, calendar, anomaly, map, method tab, 3 CSV downloads), then improved it | Nicholas | [1642](ai-log/2026-11-14_1642_nicholas_stack-app.md), [1800](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md) |
 | `app/maps.py`, `.streamlit/config.toml` | Wrote the map with basemap and the app theme | Nicholas | [1800](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md) |
 | `pipeline/*.py`, `rodar*.bat`, `docs/contrato-dados.md`, `graficos/modis_vs_snpp.html`, `data/processed/README.md`, this page | Translated comments, messages and docs into English; added the AI marks | Nicholas | [1515](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md) |
+| `README.md` (Credits), `docs/DATA.md`, `app/streamlit_app.py` (Space Apps credit in the sidebar) | Checked every link in the repository; organized credits for data sources, libraries and frameworks; added the Space Apps small logo (official file, unaltered) | Maria Eliza | [2331](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md) |
 
 Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template for Streamlit).
 
@@ -56,6 +57,7 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 14 Nov, 17:39 | Nicholas | Review the repository against the documentation plan |
 | 14 Nov, 18:00 | Nicholas | Review the app (code, numbers, UX) and fix the issues found |
 | 14 Nov, 23:03 | Nicholas | Read the submission rules and draft the project page; note new app ideas |
+| 14 Nov, 23:31 | Maria Eliza | Check every link used, credit data sources, libraries and frameworks, and add the Space Apps logo (no NASA logos) |
 | 15 Nov, 15:15 | Nicholas | Check the project against the Space Apps rules, add the AI marks and translate the remaining Portuguese |
 
 ## Team decisions (summary of `docs/decisions.md`)
@@ -77,5 +79,6 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 22 | Map with OpenStreetMap basemap and the grid as an image; offline fallback | proposed |
 | 23 | Reading rules: partial months not compared with normal; same totals in map, calendar and CSV | proposed |
 | 24 | References in APA 7 | proposed |
+| 27 | No NASA logos; only the Space Apps small logo (no text) in the README and the app | proposed |
 
 "Proposed" means one teammate recorded it and the other had not yet marked it as reviewed in the log; all of them are implemented in the delivered project.
