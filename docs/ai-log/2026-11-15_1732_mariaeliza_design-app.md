@@ -11,10 +11,14 @@ tema: design-app
 Mariaeliza assume o design do app. Revisão do site (desktop e celular) e plano das melhorias de prioridade máxima, **para aprovação do nicholas antes de executar**.
 
 ## Decisões
-- Plano de design de prioridade máxima (8 itens abaixo), a executar só depois do ok do nicholas *(decisions #28)*
+- Plano de design de prioridade máxima (8 itens abaixo), a executar só depois do ok do nicholas *(decisions #28; ok do nicholas na #30)*
 
+- Fundo do mapa trocado de CARTO para Esri Light Gray Canvas: a CARTO passou a exigir chave de API (os blocos apareciam com "API KEY REQUIRED")
 ## Código gerado ou alterado com IA
-- —
+- `app/maps.py` — zoom com a rolagem só depois do clique, mapa travado no Brasil (zoom 4–11), zoom suave, nomes (CARTO) por cima das cores, opção de suavizar, divisas IBGE de estados e municípios — alterado
+- `app/streamlit_app.py`, `app/charts.py`, `app/data.py` — seletor EN/PT, área por regiões, RJ como padrão, biomas em inglês — alterado
+- `app/i18n.py` — textos em inglês e português — gerado
+- `pipeline/07_divisas.py` + `data/processed/ufs_simplificado.geojson`, `municipios/<UF>.geojson` — divisas IBGE 2024 simplificadas — gerado
 
 ## Ideias (ainda não decididas)
 - #app depois: números do topo cortados, faixa de abertura, cores (tirar o azul), contraste das siglas, calendário e celular
@@ -29,7 +33,8 @@ Mariaeliza assume o design do app. Revisão do site (desktop e celular) e plano 
   6. Área por regiões (Norte, Nordeste, Centro-Oeste, Sudeste, Sul)
   7. Biomas em inglês: Amazon e Atlantic Forest; Cerrado, Caatinga, Pantanal e Pampa ficam (IBGE é domínio público com citação da fonte; anotar "nomes traduzidos pela equipe")
   8. Seletor de idioma EN/PT, inglês como padrão
-- [ ] @mariaeliza executar os 8 itens depois do ok, em pull request
+- [x] @mariaeliza executar os 8 itens depois do ok, em pull request *(feito: PR mariaeliza/design-mapa)*
+- [ ] @nicholas revisar e fazer o merge do PR de design; depois conferir o mapa no app publicado
 
 ## Referências
 - Revisão no app publicado (firepoints.streamlit.app), 1440 px e celular; problemas vistos: zoom com a rolagem rouba a página e afasta até o mundo todo; clique recarrega e perde o zoom; divisas em escadinha
