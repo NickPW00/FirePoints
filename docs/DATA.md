@@ -31,7 +31,7 @@ https://doi.org/10.5067/FIRMS/MODIS/MCD14ML
 NASA FIRMS. (2026). *VIIRS (S-NPP) I band 375 m active fire product VNP14IMGT* [Data set]. NASA Fire Information for Resource Management System.\
 https://doi.org/10.5067/FIRMS/VIIRS/VNP14IMGT_NRT.002
 
-Full reference list: [`METHODOLOGY.md` § 9](METHODOLOGY.md#9-references).
+Full reference list: [`METHODOLOGY.md` § 10](METHODOLOGY.md#10-references).
 
 ## 2. Boundaries — IBGE
 

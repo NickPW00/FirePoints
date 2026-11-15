@@ -106,7 +106,20 @@ Point-level detections for CSV download are split by year and sensor in `data/pr
 - **End of S-NPP:** the S-NPP record in FIRMS ends on 2 Nov 2026. Extending the series will require calibrating NOAA-20 or NOAA-21 against S-NPP in the same way.
 - **2000–2002** remains underestimated (Terra only) and is flagged as partial instead of corrected.
 
-## 8. Reproducing the results
+## 8. Future work: fire outlooks
+
+A harmonized 26-year record is what a seasonal fire outlook needs for training: before it, the 2012 jump would have looked like a change in climate. We ran a first test (`pipeline/06_teste_previsao.py`, results in `data/processed/teste_previsao.csv`) to see how much of the next 12 months the record alone can predict. Forecasts were issued at the end of every month from Jan 2016 to Oct 2025, each using only data up to its issue month, and compared with what VIIRS then observed.
+
+| Brazil, months ahead | 1–3 | 4–6 | 7–12 |
+|---|---|---|---|
+| Climatology (mean of the same month) | 34.2% | 34.3% | 35.4% |
+| Climatology × recent anomaly (last 3 months, fading) | **29.1%** | 33.5% | 35.0% |
+
+*Weighted absolute percentage error, 354 forecasts per band (708 for 7–12).*
+
+The recent anomaly carries real information for the next three months (also in the Amazon, 46.2% → 38.4%, and the Atlantic Forest, 52.3% → 39.9%), but none beyond that: the size of the fire season depends on the coming dry season, not on the current one. Peak-season totals for Brazil vary up to 2.8× between years (474 thousand detections in Aug–Oct 2026, 1.31 million in 2024). Our next step is to add climate drivers that are known ahead of time — lagged Fire Weather Index and Drought Code from NASA's Global Fire WEather Database (GFWED), and ENSO forecasts — in a quantile model that gives a median and an 80% range per region, and to show it in the app only if it beats climatology in this same test.
+
+## 9. Reproducing the results
 
 Requirements: Python 3.11+ and `pip install -r requirements.txt`.
 
@@ -118,10 +131,11 @@ Requirements: Python 3.11+ and `pip install -r requirements.txt`.
    python pipeline/03_harmonizar.py         # biome x month factors, validation, harmonized series
    python pipeline/04_calendario.py         # burning calendar for Brazil, biomes, states
    python pipeline/05_exportar_focos.py     # point files for the CSV download
+   python pipeline/06_teste_previsao.py     # optional: outlook test (section 8)
    ```
 The outputs and their columns are described in `docs/contrato-dados.md`.
 
-## 9. References
+## 10. References
 
 References follow APA 7th edition.
 
