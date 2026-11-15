@@ -16,12 +16,15 @@ Avaliar o que vale aplicar do Brand Guide do Space Apps no app e na demo, e corr
 
 ## Código gerado ou alterado com IA
 - `.streamlit/config.toml` — `primaryColor` — alterado
+- Slides da demo (deck fora do repo, 7 slides em EN): texto, layout e gráficos (MODIS × VIIRS por ano; previsto × observado 2012–2019; tabela de k) feitos com o Claude a partir de `data/processed/` e dos docs — gerado
 
 ## Ideias (ainda não decididas)
 - #app manter as paletas de dados (laranja = quanto fogo; RdBu = abaixo/acima do normal, seguras para daltonismo) e as fontes do app; a paleta azul do Brand Guide é da marca, não de dados
 - #demo slides: fundo Deep Blue `#07173F` ou Electric Blue `#0042A6` com texto branco, Fira Sans (títulos) + Overpass (corpo), prints do app em cartão branco, Rocket Red só como destaque
 
 ## Pendências / perguntas para a dupla
+- [ ] @nicholas declarar os slides da demo em `docs/AI_USE.md` (feitos com IA) e pôr o link público da demo no rascunho da submissão
+- [ ] @nicholas confirmar o nome da equipe nos slides (usado: 2XLero)
 - [ ] @mariaeliza avisar quando o mapa estiver fechado: os prints dos slides 5 e 6 são tirados no fim, de uma vez, com o app em inglês
 - [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões
 
