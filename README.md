@@ -9,9 +9,25 @@
 
 FirePoints merges 26 years of satellite fire detections into **one consistent record**, so emergency teams, scientists and land managers can see when and where Brazil burns, compare any month with its history and download the detections behind every number.
 
-- **Live app:** <https://firepoints.streamlit.app>
+- **Live app:** <https://firepoints.streamlit.app> (if it shows a sleeping page, click "Yes, get this app back up!" and wait about a minute)
 - **Demo (7 slides):** [`docs/demo/FirePoints-demo.pdf`](docs/demo/FirePoints-demo.pdf)
 - **Methodology:** [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) · **Data sources:** [`docs/DATA.md`](docs/DATA.md)
+
+<p align="center">
+  <img src="docs/img/app-map.png" alt="FirePoints map: Brazil on a dark basemap with state borders; fire pixels from purple to bright yellow, brightest along the southern and eastern edge of the Amazon and in the Cerrado" width="640">
+</p>
+<p align="center"><em>Where it burns: fires per year, 2000–2026. Half of the fires come from 14% of the grid cells.</em></p>
+
+<table>
+  <tr>
+    <td width="42%"><img src="docs/img/app-calendar.png" alt="FirePoints calendar: a grid of years by months for the whole of Brazil, darker orange where there are more fires, strongest from August to October"></td>
+    <td width="58%"><img src="docs/img/app-season.png" alt="FirePoints season chart: the 2026 line against the grey band of the usual range, 51% below normal from January to October"></td>
+  </tr>
+  <tr>
+    <td align="center"><em>When it burns: one square per month, Nov 2000 – Oct 2026.</em></td>
+    <td align="center"><em>Is this season normal? 2026 against the usual range of 2003–2025.</em></td>
+  </tr>
+</table>
 
 ## The problem
 
@@ -57,6 +73,10 @@ These are **hotspot detections, not fire events or burned area**. Clouds are not
 - **Maria Elizabeth Tavares da Silva Ramos** ([@Mariaeliza07](https://github.com/Mariaeliza07))
 
 Both worked across the data pipeline, the method and the web app.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The data and third-party material (NASA FIRMS, IBGE, Esri, OpenStreetMap, GeoNames, the Space Apps logo) keep their own terms: see [Credits](#credits) and [`docs/DATA.md`](docs/DATA.md).
 
 ## Use of AI
 
