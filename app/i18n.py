@@ -357,10 +357,10 @@ Filtros: confiança MODIS ≥ 30, confiança VIIRS nominal/alta, só fogo em veg
     # ---------------------------------------------------------------- footer
     "footer": _("Built by the FirePoints team for the NASA Space Apps Challenge 2026, with AI assistance (Claude, "
                 "Anthropic): [how we used AI](https://github.com/NickPW00/FirePoints/blob/main/docs/AI_USE.md). "
-                "Basemap © OpenStreetMap contributors © CARTO. Borders: IBGE.",
+                "Basemap © Esri, HERE, Garmin, © OpenStreetMap contributors. Borders: IBGE.",
                 "Feito pela equipe FirePoints para o NASA Space Apps Challenge 2026, com ajuda de IA (Claude, "
                 "Anthropic): [como usamos IA](https://github.com/NickPW00/FirePoints/blob/main/docs/AI_USE.md). "
-                "Mapa de fundo © colaboradores do OpenStreetMap © CARTO. Divisas: IBGE."),
+                "Mapa de fundo © Esri, HERE, Garmin, © colaboradores do OpenStreetMap. Divisas: IBGE."),
     # ---------------------------------------------------------------- charts
     "c_no_data": _("No data", "Sem dados"),
     "c_fires_eq": _("{n} fires (VIIRS-eq.)", "{n} focos (equiv. VIIRS)"),

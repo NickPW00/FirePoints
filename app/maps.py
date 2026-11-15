@@ -42,11 +42,12 @@ OUTLINE = "#1f1f1f"
 MIN_ZOOM, MAX_ZOOM = 4, 11   # 0.1° cells are ≈11 km: zooming further only shows bigger squares
 # The map cannot be dragged or zoomed out beyond Brazil and its neighbours
 PAN_LIMITS = dict(min_lat=-40.0, max_lat=10.0, min_lon=-82.0, max_lon=-25.0)
-# Basemap without labels under the data; place names on top of the data (as on Windy), both by CARTO from OSM data
-TILES_BASE = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
-TILES_LABELS = "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
-TILES_ATTR = ('&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors '
-              '&copy; <a href="https://carto.com/attributions">CARTO</a>')
+# Basemap without labels under the data; place names on top of the data (as on Windy), both from Esri's Light Gray Canvas (CARTO now asks for an API key)
+TILES_ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/{}/MapServer/tile/{{z}}/{{y}}/{{x}}"
+TILES_BASE = TILES_ESRI.format("World_Light_Gray_Base")        # light grey basemap without names (no API key)
+TILES_LABELS = TILES_ESRI.format("World_Light_Gray_Reference")  # place names only, drawn above the data
+TILES_ATTR = ('Tiles &copy; <a href="https://www.esri.com">Esri</a>, HERE, Garmin, '
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors')
 
 METRICS = {          # metric -> i18n key of its label
     "fires": "metric_fires",

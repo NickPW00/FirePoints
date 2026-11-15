@@ -13,6 +13,7 @@ Mariaeliza assume o design do app. Revisão do site (desktop e celular) e plano 
 ## Decisões
 - Plano de design de prioridade máxima (8 itens abaixo), a executar só depois do ok do nicholas *(decisions #28; ok do nicholas na #30)*
 
+- Fundo do mapa trocado de CARTO para Esri Light Gray Canvas: a CARTO passou a exigir chave de API (os blocos apareciam com "API KEY REQUIRED")
 ## Código gerado ou alterado com IA
 - `app/maps.py` — zoom com a rolagem só depois do clique, mapa travado no Brasil (zoom 4–11), zoom suave, nomes (CARTO) por cima das cores, opção de suavizar, divisas IBGE de estados e municípios — alterado
 - `app/streamlit_app.py`, `app/charts.py`, `app/data.py` — seletor EN/PT, área por regiões, RJ como padrão, biomas em inglês — alterado
