@@ -47,6 +47,7 @@
 - **#31** Cor principal do app (`primaryColor`) de `#d94801` para `#c44100` — Contraste WCAG AA ≥ 4,5:1 em botões e links (antes 4,19:1 e 4,31:1), pedido pelo Brand Guide do Space Apps; continua na família do laranja de fogo
 - **#32** Demo em slides (não vídeo), 7 no total: título/equipe/desafio, problema, método, validação, app (calendário), mapa, impacto + próximo passo + links; o slide do mapa e os prints do app ficam em aberto até o design do mapa fechar — Limite de 7 slides do regulamento; os juízes leem sem narração; o mapa ainda está mudando (#28)
 - **#39** Demo entregue como PDF de 7 slides no repositório (`docs/demo/FirePoints-demo.pdf`), linkado no README; é o link público do campo "Link to Project Demo" — O guia aceita GitHub como hospedagem; abre sem login; fica junto do código e da declaração de IA
+- **#40** Código do repositório sob licença MIT (`LICENSE`, em nome dos dois integrantes); dados e material de terceiros seguem os termos de cada fonte — O README e a demo dizem "open code and data" e não havia licença; MIT é simples e permissiva
 
 ## 💡 Ideias por tema
 
@@ -109,6 +110,7 @@
 - [ ] @mariaeliza revisar a tradução do `pipeline/` e do `contrato-dados.md` no PR (só texto mudou) ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
 - [ ] @mariaeliza onde estão os arquivos do GFWED e até que mês vão? (não estão no repo) ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
 - [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
+- [ ] @mariaeliza confirmar a licença MIT (#40): vale para o código dos dois ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
 - [ ] @mariaeliza conferir o slide 6 (print do mapa de 15/11, leitura "metade dos focos em 14% das células") ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
 
 **@nicholas:**
