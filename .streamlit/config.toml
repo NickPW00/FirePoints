@@ -1,8 +1,9 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1751_nicholas_contraste-tema.md
 # App look (read by `streamlit run` from the repo root and by Streamlit Community Cloud)
 [theme]
 base = "light"
-primaryColor = "#d94801"            # fire orange, same family as the map and calendar ramp
+primaryColor = "#c44100"            # fire orange, darkened for WCAG AA (5.0:1 on the background, 5.1:1 under white button text)
 backgroundColor = "#fcfcfb"
 secondaryBackgroundColor = "#f3f2ee"
 textColor = "#1f1f1f"
