@@ -1,5 +1,6 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
 """Plotly figures for the FirePoints app (calendar, season, anomaly, fallback map, method)."""
 
 from __future__ import annotations
@@ -8,7 +9,8 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
-from maps import FIRE_RAMP, MONTHS, NO_FIRE, OUTLINE, SEASONS
+from i18n import biome, month, months, num, plotly_separators, status as status_name, t
+from maps import FIRE_RAMP, NO_FIRE, OUTLINE, SEASONS
 
 NO_DATA_GREY = "#d4d3ce"
 # One sequential ramp for every "how many fires" encoding (light = few, dark = many); grey = no data
@@ -17,13 +19,13 @@ K_SCALE = [[0, "#cde2fb"], [0.5, "#5598e7"], [1, "#0d366b"]]          # calibrat
 STATUS_MARK = {"observed": "", "estimated": " *", "partial": " †"}
 # Diverging, colour-blind safe (ColorBrewer RdBu): blue = fewer fires than normal, red = more
 BAND_COLORS = ["#2166ac", "#92c5de", "#f7f7f7", "#f4a582", "#b2182b"]
-BAND_NAMES = ["far below (<0.5×)", "below (0.5–0.8×)", "normal (0.8–1.25×)", "above (1.25–2×)", "far above (>2×)"]
+BAND_KEYS = ["c_band1", "c_band2", "c_band3", "c_band4", "c_band5"]   # i18n keys of the 1–5 anomaly bands
 BLUE, ORANGE, INK, MUTED = "#2a78d6", "#eb6834", "#31333f", "#8a8f98"
 PLOT_CONFIG = {"displaylogo": False, "modeBarButtonsToRemove": ["lasso2d", "select2d", "autoScale2d"]}
 
 
 def _layout(fig: go.Figure, height: int, **kwargs) -> go.Figure:
-    fig.update_layout(height=height, margin=dict(l=10, r=10, t=10, b=10),
+    fig.update_layout(height=height, margin=dict(l=10, r=10, t=10, b=10), separators=plotly_separators(),
                       paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", **kwargs)
     return fig
 
@@ -59,17 +61,17 @@ def calendar(monthly: pd.DataFrame, log_scale: bool = True, view: str = "count")
     pct = (monthly.pivot(index="year", columns="month", values="anomaly_pct").reindex(columns=range(1, 13)).to_numpy()
            if "anomaly_pct" in monthly else np.full(z.shape, np.nan))
     hover = np.empty(z.shape, dtype=object)
+    MONTHS = months()
     for i, y in enumerate(years):
         for j in range(12):
             v, s = z[i, j], status.iat[i, j]
             if s is None or (isinstance(s, float) and np.isnan(s)):
-                hover[i, j] = f"<b>{MONTHS[j]} {y}</b><br>No data"
+                hover[i, j] = f"<b>{MONTHS[j]} {y}</b><br>{t('c_no_data')}"
             elif s == "partial":
-                hover[i, j] = (f"<b>{MONTHS[j]} {y}</b><br>{v:,.0f} fires (VIIRS-eq.)<br>"
-                               "partial: MODIS Terra only, under-counted<br>not compared with the normal")
+                hover[i, j] = (f"<b>{MONTHS[j]} {y}</b><br>{t('c_fires_eq', n=num(v))}<br>{t('c_partial_hover')}")
             else:
-                extra = f"<br>{pct[i, j]:+.0f}% vs 2003–2025 mean" if np.isfinite(pct[i, j]) else ""
-                hover[i, j] = f"<b>{MONTHS[j]} {y}</b><br>{v:,.0f} fires (VIIRS-eq.){extra}<br>{s}"
+                extra = f"<br>{t('c_vs_mean', pct=f'{pct[i, j]:+.0f}')}" if np.isfinite(pct[i, j]) else ""
+                hover[i, j] = f"<b>{MONTHS[j]} {y}</b><br>{t('c_fires_eq', n=num(v))}{extra}<br>{status_name(s)}"
 
     if view == "anomaly":
         band = monthly.pivot(index="year", columns="month", values="anomaly_band").reindex(columns=range(1, 13))
@@ -77,7 +79,8 @@ def calendar(monthly: pd.DataFrame, log_scale: bool = True, view: str = "count")
         trace = go.Heatmap(
             z=band.to_numpy(dtype=float), x=MONTHS, y=ylabels, text=hover, hoverinfo="text",
             colorscale=scale, zmin=0.5, zmax=5.5, xgap=2, ygap=2,
-            colorbar=dict(title="vs normal", tickvals=[1, 2, 3, 4, 5], ticktext=BAND_NAMES, len=0.6, thickness=14),
+            colorbar=dict(title=t("c_vs_normal"), tickvals=[1, 2, 3, 4, 5], ticktext=[t(k) for k in BAND_KEYS],
+                          len=0.6, thickness=14),
         )
     else:
         finite = z[np.isfinite(z)]
@@ -85,9 +88,9 @@ def calendar(monthly: pd.DataFrame, log_scale: bool = True, view: str = "count")
         vmin = float(finite.min()) if len(finite) else 0.0
         if log_scale:
             ticks = _log_ticks(max(vmin, 1), max(vmax, 1))
-            colorbar = dict(title="Fires", tickvals=np.log10(np.array(ticks) + 1), ticktext=[f"{t:,}" for t in ticks])
+            colorbar = dict(title=t("c_fires"), tickvals=np.log10(np.array(ticks) + 1), ticktext=[num(v) for v in ticks])
         else:
-            colorbar = dict(title="Fires")
+            colorbar = dict(title=t("c_fires"))
         colorbar.update(len=0.6, thickness=14)
         trace = go.Heatmap(z=zc, x=MONTHS, y=ylabels, text=hover, hoverinfo="text",
                            colorscale=COLORSCALE, colorbar=colorbar, xgap=2, ygap=2)
@@ -107,24 +110,25 @@ def calendar(monthly: pd.DataFrame, log_scale: bool = True, view: str = "count")
 def season_tracker(monthly: pd.DataFrame, envelope: pd.DataFrame, year: int, compare: int | None = None) -> go.Figure:
     """One year (and optionally another) against the usual range of each month in 2003–2025."""
     fig = go.Figure()
+    MONTHS = months()
     fig.add_scatter(x=MONTHS, y=envelope["p90"], mode="lines", line=dict(width=0), hoverinfo="skip", showlegend=False)
     fig.add_scatter(x=MONTHS, y=envelope["p10"], mode="lines", line=dict(width=0), fill="tonexty",
-                    fillcolor="rgba(82,81,78,0.15)", name="usual range (10th–90th percentile, 2003–2025)",
+                    fillcolor="rgba(82,81,78,0.15)", name=t("c_usual"),
                     hoverinfo="skip")
     fig.add_scatter(x=MONTHS, y=envelope["p50"], mode="lines", line=dict(color=MUTED, width=2, dash="dot"),
-                    name="median", hovertemplate="median: %{y:,.0f}<extra></extra>")
+                    name=t("c_median"), hovertemplate=t("c_median") + ": %{y:,.0f}<extra></extra>")
     series = [(year, ORANGE)] + ([(compare, BLUE)] if compare and compare != year else [])
     for yr, color in reversed(series):
         d = monthly[(monthly["year"] == yr) & monthly["fires"].notna()]
         if d.empty:
             continue
-        fig.add_scatter(x=[MONTHS[m - 1] for m in d["month"]], y=d["fires"], mode="lines+markers", name=str(yr),
+        fig.add_scatter(x=[month(m) for m in d["month"]], y=d["fires"], mode="lines+markers", name=str(yr),
                         line=dict(color=color, width=2.5), marker=dict(size=8, line=dict(color="white", width=2)),
-                        hovertemplate=f"{yr}: %{{y:,.0f}} fires<extra></extra>")
-        fig.add_annotation(x=MONTHS[int(d["month"].iloc[-1]) - 1], y=float(d["fires"].iloc[-1]), text=f"<b>{yr}</b>",
+                        hovertemplate=f"{yr}: %{{y:,.0f}} {t('c_fires_hover')}<extra></extra>")
+        fig.add_annotation(x=month(d["month"].iloc[-1]), y=float(d["fires"].iloc[-1]), text=f"<b>{yr}</b>",
                            showarrow=False, xanchor="left", xshift=10, font=dict(color=INK))
     _layout(fig, 400, hovermode="x unified", legend=dict(orientation="h", y=-0.14),
-            yaxis=dict(title="Fires per month (VIIRS-eq.)", rangemode="tozero", tickformat="~s"),
+            yaxis=dict(title=t("c_fires_month"), rangemode="tozero", tickformat="~s"),
             xaxis=dict(showgrid=False))
     fig.update_layout(margin=dict(l=10, r=50, t=10, b=10))
     return fig
@@ -135,12 +139,12 @@ def anomaly_bars(history: pd.DataFrame, year: int, mean: float) -> go.Figure:
     colors = [ORANGE if y == year else ("#b9bec6" if s != "observed" else "#5b7fa8")
               for y, s in zip(history["year"], history["status"])]
     fig = go.Figure(go.Bar(x=history["year"], y=history["fires"], marker_color=colors,
-                           hovertemplate="%{x}: %{y:,.0f} fires<extra></extra>"))
+                           hovertemplate="%{x}: %{y:,.0f} " + t("c_fires_hover") + "<extra></extra>"))
     if np.isfinite(mean):
         fig.add_hline(y=mean, line_dash="dash", line_color=INK, line_width=1.5)
-        fig.add_annotation(xref="paper", x=1, y=mean, text=f"2003–2025 mean: {mean:,.0f}", showarrow=False,
+        fig.add_annotation(xref="paper", x=1, y=mean, text=t("c_mean_label", n=num(mean)), showarrow=False,
                            xanchor="right", yanchor="bottom", bgcolor="rgba(255,255,255,0.85)", font=dict(color=INK))
-    _layout(fig, 320, yaxis=dict(title="Fires (VIIRS-eq.)", tickformat="~s"), xaxis=dict(dtick=2), bargap=0.25)
+    _layout(fig, 320, yaxis=dict(title=t("c_fires_eq_axis"), tickformat="~s"), xaxis=dict(dtick=2), bargap=0.25)
     fig.update_layout(margin=dict(l=10, r=10, t=20, b=10))
     return fig
 
@@ -169,8 +173,7 @@ def cell_map(grid, layer: dict, hover: np.ndarray, fit: list[list[float]] | None
     scale = [[0, NO_FIRE], [third, "#e3e2de"], [2 * third, "#9d9c97"]] + top
     fig = go.Figure(go.Heatmap(
         z=z, x=grid.lons, y=grid.lats, zmin=-2, zmax=1, colorscale=scale, showscale=False, customdata=hover,
-        hovertemplate=("lat %{y:.2f}, lon %{x:.2f}<br>%{customdata[0]:,.1f} fires per year<br>"
-                       "fire in %{customdata[1]:.0f}% of the years<extra></extra>"),
+        hovertemplate=t("hover_cell"),
     ))
     if grid.border_lines:
         bx, by = [], []
@@ -193,7 +196,7 @@ def cell_map(grid, layer: dict, hover: np.ndarray, fit: list[list[float]] | None
 def factors_heatmap(factors: pd.DataFrame) -> go.Figure:
     """Calibration factor k (VIIRS / MODIS) per biome and month."""
     fig = go.Figure(go.Heatmap(
-        z=factors.to_numpy(), x=MONTHS, y=factors.index.to_list(), colorscale=K_SCALE,
+        z=factors.to_numpy(), x=months(), y=[biome(b) for b in factors.index], colorscale=K_SCALE,
         text=np.round(factors.to_numpy(), 2), texttemplate="%{text}", colorbar=dict(title="k", thickness=14),
         hovertemplate="%{y}, %{x}: k = %{z:.2f}<extra></extra>", xgap=2, ygap=2,
     ))
@@ -210,15 +213,15 @@ def harmonization_check(monthly: pd.DataFrame) -> go.Figure:
     y.loc[y["year"] < 2012, "viirs_raw"] = np.nan  # S-NPP starts in 2012
     y = y[y["year"] >= 2001]                       # 2000 has only Nov–Dec
     fig = go.Figure()
-    fig.add_scatter(x=y["year"], y=y["modis_raw"], name="MODIS (raw)", mode="lines+markers", line_color="#9aa5b1",
+    fig.add_scatter(x=y["year"], y=y["modis_raw"], name=t("c_modis_raw"), mode="lines+markers", line_color="#9aa5b1",
                     hovertemplate="%{y:,.0f}")
-    fig.add_scatter(x=y["year"], y=y["modis_adj"], name="MODIS × k (harmonized)", mode="lines+markers",
+    fig.add_scatter(x=y["year"], y=y["modis_adj"], name=t("c_modis_adj"), mode="lines+markers",
                     line=dict(color=ORANGE, width=3), hovertemplate="%{y:,.0f}")
-    fig.add_scatter(x=y["year"], y=y["viirs_raw"], name="VIIRS S-NPP (observed)", mode="lines+markers",
+    fig.add_scatter(x=y["year"], y=y["viirs_raw"], name=t("c_viirs"), mode="lines+markers",
                     line=dict(color=BLUE, width=3, dash="dot"), hovertemplate="%{y:,.0f}")
     fig.add_vrect(x0=2011.5, x1=2019.5, fillcolor="#f2c14e", opacity=0.15, line_width=0,
-                  annotation_text="calibration 2012–2019", annotation_position="top left")
-    _layout(fig, 380, hovermode="x unified", yaxis=dict(title="Fires per year", tickformat="~s"),
+                  annotation_text=t("c_calibration"), annotation_position="top left")
+    _layout(fig, 380, hovermode="x unified", yaxis=dict(title=t("c_fires_year"), tickformat="~s"),
             legend=dict(orientation="h", y=-0.15))
     fig.update_layout(margin=dict(l=10, r=10, t=30, b=10))
     return fig

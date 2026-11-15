@@ -1,5 +1,6 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
 """Data access for the FirePoints app.
 
 Reads the pre-processed Parquet files in ``data/processed/`` (built by
@@ -30,6 +31,18 @@ POINTS_DIR = PROCESSED / "focos"  # ano=<year>/focos_<year>_<sensor>.parquet (pi
 CELL = 0.1
 FIRST_MONTH = (2000, 11)  # MODIS Terra starts in Nov/2000
 LAST_MONTH = (2026, 10)   # last complete S-NPP month in the series (pipeline/03_harmonizar.py)
+
+STATES_GEOJSON = PROCESSED / "ufs_simplificado.geojson"   # smooth state borders (pipeline/07_divisas.py)
+MUNICIPALITIES_DIR = PROCESSED / "municipios"               # <UF>.geojson (pipeline/07_divisas.py)
+
+# IBGE macro-regions (internal key = IBGE name) -> states
+REGIONS = {
+    "Norte": ["AC", "AM", "AP", "PA", "RO", "RR", "TO"],
+    "Nordeste": ["AL", "BA", "CE", "MA", "PB", "PE", "PI", "RN", "SE"],
+    "Centro-Oeste": ["DF", "GO", "MS", "MT"],
+    "Sudeste": ["ES", "MG", "RJ", "SP"],
+    "Sul": ["PR", "RS", "SC"],
+}
 
 # Status labels, as written by pipeline/03_harmonizar.py
 STATUS_EN = {"observado": "observed", "estimado": "estimated", "parcial": "partial"}
@@ -87,6 +100,15 @@ def cells_table(series: pd.DataFrame) -> pd.DataFrame:
     return cells
 
 
+def states_of(area: dict) -> list[str]:
+    """States (UF) covered by a "states" or "regions" area; empty list for the other kinds."""
+    if area.get("type") == "states":
+        return list(area["states"])
+    if area.get("type") == "regions":
+        return [uf for r in area["regions"] for uf in REGIONS.get(r, [])]
+    return []
+
+
 def select_cells(cells: pd.DataFrame, area: dict) -> np.ndarray:
     """Return the keys of the cells whose centre falls inside ``area``.
 
@@ -94,6 +116,7 @@ def select_cells(cells: pd.DataFrame, area: dict) -> np.ndarray:
       {"type": "brazil"}
       {"type": "biomes", "biomes": [...]}
       {"type": "states", "states": ["RJ", ...]}
+      {"type": "regions", "regions": ["Sudeste", ...]}   (IBGE macro-regions, see REGIONS)
       {"type": "bbox", "lat_min", "lat_max", "lon_min", "lon_max"}
       {"type": "polygon", "coords": [[lon, lat], ...]}
     """
@@ -104,6 +127,8 @@ def select_cells(cells: pd.DataFrame, area: dict) -> np.ndarray:
         mask = cells["bioma"].isin(area["biomes"]).to_numpy()
     elif kind == "states":
         mask = cells["estado"].isin(area["states"]).to_numpy()
+    elif kind == "regions":
+        mask = cells["estado"].isin(states_of(area)).to_numpy()
     elif kind == "bbox":
         mask = (
             cells["lat"].between(area["lat_min"], area["lat_max"])
