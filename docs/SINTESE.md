@@ -31,6 +31,7 @@
 - **#17** CSV dos focos lê `focos/ano=*/` via DuckDB, só os anos do período, até 1,5 mi pontos por download — Pontos já estão no repo; plano B da #15 não é mais necessário
 - **#22** Mapa do app em folium: basemap OSM em cinza + grade de 0,1° como imagem reprojetada para Mercator, divisas e siglas dos estados, região escolhida destacada sem cortar o Brasil; raster Plotly fica como reserva offline — Dá zoom/arraste e contexto geográfico (pedidos da mariaeliza) com página leve (0,26 MB); a reserva garante a demo sem internet
 - **#23** Leitura dos números no app: meses parciais (nov/2000–2002) ficam sem faixa no "vs normal"; "% de anos com fogo" divide só pelos anos com dado no mês (ou anos completos); o total do mapa respeita o mês escolhido; CSV de pontos vai até out/2026, fim da série — Não mostrar falta de satélite como "menos fogo" nem números diferentes entre mapa, calendário e CSV
+- **#24** Referências da documentação (METHODOLOGY § 9, DATA.md, README) no formato APA 7 — Padrão científico; os juízes leem em inglês; os produtos FIRMS já trazem DOI
 
 ## 💡 Ideias por tema
 
