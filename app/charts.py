@@ -1,6 +1,7 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1732_mariaeliza_design-app.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md
 """Plotly figures for the FirePoints app (calendar, season, anomaly, fallback map, method)."""
 
 from __future__ import annotations
@@ -10,7 +11,8 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from i18n import biome, month, months, num, plotly_separators, status as status_name, t
-from maps import FIRE_RAMP, NO_FIRE, OUTLINE, SEASONS
+import maps
+from maps import FIRE_RAMP, SEASONS
 
 NO_DATA_GREY = "#d4d3ce"
 # One sequential ramp for every "how many fires" encoding (light = few, dark = many); grey = no data
@@ -152,25 +154,27 @@ def anomaly_bars(history: pd.DataFrame, year: int, mean: float) -> go.Figure:
 def cell_map(grid, layer: dict, hover: np.ndarray, fit: list[list[float]] | None = None) -> go.Figure:
     """Offline map: the grid as a raster (lat × lon), no basemap or WebGL needed, so it always renders.
 
-    Same reading as the basemap version (``maps.render``): selected area in full colour, the
-    rest of Brazil in grey, state boundaries and labels from the grid. Everything goes in a
+    Same reading and colours as the basemap version (``maps.render``, ``maps.THEME``): selected area in
+    full colour, the rest of Brazil in grey, state boundaries and labels from the grid. Everything goes in a
     single heatmap (one z array) to keep the page light:
     z = -2 Brazil without fire · [-1, 0) outside the selected area · [0, 1] selected area.
     """
-    value, t, sel = layer["value"], layer["t"], layer["sel"]
+    th = maps.THEME
+    value, pos, sel = layer["value"], layer["t"], layer["sel"]   # not "t": that is the i18n function
     shown = np.isfinite(value)
     z = np.full(grid.shape, np.nan, dtype=np.float32)
     z[grid.inside & ~shown] = -2.0
-    z[shown & ~sel] = (t[shown & ~sel] - 1.0) * 0.998 - 0.001
-    z[shown & sel] = t[shown & sel]
+    z[shown & ~sel] = (pos[shown & ~sel] - 1.0) * 0.998 - 0.001
+    z[shown & sel] = pos[shown & sel]
     third = 1 / 3
     if layer["legend"]["kind"] == "classes":      # t is 0, 0.5 or 1
         c = [color for _, _, color in SEASONS]
         top = [[2 * third, c[0]], [0.75, c[0]], [0.75, c[1]], [0.9167, c[1]], [0.9167, c[2]], [1, c[2]]]
     else:
-        top = [[2 * third + pos * third, color] for pos, color in COLORSCALE]
+        stops = layer["legend"]["stops"]
+        top = [[2 * third + i / (len(stops) - 1) * third, color] for i, color in enumerate(stops)]
         top[0][0] = 2 * third + 1e-4
-    scale = [[0, NO_FIRE], [third, "#e3e2de"], [2 * third, "#9d9c97"]] + top
+    scale = [[0, th["no_fire"]], [third, th["faded_scale"][0]], [2 * third, th["faded_scale"][1]]] + top
     fig = go.Figure(go.Heatmap(
         z=z, x=grid.lons, y=grid.lats, zmin=-2, zmax=1, colorscale=scale, showscale=False, customdata=hover,
         hovertemplate=t("hover_cell"),
@@ -180,16 +184,18 @@ def cell_map(grid, layer: dict, hover: np.ndarray, fit: list[list[float]] | None
         for (la0, lo0), (la1, lo1) in grid.border_lines:
             bx += [lo0, lo1, None]
             by += [la0, la1, None]
-        fig.add_scatter(x=bx, y=by, mode="lines", line=dict(color=OUTLINE, width=0.8), opacity=0.6,
+        fig.add_scatter(x=bx, y=by, mode="lines", line=dict(color=th["line"], width=0.8), opacity=0.6,
                         hoverinfo="skip", showlegend=False)
         fig.add_scatter(x=[lon for _, _, lon in grid.labels], y=[lat for _, lat, _ in grid.labels],
-                        text=[uf for uf, _, _ in grid.labels], mode="text", textfont=dict(size=10, color=INK),
+                        text=[uf for uf, _, _ in grid.labels], mode="text", textfont=dict(size=10, color=th["ink"]),
                         hoverinfo="skip", showlegend=False)
     (south, west), (north, east) = fit or grid.bounds
     pad = max(0.3, 0.08 * max(north - south, east - west))
     _layout(fig, 600, dragmode="pan",
             xaxis=dict(visible=False, range=[west - pad, east + pad]),
             yaxis=dict(visible=False, range=[south - pad, north + pad], scaleanchor="x", scaleratio=1))
+    if th["plot_bg"]:
+        fig.update_layout(plot_bgcolor=th["plot_bg"])
     return fig
 
 

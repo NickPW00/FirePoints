@@ -40,6 +40,7 @@
 | `pipeline/*.py`, `rodar*.bat`, `docs/contrato-dados.md`, `graficos/modis_vs_snpp.html`, `data/processed/README.md`, this page | Translated comments, messages and docs into English; added the AI marks | Nicholas | [1515](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md) |
 | `README.md` (Credits), `docs/DATA.md`, `app/streamlit_app.py` (Space Apps credit in the sidebar) | Checked every link in the repository; organized credits for data sources, libraries and frameworks; added the Space Apps small logo (official file, unaltered) | Maria Eliza | [2331](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md) |
 | `app/i18n.py`, `app/maps.py`, `app/streamlit_app.py`, `app/charts.py`, `app/data.py`, `pipeline/07_divisas.py`, `data/processed/ufs_simplificado.geojson`, `data/processed/municipios/` | Map design (scroll zoom after a click, map locked to Brazil, smooth zoom, place names over the data, smoothing option, IBGE state and municipal borders), regions, English biome names and the English/Portuguese language switch | Maria Eliza | [1732](ai-log/2026-11-15_1732_mariaeliza_design-app.md) |
+| `app/maps.py`, `app/charts.py`, `app/streamlit_app.py`, `app/i18n.py` | Windy-like map (continuous colour field, new colour ramp on a dark basemap, white place names, thin borders), scroll-zoom button and Ctrl + scroll, free camera, fallback-map fix | Maria Eliza | [1815](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md) |
 | `pipeline/06_teste_previsao.py`, `data/processed/teste_previsao.csv`, METHODOLOGY § 8 | Wrote the outlook test (rolling-origin forecasts, climatology vs recent anomaly) and the Future work section | Nicholas | [1733](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md) |
 
 Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template for Streamlit).
@@ -64,6 +65,7 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 15 Nov, 17:33 | Nicholas | Evaluate a fire outlook model; keep it as future work, backed by a first forecast test |
 | 15 Nov, 17:32 | Maria Eliza | Review the app design (desktop and mobile), get Nicholas's approval and build the top-priority improvements (map, regions, biome names, EN/PT) |
 | 15 Nov, 17:51 | Nicholas | Assess which Space Apps brand guidelines are worth applying to the app and the demo; fix the theme contrast |
+| 15 Nov, 18:15 | Maria Eliza | Rework the map look after seeing it live (compare with Windy) and let the user choose when the wheel zooms the map |
 
 ## Team decisions (summary of `docs/decisions.md`)
 

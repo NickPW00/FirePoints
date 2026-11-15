@@ -73,8 +73,8 @@ The solution idea is entirely the team's own. We developed it with the help of *
 | **IBGE** | Biomes of Brazil, 1:250,000 (2019) — `Biomas_250mil.zip` | [geoftp.ibge.gov.br — biomas/vetores](https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/) | Free use with attribution |
 | **IBGE** | State boundaries, 2024 territorial mesh — `BR_UF_2024.zip` | [geoftp.ibge.gov.br — malhas municipais 2024](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | Free use with attribution |
 | **IBGE** | Municipal boundaries, 2024 territorial mesh — `BR_Municipios_2024.zip` (map borders of the selected area) | [geoftp.ibge.gov.br — malhas municipais 2024](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/) | Free use with attribution |
-| **Esri World Light Gray Canvas** | Basemap and place-name tiles of the app map (no API key) | [Esri attribution](https://www.esri.com/en-us/legal/terms/data-attributions) · [openstreetmap.org/copyright](https://www.openstreetmap.org/copyright) | Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors |
-| **OpenStreetMap** contributors | Basemap of the app's map (loaded live through folium) | OpenStreetMap standard tiles | © OpenStreetMap contributors, [ODbL](https://www.openstreetmap.org/copyright) |
+| **Esri World Dark Gray Canvas** | Basemap and place-name tiles of the app map (no API key) | [Esri attribution](https://www.esri.com/en-us/legal/terms/data-attributions) · [openstreetmap.org/copyright](https://www.openstreetmap.org/copyright) | Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors |
+| **OpenStreetMap** contributors | Data behind the basemap tiles of the app's map (loaded live through folium) | Through the Esri canvas tiles above | © OpenStreetMap contributors, [ODbL](https://www.openstreetmap.org/copyright) |
 
 FIRMS downloads require a free [NASA Earthdata Login](https://urs.earthdata.nasa.gov) account. Full download steps: [`docs/DATA.md`](docs/DATA.md).
 

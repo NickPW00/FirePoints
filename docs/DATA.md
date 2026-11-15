@@ -51,9 +51,9 @@ https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/veto
 Instituto Brasileiro de Geografia e Estatística. (2024). *Malha territorial: Unidades da Federação (BR_UF_2024)* [Data set]. IBGE.\
 https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/
 
-## 2b. Basemap — OpenStreetMap
+## 2b. Basemap — Esri Dark Gray Canvas
 
-The app's map draws OpenStreetMap standard tiles under the data (loaded live by folium; nothing stored in this repository). © OpenStreetMap contributors, [ODbL](https://www.openstreetmap.org/copyright).
+The app's map draws Esri's *World Dark Gray Canvas* under the data and its place-name layer above the data (tiles loaded live by folium, no API key; nothing stored in this repository). Tiles © Esri, HERE, Garmin, © OpenStreetMap contributors ([ODbL](https://www.openstreetmap.org/copyright)).
 
 ## 3. Outputs in this repository
 

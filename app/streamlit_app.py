@@ -1,4 +1,5 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md
@@ -66,6 +67,11 @@ def get_grid() -> maps.Grid:
 @st.cache_resource
 def get_states_geojson() -> dict | None:
     return json.loads(STATES_GEOJSON.read_text(encoding="utf-8")) if STATES_GEOJSON.exists() else None
+
+
+def wheel_text() -> dict:
+    """Texts of the scroll-zoom button of the map, in the current language."""
+    return {"on": t("wheel_on"), "off": t("wheel_off"), "tip": t("wheel_tip")}
 
 
 @st.cache_resource
@@ -221,9 +227,9 @@ if mode == "draw":
     record = (y_min, y_max)
     overview = maps.render(grid, get_frequency(record, None), "fires", get_cells()["key"].to_numpy(), log=True)
     drawn = area if area["type"] == "polygon" else None
-    out = st_folium(maps.base_map(grid, draw=True, states_geojson=get_states_geojson(), height=520, hint=t("map_hint")),
+    out = st_folium(maps.base_map(grid, draw=True, states_geojson=get_states_geojson(), height=520, wheel=wheel_text()),
                     key=f"draw_map_{st.session_state.get('draw_gen', 0)}", height=520, use_container_width=True,
-                    feature_group_to_add=maps.data_layer(grid, overview["rgba"], drawn),
+                    feature_group_to_add=maps.data_layer(grid, overview, drawn),
                     returned_objects=["last_active_drawing"], pixelated=True)
     drawing = (out or {}).get("last_active_drawing")
     if drawing and drawing.get("geometry", {}).get("type") == "Polygon":
@@ -376,10 +382,10 @@ def render_map() -> None:
         from streamlit_folium import st_folium
 
         states_geo = get_states_geojson()
-        base = maps.base_map(grid, fit=fit, states_geojson=states_geo, height=640, hint=t("map_hint"),
+        base = maps.base_map(grid, fit=fit, states_geojson=states_geo, height=640, wheel=wheel_text(),
                              municipalities=get_municipalities(tuple(sel_states)))
         out = st_folium(base, key="fire_map", height=640, use_container_width=True, pixelated=not smooth,
-                        feature_group_to_add=maps.data_layer(grid, layer["rgba"], area, layer["sel"], smooth=smooth,
+                        feature_group_to_add=maps.data_layer(grid, layer, area, smooth=smooth,
                                                              states_geojson=states_geo, selected_states=sel_states),
                         returned_objects=["last_clicked"])
         clicked = (out or {}).get("last_clicked")
