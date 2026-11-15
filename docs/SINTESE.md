@@ -128,6 +128,5 @@
 - [ ] @nicholas revisar e fazer o merge do PR de design; depois conferir o mapa no app publicado ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 - [ ] @nicholas revisar e fazer o merge do PR do mapa (inclui a correção do PR #7, que pode ser fechado) ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
 - [ ] @nicholas revisar e fazer o merge do PR do mapa com pixels pequenos ([log](ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md))
-- [ ] @nicholas confirmar o nome da equipe (2XLero) e o nome da Maria Eliza como aparecem no slide 1 ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
 - [ ] @nicholas colar o link do PDF no campo "Link to Project Demo" e testar em janela anônima ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
 
