@@ -20,10 +20,21 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+import importlib
+
 import charts
 import data
 import i18n
 import maps
+
+# Community Cloud can keep the old copy of these modules after a deploy (only this script is
+# re-read), so reload any module whose file changed since it was imported.
+for _mod in (i18n, data, maps, charts):
+    _mtime = Path(_mod.__file__).stat().st_mtime
+    if getattr(_mod, "_fp_mtime", None) != _mtime:
+        importlib.reload(_mod)
+        _mod._fp_mtime = _mtime
+
 from i18n import band_word, biome, month as mname, months, num, region, t
 
 st.set_page_config(page_title=t("page_title"), page_icon="🔥", layout="wide")
