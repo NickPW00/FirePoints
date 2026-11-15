@@ -46,6 +46,7 @@
 - **#29** Modelo preditivo fica fora do app nesta entrega: entra como "Future work" (METHODOLOGY § 8 e descrição da submissão), com o teste `pipeline/06_teste_previsao.py` — Ganho real só de 1 a 3 meses (Brasil: erro 34,2% → 29,1%); o app já mostra a faixa histórica; prioridade é a demo e o critério Validity
 - **#31** Cor principal do app (`primaryColor`) de `#d94801` para `#c44100` — Contraste WCAG AA ≥ 4,5:1 em botões e links (antes 4,19:1 e 4,31:1), pedido pelo Brand Guide do Space Apps; continua na família do laranja de fogo
 - **#32** Demo em slides (não vídeo), 7 no total: título/equipe/desafio, problema, método, validação, app (calendário), mapa, impacto + próximo passo + links; o slide do mapa e os prints do app ficam em aberto até o design do mapa fechar — Limite de 7 slides do regulamento; os juízes leem sem narração; o mapa ainda está mudando (#28)
+- **#39** Demo entregue como PDF de 7 slides no repositório (`docs/demo/FirePoints-demo.pdf`), linkado no README; é o link público do campo "Link to Project Demo" — O guia aceita GitHub como hospedagem; abre sem login; fica junto do código e da declaração de IA
 
 ## 💡 Ideias por tema
 
@@ -107,8 +108,8 @@
 - [ ] @mariaeliza abrir firepoints.streamlit.app numa janela anônima para confirmar que é público (o guia exige) ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @mariaeliza revisar a tradução do `pipeline/` e do `contrato-dados.md` no PR (só texto mudou) ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
 - [ ] @mariaeliza onde estão os arquivos do GFWED e até que mês vão? (não estão no repo) ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
-- [ ] @mariaeliza avisar quando o mapa estiver fechado: os prints dos slides 5 e 6 são tirados no fim, de uma vez, com o app em inglês ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 - [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
+- [ ] @mariaeliza conferir o slide 6 (print do mapa de 15/11, leitura "metade dos focos em 14% das células") ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
 
 **@nicholas:**
 
@@ -125,8 +126,8 @@
 - [ ] @nicholas conferir se a lista de bibliotecas do app no README está completa ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @nicholas aprovar (ou ajustar) o plano de design antes de a mariaeliza mexer no `app/` — responder aqui ou confirmar a #28: ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 - [ ] @nicholas revisar e fazer o merge do PR de design; depois conferir o mapa no app publicado ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
-- [ ] @nicholas declarar os slides da demo em `docs/AI_USE.md` (feitos com IA) e pôr o link público da demo no rascunho da submissão ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
-- [ ] @nicholas confirmar o nome da equipe nos slides (usado: 2XLero) ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 - [ ] @nicholas revisar e fazer o merge do PR do mapa (inclui a correção do PR #7, que pode ser fechado) ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
 - [ ] @nicholas revisar e fazer o merge do PR do mapa com pixels pequenos ([log](ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md))
+- [ ] @nicholas confirmar o nome da equipe (2XLero) e o nome da Maria Eliza como aparecem no slide 1 ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
+- [ ] @nicholas colar o link do PDF no campo "Link to Project Demo" e testar em janela anônima ([log](ai-log/2026-11-15_1931_nicholas_demo-slides.md))
 
