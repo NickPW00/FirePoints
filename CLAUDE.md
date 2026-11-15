@@ -1,4 +1,7 @@
+<!-- AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1430_nicholas_documentacao.md -->
 # FirePoints — instruções para o Claude
+
+> *Instructions for the team's AI assistant (Claude), in Portuguese, written with its help. See [`docs/AI_USE.md`](docs/AI_USE.md).*
 
 Projeto do NASA Space Apps 2026 (desafio "Harmonization of MODIS and VIIRS Hot Spots"), feito em dupla. Cada integrante usa o próprio Claude; o registro compartilhado fica em `docs/`.
 
@@ -16,5 +19,5 @@ Projeto do NASA Space Apps 2026 (desafio "Harmonization of MODIS and VIIRS Hot S
    `# AI-assisted: Claude (Anthropic). See docs/ai-log/<arquivo-do-log>.md`
 
 ## Convenções
-- Documentos para os juízes (README, docs/METHODOLOGY.md, docs/DATA.md, guia do app) em inglês; registros internos em português.
+- Documentos para os juízes (README, docs/METHODOLOGY.md, docs/DATA.md, docs/AI_USE.md, guia do app) e código (comentários, docstrings, mensagens) em inglês; registros internos (`decisions.md`, `ai-log/`) em português (#25). Ao criar um log novo, acrescente a sessão e os arquivos em `docs/AI_USE.md`.
 - Nunca commitar a MAP_KEY do FIRMS: usar variável de ambiente ou `st.secrets`.

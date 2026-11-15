@@ -1,5 +1,6 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
 """FirePoints — harmonized MODIS + VIIRS fire calendar for Brazil.
 
 Run locally:  streamlit run app/streamlit_app.py
@@ -510,3 +511,6 @@ for (tab_label, render), container in zip(TABS.items(), containers):
         continue
     with container:
         render()
+
+st.divider()
+st.caption("Built by the FirePoints team for the NASA Space Apps Challenge 2026, with AI assistance (Claude, Anthropic): [how we used AI](https://github.com/NickPW00/FirePoints/blob/main/docs/AI_USE.md). Basemap © OpenStreetMap contributors.")

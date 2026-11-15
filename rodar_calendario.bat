@@ -1,21 +1,22 @@
 @echo off
+rem AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md and docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
 chcp 65001 >nul
 cd /d "%~dp0"
-rem Funciona com os scripts soltos na pasta ou dentro de pipeline\
+rem Works with the scripts loose in the folder or inside pipeline\
 set P=
 if exist pipeline\01_processar_focos.py set P=pipeline\
 echo.
-echo === 1/2 Trazendo o contorno dos estados dos Downloads ===
-if exist "%USERPROFILE%\Downloads\BR_UF_*.zip" (move "%USERPROFILE%\Downloads\BR_UF_*.zip" .) else (echo Contorno dos estados nao esta nos Downloads - procurando na pasta do projeto.)
+echo === 1/2 Moving the state boundaries from Downloads ===
+if exist "%USERPROFILE%\Downloads\BR_UF_*.zip" (move "%USERPROFILE%\Downloads\BR_UF_*.zip" .) else (echo State boundaries are not in Downloads - looking in the project folder.)
 echo.
-echo === 2/2 Montando o calendario de queimadas ===
+echo === 2/2 Building the burning calendar ===
 python %P%04_calendario.py
 if errorlevel 1 goto erro
 echo.
-echo Tudo pronto!
+echo All done!
 pause
 exit /b
 :erro
 echo.
-echo Deu erro. Tire um print desta janela e mande para o Claude.
+echo Something went wrong. Take a screenshot of this window and share it with the team.
 pause

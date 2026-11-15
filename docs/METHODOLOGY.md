@@ -157,4 +157,4 @@ https://github.com/NickPW00/FirePoints
 
 ## Use of AI
 
-The pipeline code and this document were written with the help of Claude (Anthropic). Every AI-assisted file has a header pointing to its log in `docs/ai-log/`, and the team's decisions are recorded in `docs/decisions.md`.
+The solution idea is the team's own. We developed it with the help of Claude (Anthropic): the pipeline code and this document were written with its assistance, and every technical choice was confirmed by both teammates in `docs/decisions.md`. Every AI-assisted file has a header pointing to its log in `docs/ai-log/`. Full declaration: [`AI_USE.md`](AI_USE.md).

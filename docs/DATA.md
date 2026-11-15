@@ -1,5 +1,7 @@
 # Data sources
 
+*AI-assisted: drafted with Claude (Anthropic) and reviewed by the team. The processed files in `data/processed/` are outputs of the AI-assisted pipeline — see [`data/processed/README.md`](../data/processed/README.md) and [`AI_USE.md`](AI_USE.md).*
+
 All inputs are public and free. Raw files are not stored in this repository (the largest are close to 500 MB); the steps below download them again.
 
 ## 1. Active fires — NASA FIRMS
@@ -60,7 +62,7 @@ https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_
 | `quadradinhos.parquet` | 04 | biome and state of each cell |
 | `focos/ano=<year>/focos_<year>_<sensor>.parquet` | 05 | individual detections for CSV download |
 
-Column definitions: [`contrato-dados.md`](contrato-dados.md) (Portuguese).
+Column definitions: [`contrato-dados.md`](contrato-dados.md) (data contract) and the glossary in [`data/processed/README.md`](../data/processed/README.md).
 
 ## 4. Terms of use
 

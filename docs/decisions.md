@@ -1,5 +1,7 @@
 # Registro de decisões
 
+> *Internal decision log, kept in Portuguese and written with the help of Claude (Anthropic). English summary: [`AI_USE.md`](AI_USE.md#team-decisions-summary-of-docsdecisionsmd).*
+
 **Regra:** só acrescentar linhas no fim da tabela; nunca editar nem apagar as antigas. Para mudar uma decisão, adicione uma linha nova com status `substitui #N`.
 
 Status: `proposta` (uma pessoa decidiu, falta a outra ver) · `confirmada` · `substitui #N` · `descartada`
@@ -30,3 +32,5 @@ Status: `proposta` (uma pessoa decidiu, falta a outra ver) · `confirmada` · `s
 | 22 | 2026-11-14 | nicholas | Mapa do app em folium: basemap OSM em cinza + grade de 0,1° como imagem reprojetada para Mercator, divisas e siglas dos estados, região escolhida destacada sem cortar o Brasil; raster Plotly fica como reserva offline | Dá zoom/arraste e contexto geográfico (pedidos da mariaeliza) com página leve (0,26 MB); a reserva garante a demo sem internet | proposta | [log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md) |
 | 23 | 2026-11-14 | nicholas | Leitura dos números no app: meses parciais (nov/2000–2002) ficam sem faixa no "vs normal"; "% de anos com fogo" divide só pelos anos com dado no mês (ou anos completos); o total do mapa respeita o mês escolhido; CSV de pontos vai até out/2026, fim da série | Não mostrar falta de satélite como "menos fogo" nem números diferentes entre mapa, calendário e CSV | proposta | [log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md) |
 | 24 | 2026-11-15 | nicholas | Referências da documentação (METHODOLOGY § 9, DATA.md, README) no formato APA 7 | Padrão científico; os juízes leem em inglês; os produtos FIRMS já trazem DOI | proposta | [log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md) |
+| 25 | 2026-11-15 | nicholas | Código (comentários, docstrings, mensagens), `.bat`, gráfico e contrato de dados em inglês; logs internos seguem em PT, com resumo em EN em `docs/AI_USE.md` | Regra do Space Apps: tudo o que estiver linkado na submissão deve estar em inglês | substitui #2 | [log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md) |
+| 26 | 2026-11-15 | nicholas | Declaração de uso de IA: a ideia da solução é da equipe; o desenvolvimento a partir dela foi feito com o Claude; toda escolha técnica confirmada pelos dois | Regra: a IA não pode criar a ideia; o texto precisa dizer exatamente como foi usada | proposta | [log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md) |
