@@ -21,7 +21,15 @@ Our requests: 848817 (MODIS) and 848820 (VIIRS S-NPP), made on 14 Nov 2026.
 
 **Programmatic alternative:** the FIRMS API (`/api/area/csv/...`) needs a free MAP_KEY requested at firms.modaps.eosdis.nasa.gov/api/map_key. Never commit a MAP_KEY; use an environment variable or `st.secrets`.
 
-**Citation:** MODIS Collection 6 Hotspot / Active Fire Detections MCD14ML distributed from NASA FIRMS, doi:10.5067/FIRMS/MODIS/MCD14ML. VIIRS S-NPP 375 m active fire product distributed from NASA FIRMS (https://earthdata.nasa.gov/firms).
+**Citation (APA 7):**
+
+NASA FIRMS. (2026). *MODIS Collection 6.1 hotspot / active fire detections MCD14ML* [Data set]. NASA Fire Information for Resource Management System.\
+https://doi.org/10.5067/FIRMS/MODIS/MCD14ML
+
+NASA FIRMS. (2026). *VIIRS (S-NPP) I band 375 m active fire product VNP14IMGT* [Data set]. NASA Fire Information for Resource Management System.\
+https://doi.org/10.5067/FIRMS/VIIRS/VNP14IMGT_NRT.002
+
+Full reference list: [`METHODOLOGY.md` § 9](METHODOLOGY.md#9-references).
 
 ## 2. Boundaries — IBGE
 
@@ -30,7 +38,15 @@ Our requests: 848817 (MODIS) and 848820 (VIIRS S-NPP), made on 14 Nov 2026.
 | Biomes of Brazil, 1:250,000 (2019) | `Biomas_250mil.zip` — geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/ | biome of each 0.1° cell → harmonization factors |
 | States (Unidades da Federação), 2024 territorial mesh | `BR_UF_2024.zip` — geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/ | state of each cell → state calendars |
 
-Both zips can stay compressed inside the project folder. Source: IBGE.
+Both zips can stay compressed inside the project folder.
+
+**Citation (APA 7):**
+
+Instituto Brasileiro de Geografia e Estatística. (2019). *Biomas do Brasil 1:250.000* [Data set]. IBGE.\
+https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/
+
+Instituto Brasileiro de Geografia e Estatística. (2024). *Malha territorial: Unidades da Federação (BR_UF_2024)* [Data set]. IBGE.\
+https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/
 
 ## 3. Outputs in this repository
 

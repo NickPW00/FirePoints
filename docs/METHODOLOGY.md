@@ -121,6 +121,40 @@ Requirements: Python 3.11+ and `pip install -r requirements.txt`.
    ```
 The outputs and their columns are described in `docs/contrato-dados.md`.
 
+## 9. References
+
+References follow APA 7th edition.
+
+**NASA data**
+
+NASA FIRMS. (2026). *MODIS Collection 6.1 hotspot / active fire detections MCD14ML* [Data set]. NASA Fire Information for Resource Management System.\
+https://doi.org/10.5067/FIRMS/MODIS/MCD14ML
+
+NASA FIRMS. (2026). *VIIRS (S-NPP) I band 375 m active fire product VNP14IMGT* [Data set]. NASA Fire Information for Resource Management System.\
+https://doi.org/10.5067/FIRMS/VIIRS/VNP14IMGT_NRT.002
+
+NASA FIRMS. (2026). *FIRMS archive download* [Data portal]. Retrieved November 14, 2026.\
+https://firms.modaps.eosdis.nasa.gov/download/
+
+Schroeder, W., Oliva, P., Giglio, L., & Csiszar, I. A. (2014). The new VIIRS 375 m active fire detection data product: Algorithm description and initial assessment. *Remote Sensing of Environment, 143*, 85–96.\
+https://doi.org/10.1016/j.rse.2013.12.008
+
+**Other data**
+
+Instituto Brasileiro de Geografia e Estatística. (2019). *Biomas do Brasil 1:250.000* [Data set]. IBGE.\
+https://geoftp.ibge.gov.br/informacoes_ambientais/estudos_ambientais/biomas/vetores/
+
+Instituto Brasileiro de Geografia e Estatística. (2024). *Malha territorial: Unidades da Federação (BR_UF_2024)* [Data set]. IBGE.\
+https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2024/Brasil/
+
+OpenStreetMap contributors. (2026). *OpenStreetMap* [Map tiles].\
+https://www.openstreetmap.org/copyright
+
+**This project**
+
+FirePoints Team. (2026). *FirePoints: Harmonized MODIS and VIIRS fire calendar for Brazil* [Source code and documentation]. GitHub.\
+https://github.com/NickPW00/FirePoints
+
 ## Use of AI
 
 The pipeline code and this document were written with the help of Claude (Anthropic). Every AI-assisted file has a header pointing to its log in `docs/ai-log/`, and the team's decisions are recorded in `docs/decisions.md`.

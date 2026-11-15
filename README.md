@@ -54,4 +54,6 @@ We used Claude (Anthropic) to help write code and documentation. Every AI-assist
 
 ## Acknowledgements
 
-We acknowledge the use of data from NASA's Fire Information for Resource Management System (FIRMS), part of NASA's Earth Science Data and Information System (ESDIS). Biome and state boundaries: IBGE (Instituto Brasileiro de Geografia e Estatística).
+We acknowledge the use of data from NASA's Fire Information for Resource Management System (FIRMS), part of NASA's Earth Science Data and Information System (ESDIS). Biome and state boundaries: IBGE (Instituto Brasileiro de Geografia e Estatística). Basemap: © OpenStreetMap contributors.
+
+Full reference list in APA 7 format: [`docs/METHODOLOGY.md` § 9](docs/METHODOLOGY.md#9-references).
