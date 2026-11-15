@@ -11,6 +11,7 @@
 | `calendario.parquet` | `04_calendario.py` | Region × year × month: detections, historical mean, anomaly and color classes |
 | `quadradinhos.parquet` | `04_calendario.py` | Each grid cell with its biome and state |
 | `focos/ano=<year>/focos_<year>_<sensor>.parquet` | `05_exportar_focos.py` | Individual detections (raw, not harmonized), split by year and sensor |
+| `teste_previsao.csv` | `06_teste_previsao.py` | Outlook test: forecast error by region and horizon (METHODOLOGY § 8); not used by the app |
 
 Full column descriptions: [`docs/contrato-dados.md`](../../docs/contrato-dados.md).
 

@@ -106,4 +106,4 @@ All open source. Versions in [`requirements.txt`](requirements.txt) (pipeline) a
 
 We acknowledge the use of data and imagery from NASA's Fire Information for Resource Management System ([FIRMS](https://www.earthdata.nasa.gov/data/tools/firms)), part of NASA's Earth Observing System Data and Information System (EOSDIS). Biome and state boundaries: IBGE (Instituto Brasileiro de Geografia e Estatística). Basemap: © OpenStreetMap contributors.
 
-Full reference list in APA 7 format: [`docs/METHODOLOGY.md` § 9](docs/METHODOLOGY.md#9-references).
+Full reference list in APA 7 format: [`docs/METHODOLOGY.md` § 10](docs/METHODOLOGY.md#10-references).
