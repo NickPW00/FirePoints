@@ -19,6 +19,7 @@
 - **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
 - **#11** Série harmonizada a partir de 2003: MODIS × fator por mês e região (calibrado em 2012–2019) até 2011, VIIRS S-NPP real a partir de 2012; 2003–2011 marcado como estimado no app; nov/2000–2002 marcado como parcial (só Terra até 07/2002) — Validação deixando um ano de fora: erro anual 0,7%, mensal 3%; fator por região reduz o erro local de 12,6% para 7,7%
 - **#27** Nenhum logo da NASA no projeto; do Space Apps só o logo pequeno sem texto (README e barra lateral do app), arquivo oficial sem alteração — Todos os outros logos do Space Apps têm "NASA" escrito; evita qualquer uso de identificador da NASA
+- **#28** Plano de design de prioridade máxima do app (8 itens: rolagem/zoom do mapa, zoom sem perder ao clicar, mapa estilo Windy, divisas suaves de estados e municípios da área, RJ como padrão, regiões, biomas em inglês, seletor EN/PT). Executar só após o ok do nicholas, em pull request — Mariaeliza assumiu o design; o app era do nicholas
 
 **Propostas de nicholas:**
 
@@ -43,6 +44,7 @@
 
 - incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 - botão "passo a passo" em cada gráfico, explicando para leigos como ler e quais ferramentas estão disponíveis — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
+- depois: números do topo cortados, faixa de abertura, cores (tirar o azul), contraste das siglas, calendário e celular — *mariaeliza* ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 
 ### #dados
 
@@ -90,6 +92,7 @@
 - [ ] @mariaeliza dá para enviar hoje e reenviar até dom. 23:59 (só a última versão vale) — enviar uma versão provisória para garantir? ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 - [ ] @mariaeliza abrir firepoints.streamlit.app numa janela anônima para confirmar que é público (o guia exige) ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @mariaeliza revisar a tradução do `pipeline/` e do `contrato-dados.md` no PR (só texto mudou) ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
+- [ ] @mariaeliza executar os 8 itens depois do ok, em pull request ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 
 **@nicholas:**
 
@@ -104,4 +107,5 @@
 - [ ] @nicholas implementar o botão "passo a passo" nos gráficos (#app) ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 - [ ] @nicholas revisar o crédito do Space Apps na barra lateral do app (`space_apps_credit()`) ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @nicholas conferir se a lista de bibliotecas do app no README está completa ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
+- [ ] @nicholas aprovar (ou ajustar) o plano de design antes de a mariaeliza mexer no `app/` — responder aqui ou confirmar a #28: ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 
