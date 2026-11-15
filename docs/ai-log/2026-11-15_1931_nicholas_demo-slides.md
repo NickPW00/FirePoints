@@ -22,7 +22,7 @@ Fechar os 7 slides da demo: nomes e GitHub dos criadores, prints do app, slide d
 - —
 
 ## Pendências / perguntas para a dupla
-- [ ] @nicholas confirmar o nome da equipe (2XLero) e o nome da Maria Eliza como aparecem no slide 1
+- [x] @nicholas confirmar o nome da equipe (2XLero) e o nome da Maria Eliza como aparecem no slide 1 *(feito: 2XLero Team; Maria Elizabeth Tavares da Silva Ramos; slides, PDF e README corrigidos)*
 - [ ] @mariaeliza conferir o slide 6 (print do mapa de 15/11, leitura "metade dos focos em 14% das células")
 - [ ] @nicholas colar o link do PDF no campo "Link to Project Demo" e testar em janela anônima
 
