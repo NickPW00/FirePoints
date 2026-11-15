@@ -127,11 +127,26 @@ All open source. Versions in [`requirements.txt`](requirements.txt) (pipeline) a
 | folium (Leaflet) | Interactive map with zoom, pan and drawing tool | app | <https://python-visualization.github.io/folium/> · <https://leafletjs.com> |
 | streamlit-folium | Embedding the folium map in Streamlit | app | <https://github.com/randyzwitch/streamlit-folium> |
 | DuckDB | Fast filtering of the point detections for CSV download | app | <https://duckdb.org> |
+| geonamescache | City names of the map, read from the GeoNames database | pipeline | <https://github.com/yaph/geonamescache> |
+| Leaflet.draw | Drawing tool of the map (through folium's `Draw` plugin) | app | <https://github.com/Leaflet/Leaflet.draw> |
+| branca, Jinja2 | Custom map layers and city labels drawn over folium | app | <https://github.com/python-visualization/branca> · <https://jinja.palletsprojects.com/> |
+| Pillow | Encoding the map's grid of pixels as a PNG image | app | <https://python-pillow.org> |
 
 **Hosting:** the app runs on [Streamlit Community Cloud](https://streamlit.io/cloud); code and data are on [GitHub](https://github.com/NickPW00/FirePoints).
 
+### Design, demo and tooling
+
+| What | Used for | Link |
+|---|---|---|
+| ColorBrewer (Cynthia Brewer) | Colour-blind-safe palettes of the calendar (Oranges) and the anomaly classes (RdBu) | <https://colorbrewer2.org> |
+| NASA Space Apps Challenge small logo and Brand Guidelines | Logo in this README, the app and the demo (official file, unaltered); colours and typefaces of the demo slides | <https://www.spaceappschallenge.org/brand/> |
+| Fira Sans and Overpass (open-source typefaces) | Text of the demo slides | <https://github.com/bBoxType/FiraSans> · <https://github.com/RedHatOfficial/Overpass> |
+| GitHub Actions | Regenerating the team's summary of decisions on every push | <https://github.com/features/actions> |
+| Python | Language of the pipeline and the app | <https://www.python.org> |
+| Claude (Anthropic) | AI assistant used during development: see [Use of AI](#use-of-ai) | <https://www.anthropic.com/claude> |
+
 ### Acknowledgements
 
-We acknowledge the use of data and imagery from NASA's Fire Information for Resource Management System ([FIRMS](https://www.earthdata.nasa.gov/data/tools/firms)), part of NASA's Earth Observing System Data and Information System (EOSDIS). Biome and state boundaries: IBGE (Instituto Brasileiro de Geografia e Estatística). Basemap: © OpenStreetMap contributors.
+We acknowledge the use of data and imagery from NASA's Fire Information for Resource Management System ([FIRMS](https://www.earthdata.nasa.gov/data/tools/firms)), part of NASA's Earth Observing System Data and Information System (EOSDIS). Biome, state and municipal boundaries: IBGE (Instituto Brasileiro de Geografia e Estatística). Basemap: tiles © Esri, HERE, Garmin, © OpenStreetMap contributors. City names: GeoNames (CC BY 4.0).
 
 Full reference list in APA 7 format: [`docs/METHODOLOGY.md` § 10](docs/METHODOLOGY.md#10-references).
