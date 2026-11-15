@@ -11,6 +11,7 @@ tema: demo-slides
 Fechar os 7 slides da demo: nomes e GitHub dos criadores, prints do app, slide do mapa, PDF com link público e declaração de IA.
 
 ## Decisões
+- Capa dos slides e seção Team do README sem a divisão de responsabilidades: os dois trabalharam no pipeline, no método e no app — pedido do nicholas
 - Demo entregue como PDF no repositório (`docs/demo/FirePoints-demo.pdf`), linkado no README; esse é o link público da submissão *(decisions #39)*
 
 ## Código gerado ou alterado com IA
