@@ -12,6 +12,7 @@ Avaliar o que vale aplicar do Brand Guide do Space Apps no app e na demo, e corr
 
 ## Decisões
 - Cor principal do app (`primaryColor`) de `#d94801` para `#c44100`: botões e links passam de 4,5:1 (antes 4,19:1 no fundo e 4,31:1 sob texto branco; agora 5,0:1 e 5,1:1) *(decisions #31)*
+- Demo em slides (não vídeo), 7 no total: 1 título/equipe/desafio · 2 problema (degrau de 2012) · 3 método (k por bioma × mês) · 4 validação (0,9%) · 5 app (calendário + vs normal) · 6 mapa (em aberto, entra por último) · 7 impacto, próximo passo e links *(decisions #32)*
 
 ## Código gerado ou alterado com IA
 - `.streamlit/config.toml` — `primaryColor` — alterado
@@ -21,6 +22,7 @@ Avaliar o que vale aplicar do Brand Guide do Space Apps no app e na demo, e corr
 - #demo slides: fundo Deep Blue `#07173F` ou Electric Blue `#0042A6` com texto branco, Fira Sans (títulos) + Overpass (corpo), prints do app em cartão branco, Rocket Red só como destaque
 
 ## Pendências / perguntas para a dupla
+- [ ] @mariaeliza avisar quando o mapa estiver fechado: os prints dos slides 5 e 6 são tirados no fim, de uma vez, com o app em inglês
 - [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões
 
 ## Referências
