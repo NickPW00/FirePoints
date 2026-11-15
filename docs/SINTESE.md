@@ -22,7 +22,10 @@
 - **#27** Nenhum logo da NASA no projeto; do Space Apps só o logo pequeno sem texto (README e barra lateral do app), arquivo oficial sem alteração — Todos os outros logos do Space Apps têm "NASA" escrito; evita qualquer uso de identificador da NASA
 - **#33** Zoom do mapa por escolha de quem usa: botão "Zoom com rolagem" no mapa (desligado por padrão) e Ctrl+rolagem/pinça sempre dão zoom no mapa; rolagem simples sempre rola a página (muda o item 1 da #28) — "Clicar para ativar" confundia: mapa e página disputavam a rolagem e o clique fazia a página pular
 - **#34** Câmera livre no mapa: sem trava no Brasil, zoom de 3 a 12 (muda o item 1 da #28) — Pedido da responsável pelo design: mover e dar zoom livremente
-- **#35** Visual do mapa estilo Windy: campo contínuo de cor, rampa "inferno" sobre fundo escuro Esri (mais claro = mais focos), nomes brancos, divisas finas, municípios só de perto; tema claro guardado como alternativa — Gradiente em blocos, sem variação de cor, e nomes/divisas pouco legíveis
+- **#35** Visual do mapa estilo Windy: campo contínuo de cor, rampa "inferno" sobre fundo escuro Esri (mais claro = mais focos), nomes brancos, divisas finas, municípios só de perto; tema claro guardado como alternativa — Gradiente em blocos, sem variação de cor, e nomes/divisas pouco legíveis *(substituição proposta em #37)*
+- **#36** Mapa do app desenhado numa grade 4× mais fina (0,025° ≈ 2,8 km, `grade_fina.parquet`, mesmos pesos da harmonização); só exibição: calendário, estatísticas e clique seguem na grade de 0,1° (#5/#20 não mudam) — Pixels de 11 km ficavam grandes demais ao aproximar; a soma da grade fina confere com a série (+0,002%)
+- **#37** Pixels nítidos por padrão no mapa; "Suavizar cores" fica como opção desligada — substitui #35 (só a parte do campo contínuo): ao aproximar, o gradiente juntava tudo e não dava para ver onde é cada coisa
+- **#38** Nomes das cidades do mapa desenhados como texto, a partir do GeoNames (CC BY 4.0, `cidades.json`), no lugar dos blocos de imagem com nomes — As letras em imagem ficavam com baixa qualidade; texto fica nítido em qualquer zoom
 
 **Propostas de nicholas:**
 
@@ -73,6 +76,7 @@
 - mapa de anomalia do mês (cada célula contra a própria média) — *nicholas* ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 - detalhe pelo zoom: quanto mais aproximar, menor a célula (hoje 0,1° ≈ 11 km); avaliar a melhor forma (faixas de zoom com grades diferentes ou outra abordagem) — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 - tema claro (amarelo → vinho, fundo claro) pronto em `maps.THEMES["light"]`: trocar é uma linha — *mariaeliza* ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
+- tirar bairros (Copacabana, Vidigal) da lista de nomes; #app calendário e mapa com a mesma direção de cor — *mariaeliza* ([log](ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md))
 
 ### #validacao
 
@@ -124,4 +128,5 @@
 - [ ] @nicholas declarar os slides da demo em `docs/AI_USE.md` (feitos com IA) e pôr o link público da demo no rascunho da submissão ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 - [ ] @nicholas confirmar o nome da equipe nos slides (usado: 2XLero) ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 - [ ] @nicholas revisar e fazer o merge do PR do mapa (inclui a correção do PR #7, que pode ser fechado) ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
+- [ ] @nicholas revisar e fazer o merge do PR do mapa com pixels pequenos ([log](ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md))
 
