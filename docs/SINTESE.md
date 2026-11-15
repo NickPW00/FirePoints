@@ -34,9 +34,10 @@
 
 ## 💡 Ideias por tema
 
-### #app
+### #app 🔀 *ideias dos dois — combinar*
 
 - incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
+- botão "passo a passo" em cada gráfico, explicando para leigos como ler e quais ferramentas estão disponíveis — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 
 ### #dados
 
@@ -50,6 +51,7 @@
 
 - mapa como imagem lat×lon (sem basemap/WebGL): renderiza sempre na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 - mapa de anomalia do mês (cada célula contra a própria média) — *nicholas* ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
+- detalhe pelo zoom: quanto mais aproximar, menor a célula (hoje 0,1° ≈ 11 km); avaliar a melhor forma (faixas de zoom com grades diferentes ou outra abordagem) — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 
 ### #validacao
 
@@ -75,6 +77,8 @@
 - [ ] @mariaeliza validar #22 e #23 (mapa novo e correções de leitura) ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 - [ ] @mariaeliza (opcional) exportar `data/processed/ufs_simplificado.geojson` (UFs do IBGE simplificadas): o app usa no lugar das divisas tiradas da grade ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 - [ ] @mariaeliza a cópia solta `focos/focos_*.parquet` dobra o checkout (559 MB) e o app só lê `focos/ano=*/`: pode remover? ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
+- [ ] @mariaeliza revisar o rascunho da submissão em EN (Project "Hackathon SpaceApps 2026" → `claude/rascunho-submissao.md`); falta o link da demo ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
+- [ ] @mariaeliza dá para enviar hoje e reenviar até dom. 23:59 (só a última versão vale) — enviar uma versão provisória para garantir? ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 
 **@nicholas:**
 
@@ -85,4 +89,6 @@
 - [ ] @nicholas os pontos estão em `data/processed/focos/ano=AAAA/` (como pedido); colunas: lat, lon, data, sensor, confianca, frp, dia_noite, bioma, estado — sem gi/gj/origem (ver contrato 2c) ([log](ai-log/2026-11-14_1512_mariaeliza_pipeline-focos.md))
 - [ ] @nicholas app: marcar meses NRT como provisórios (#3) ou ajustar o texto; docstrings no `streamlit_app.py`; `docs/USER_GUIDE.md` (aba How to read + colunas dos CSVs) ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
 - [ ] @nicholas testar o mapa com internet real (tiles OSM; só foi testado com tiles simulados) antes do merge e do deploy ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
+- [ ] @nicholas avaliar abordagens para o detalhe por zoom no mapa (#mapa) ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
+- [ ] @nicholas implementar o botão "passo a passo" nos gráficos (#app) ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 
