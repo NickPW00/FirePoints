@@ -39,6 +39,7 @@
 - **#26** Declaração de uso de IA: a ideia da solução é da equipe; o desenvolvimento a partir dela foi feito com o Claude; toda escolha técnica confirmada pelos dois — Regra: a IA não pode criar a ideia; o texto precisa dizer exatamente como foi usada
 - **#29** Modelo preditivo fica fora do app nesta entrega: entra como "Future work" (METHODOLOGY § 8 e descrição da submissão), com o teste `pipeline/06_teste_previsao.py` — Ganho real só de 1 a 3 meses (Brasil: erro 34,2% → 29,1%); o app já mostra a faixa histórica; prioridade é a demo e o critério Validity
 - **#31** Cor principal do app (`primaryColor`) de `#d94801` para `#c44100` — Contraste WCAG AA ≥ 4,5:1 em botões e links (antes 4,19:1 e 4,31:1), pedido pelo Brand Guide do Space Apps; continua na família do laranja de fogo
+- **#32** Demo em slides (não vídeo), 7 no total: título/equipe/desafio, problema, método, validação, app (calendário), mapa, impacto + próximo passo + links; o slide do mapa e os prints do app ficam em aberto até o design do mapa fechar — Limite de 7 slides do regulamento; os juízes leem sem narração; o mapa ainda está mudando (#28)
 
 ## 💡 Ideias por tema
 
@@ -98,6 +99,7 @@
 - [ ] @mariaeliza abrir firepoints.streamlit.app numa janela anônima para confirmar que é público (o guia exige) ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @mariaeliza revisar a tradução do `pipeline/` e do `contrato-dados.md` no PR (só texto mudou) ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
 - [ ] @mariaeliza onde estão os arquivos do GFWED e até que mês vão? (não estão no repo) ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
+- [ ] @mariaeliza avisar quando o mapa estiver fechado: os prints dos slides 5 e 6 são tirados no fim, de uma vez, com o app em inglês ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 - [ ] @mariaeliza a cor principal do tema mudou (`.streamlit/config.toml`); ao mexer nas cores do app (#28), manter contraste ≥ 4,5:1 em texto e botões ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 
 **@nicholas:**
