@@ -20,6 +20,9 @@
 - **#10** Região: Brasil inteiro; no app o usuário escolhe o estado ou desenha a área (RJ como exemplo na demo) — Mais focos → estatística mais confiável; substitui a ideia de recortar só o RJ
 - **#11** Série harmonizada a partir de 2003: MODIS × fator por mês e região (calibrado em 2012–2019) até 2011, VIIRS S-NPP real a partir de 2012; 2003–2011 marcado como estimado no app; nov/2000–2002 marcado como parcial (só Terra até 07/2002) — Validação deixando um ano de fora: erro anual 0,7%, mensal 3%; fator por região reduz o erro local de 12,6% para 7,7%
 - **#27** Nenhum logo da NASA no projeto; do Space Apps só o logo pequeno sem texto (README e barra lateral do app), arquivo oficial sem alteração — Todos os outros logos do Space Apps têm "NASA" escrito; evita qualquer uso de identificador da NASA
+- **#33** Zoom do mapa por escolha de quem usa: botão "Zoom com rolagem" no mapa (desligado por padrão) e Ctrl+rolagem/pinça sempre dão zoom no mapa; rolagem simples sempre rola a página (muda o item 1 da #28) — "Clicar para ativar" confundia: mapa e página disputavam a rolagem e o clique fazia a página pular
+- **#34** Câmera livre no mapa: sem trava no Brasil, zoom de 3 a 12 (muda o item 1 da #28) — Pedido da responsável pelo design: mover e dar zoom livremente
+- **#35** Visual do mapa estilo Windy: campo contínuo de cor, rampa "inferno" sobre fundo escuro Esri (mais claro = mais focos), nomes brancos, divisas finas, municípios só de perto; tema claro guardado como alternativa — Gradiente em blocos, sem variação de cor, e nomes/divisas pouco legíveis
 
 **Propostas de nicholas:**
 
@@ -64,11 +67,12 @@
 
 - montar a página de submissão a partir do README (resumo) + METHODOLOGY (descrição) + DATA (NASA Data) — *nicholas* ([log](ai-log/2026-11-14_1739_nicholas_revisao-docs.md))
 
-### #mapa
+### #mapa 🔀 *ideias dos dois — combinar*
 
 - mapa como imagem lat×lon (sem basemap/WebGL): renderiza sempre na demo — *nicholas* ([log](ai-log/2026-11-14_1642_nicholas_stack-app.md))
 - mapa de anomalia do mês (cada célula contra a própria média) — *nicholas* ([log](ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md))
 - detalhe pelo zoom: quanto mais aproximar, menor a célula (hoje 0,1° ≈ 11 km); avaliar a melhor forma (faixas de zoom com grades diferentes ou outra abordagem) — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
+- tema claro (amarelo → vinho, fundo claro) pronto em `maps.THEMES["light"]`: trocar é uma linha — *mariaeliza* ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
 
 ### #validacao
 
@@ -117,4 +121,5 @@
 - [ ] @nicholas conferir se a lista de bibliotecas do app no README está completa ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @nicholas aprovar (ou ajustar) o plano de design antes de a mariaeliza mexer no `app/` — responder aqui ou confirmar a #28: ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 - [ ] @nicholas revisar e fazer o merge do PR de design; depois conferir o mapa no app publicado ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
+- [ ] @nicholas revisar e fazer o merge do PR do mapa (inclui a correção do PR #7, que pode ser fechado) ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
 
