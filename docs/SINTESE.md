@@ -121,5 +121,7 @@
 - [ ] @nicholas conferir se a lista de bibliotecas do app no README está completa ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @nicholas aprovar (ou ajustar) o plano de design antes de a mariaeliza mexer no `app/` — responder aqui ou confirmar a #28: ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
 - [ ] @nicholas revisar e fazer o merge do PR de design; depois conferir o mapa no app publicado ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
+- [ ] @nicholas declarar os slides da demo em `docs/AI_USE.md` (feitos com IA) e pôr o link público da demo no rascunho da submissão ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
+- [ ] @nicholas confirmar o nome da equipe nos slides (usado: 2XLero) ([log](ai-log/2026-11-15_1751_nicholas_contraste-tema.md))
 - [ ] @nicholas revisar e fazer o merge do PR do mapa (inclui a correção do PR #7, que pode ser fechado) ([log](ai-log/2026-11-15_1815_mariaeliza_mapa-windy.md))
 
