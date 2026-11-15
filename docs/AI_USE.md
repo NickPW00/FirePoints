@@ -45,6 +45,7 @@
 | `pipeline/08_grade_fina.py`, `pipeline/09_cidades.py`, `data/processed/grade_fina.parquet`, `data/processed/cidades.json`, `app/data.py`, `app/maps.py`, `app/streamlit_app.py`, `app/i18n.py` | Map with small sharp pixels (0.025° display grid, checked against the 0.1° series) and city names drawn as text | Maria Eliza | [1855](ai-log/2026-11-15_1855_mariaeliza_mapa-pixels.md) |
 | `pipeline/06_teste_previsao.py`, `data/processed/teste_previsao.csv`, METHODOLOGY § 8 | Wrote the outlook test (rolling-origin forecasts, climatology vs recent anomaly) and the Future work section | Nicholas | [1733](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md) |
 | `docs/demo/FirePoints-demo.pdf`, `docs/demo/README.md` | Drafted the seven demo slides (text, layout, charts from `data/processed/`), captured the app screenshots and applied the Space Apps brand guidelines | Nicholas | [1751](ai-log/2026-11-15_1751_nicholas_contraste-tema.md), [1931](ai-log/2026-11-15_1931_nicholas_demo-slides.md) |
+| `README.md` (screenshots, License), `docs/img/app-*.png`, `LICENSE` | Captured three screens of the app (real screenshots) and placed them in the README; added the standard MIT licence text chosen by the team | Nicholas | [1931](ai-log/2026-11-15_1931_nicholas_demo-slides.md) |
 
 Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template for Streamlit).
 
@@ -94,5 +95,6 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 27 | No NASA logos; only the Space Apps small logo (no text) in the README and the app | proposed |
 | 31 | App primary colour darkened to `#c44100` for WCAG AA contrast (≥ 4.5:1) on buttons and links | proposed |
 | 32, 39 | Demo as seven slides in English, following the Space Apps brand guidelines; PDF kept in `docs/demo/` | proposed |
+| 40 | Code released under the MIT licence | proposed |
 
 "Proposed" means one teammate recorded it and the other had not yet marked it as reviewed in the log; all of them are implemented in the delivered project.
