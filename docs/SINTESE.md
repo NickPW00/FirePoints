@@ -37,6 +37,7 @@
 - **#24** Referências da documentação (METHODOLOGY § 9, DATA.md, README) no formato APA 7 — Padrão científico; os juízes leem em inglês; os produtos FIRMS já trazem DOI
 - **#25** Código (comentários, docstrings, mensagens), `.bat`, gráfico e contrato de dados em inglês; logs internos seguem em PT, com resumo em EN em `docs/AI_USE.md` — Regra do Space Apps: tudo o que estiver linkado na submissão deve estar em inglês
 - **#26** Declaração de uso de IA: a ideia da solução é da equipe; o desenvolvimento a partir dela foi feito com o Claude; toda escolha técnica confirmada pelos dois — Regra: a IA não pode criar a ideia; o texto precisa dizer exatamente como foi usada
+- **#29** Modelo preditivo fica fora do app nesta entrega: entra como "Future work" (METHODOLOGY § 8 e descrição da submissão), com o teste `pipeline/06_teste_previsao.py` — Ganho real só de 1 a 3 meses (Brasil: erro 34,2% → 29,1%); o app já mostra a faixa histórica; prioridade é a demo e o critério Validity
 
 ## 💡 Ideias por tema
 
@@ -45,6 +46,7 @@
 - incluir um modelo preditivo de queimadas no calendário, além da calibração MODIS/VIIRS da #6 — *mariaeliza* ([log](ai-log/2026-11-14_1510_mariaeliza_revisao-inicial.md))
 - botão "passo a passo" em cada gráfico, explicando para leigos como ler e quais ferramentas estão disponíveis — *nicholas* ([log](ai-log/2026-11-14_2303_nicholas_submissao-ideias-app.md))
 - depois: números do topo cortados, faixa de abertura, cores (tirar o azul), contraste das siglas, calendário e celular — *mariaeliza* ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
+- modelo por quantis (mediana + faixa de 80%) com FWI/Drought Code defasados do GFWED e ENSO; aba "Outlook" só se ganhar da climatologia no mesmo teste — *nicholas* ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
 
 ### #dados
 
@@ -93,6 +95,7 @@
 - [ ] @mariaeliza abrir firepoints.streamlit.app numa janela anônima para confirmar que é público (o guia exige) ([log](ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md))
 - [ ] @mariaeliza revisar a tradução do `pipeline/` e do `contrato-dados.md` no PR (só texto mudou) ([log](ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md))
 - [ ] @mariaeliza executar os 8 itens depois do ok, em pull request ([log](ai-log/2026-11-15_1732_mariaeliza_design-app.md))
+- [ ] @mariaeliza onde estão os arquivos do GFWED e até que mês vão? (não estão no repo) ([log](ai-log/2026-11-15_1733_nicholas_previsao-futuro.md))
 
 **@nicholas:**
 
