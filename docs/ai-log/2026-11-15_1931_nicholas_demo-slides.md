@@ -21,6 +21,7 @@ Fechar os 7 slides da demo: nomes e GitHub dos criadores, prints do app, slide d
 - `docs/demo/FirePoints-demo.pdf` — 7 slides em EN (texto, layout, gráficos de `data/processed/`, prints do app) — gerado
 - `docs/demo/README.md` — origem de cada slide e uso de IA — gerado
 - `README.md` (link da demo, uso de IA), `docs/AI_USE.md` (slides declarados) — alterado
+- `README.md` — créditos completados: geonamescache, Leaflet.draw, branca, Jinja2, Pillow, ColorBrewer, logo e Brand Guidelines do Space Apps, fontes da demo, GitHub Actions, Python, Claude; Acknowledgements com Esri e GeoNames — alterado
 
 ## Ideias (ainda não decididas)
 - —
