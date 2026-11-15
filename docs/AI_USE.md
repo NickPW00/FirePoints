@@ -59,6 +59,7 @@ Not AI-assisted: `.devcontainer/devcontainer.json` (GitHub Codespaces template f
 | 14 Nov, 23:03 | Nicholas | Read the submission rules and draft the project page; note new app ideas |
 | 14 Nov, 23:31 | Maria Eliza | Check every link used, credit data sources, libraries and frameworks, and add the Space Apps logo (no NASA logos) |
 | 15 Nov, 15:15 | Nicholas | Check the project against the Space Apps rules, add the AI marks and translate the remaining Portuguese |
+| 15 Nov, 17:32 | Maria Eliza | Review the app design (desktop and mobile) and plan the top-priority improvements, to be approved by Nicholas first |
 
 ## Team decisions (summary of `docs/decisions.md`)
 
