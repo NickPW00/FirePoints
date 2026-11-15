@@ -53,8 +53,10 @@ These are **hotspot detections, not fire events or burned area**. Clouds are not
 
 **2XLero Team**
 
-- **Maria Elizabeth Tavares da Silva Ramos** ([@Mariaeliza07](https://github.com/Mariaeliza07)) — data pipeline, harmonization and methodology
-- **Nicholas Puggian Wright** ([@NickPW00](https://github.com/NickPW00)) — web app
+- **Maria Elizabeth Tavares da Silva Ramos** ([@Mariaeliza07](https://github.com/Mariaeliza07))
+- **Nicholas Puggian Wright** ([@NickPW00](https://github.com/NickPW00))
+
+Both worked across the data pipeline, the method and the web app.
 
 ## Use of AI
 
