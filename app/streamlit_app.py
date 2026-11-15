@@ -1,6 +1,7 @@
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1642_nicholas_stack-app.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_1800_nicholas_melhorias-app-mapa.md
 # AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-15_1515_nicholas_ingles-e-ia.md
+# AI-assisted: Claude (Anthropic). See docs/ai-log/2026-11-14_2331_mariaeliza_creditos-fontes.md
 """FirePoints — harmonized MODIS + VIIRS fire calendar for Brazil.
 
 Run locally:  streamlit run app/streamlit_app.py
@@ -8,9 +9,11 @@ Run locally:  streamlit run app/streamlit_app.py
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import time
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -24,6 +27,9 @@ st.set_page_config(page_title="FirePoints – Fire calendar", page_icon="🔥", 
 
 MONTHS = charts.MONTHS
 STATES_GEOJSON = data.PROCESSED / "ufs_simplificado.geojson"  # optional: smooth state boundaries (pipeline)
+# Space Apps small logo (orbit only, no text): official file from spaceappschallenge.org/brand, unaltered
+SPACE_APPS_LOGO = Path(__file__).resolve().parent.parent / "docs" / "img" / "space-apps-small-logo-black.svg"
+SPACE_APPS_URL = "https://www.spaceappschallenge.org/"
 
 
 # ---------------------------------------------------------------------------
@@ -104,6 +110,18 @@ def csv_bytes(df: pd.DataFrame) -> bytes:
     return df.to_csv(index=False).encode("utf-8")
 
 
+def space_apps_credit() -> None:
+    """Small 'made for Space Apps' line with the event's small logo, linked to its home page."""
+    text = f'Made for the <a href="{SPACE_APPS_URL}" target="_blank">NASA Space Apps Challenge 2026</a>'
+    if SPACE_APPS_LOGO.exists():
+        svg = base64.b64encode(SPACE_APPS_LOGO.read_bytes()).decode("ascii")
+        logo = (f'<a href="{SPACE_APPS_URL}" target="_blank"><img src="data:image/svg+xml;base64,{svg}" '
+                f'alt="Space Apps logo" width="28" style="vertical-align:middle;margin-right:8px"></a>')
+    else:
+        logo = ""
+    st.markdown(f'<div style="font-size:0.8rem;opacity:0.8">{logo}{text}</div>', unsafe_allow_html=True)
+
+
 # ---------------------------------------------------------------------------
 # Sidebar: area and period
 # ---------------------------------------------------------------------------
@@ -157,6 +175,7 @@ with st.sidebar:
         "Data: NASA FIRMS — MODIS C6.1 (Terra/Aqua) and VIIRS S-NPP 375 m. "
         "Biomes and states: IBGE. Counts in **VIIRS-equivalent fires**."
     )
+    space_apps_credit()
 
 label = area_label(area, states)
 st.title(f"Fire calendar — {label}")
